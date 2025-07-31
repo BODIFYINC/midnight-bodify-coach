@@ -6,6 +6,7 @@ interface User {
   name: string;
   phone: string;
   grade: string;
+  password: string;
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
 }
@@ -25,7 +26,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const ADMIN_EMAIL = "abdullah@admin.com";
-const ADMIN_PASSWORD = "Abdullah2008$hackerAA07";
+const ADMIN_PASSWORD = "Abdullah2008$hackerAA07whosalsaid";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -57,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         name: 'Administrator',
         phone: '',
         grade: '',
+        password: '',
         status: 'approved',
         createdAt: new Date().toISOString()
       };
@@ -67,9 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return true;
     }
 
-    // Regular user login
+    // Regular user login - check password and status
     const existingUser = users.find(u => u.email === email);
-    if (existingUser && existingUser.status === 'approved') {
+    if (existingUser && existingUser.password === password && existingUser.status === 'approved') {
       setUser(existingUser);
       setIsAdmin(false);
       localStorage.setItem('auth', JSON.stringify({ user: existingUser, isAdmin: false }));

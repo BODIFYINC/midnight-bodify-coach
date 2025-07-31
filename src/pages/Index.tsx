@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
+import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowRight, BookOpen, Users, Globe, Star, Check } from 'lucide-react';
+import { Scene3D } from '@/components/3D/Scene3D';
+import { ArrowRight, BookOpen, Users, Globe, Star, Check, MessageCircle, GamepadIcon, BookMarked, Languages, PenTool, NotebookPen } from 'lucide-react';
 
 const Index = () => {
   const { t } = useLanguage();
@@ -12,73 +14,111 @@ const Index = () => {
   const features = [
     {
       icon: BookOpen,
-      title: 'Interactive Learning',
-      description: 'Engage with dynamic content designed for modern learners'
+      title: t('features.interactive'),
+      description: t('features.interactiveDesc')
     },
     {
       icon: Users,
-      title: 'Collaborative Environment',
-      description: 'Connect and learn together with peers worldwide'
+      title: t('features.personalized'),
+      description: t('features.personalizedDesc')
     },
     {
-      icon: Globe,
-      title: 'Global Access',
-      description: 'Learn from anywhere, anytime with our cloud platform'
+      icon: GamepadIcon,
+      title: t('features.gamified'),
+      description: t('features.gamifiedDesc')
+    },
+    {
+      icon: Languages,
+      title: t('features.translation'),
+      description: t('features.translationDesc')
+    },
+    {
+      icon: PenTool,
+      title: t('features.grammar'),
+      description: t('features.grammarDesc')
+    },
+    {
+      icon: NotebookPen,
+      title: t('features.notebook'),
+      description: t('features.notebookDesc')
     }
   ];
 
-  const plans = [
+  const testimonials = [
     {
-      name: t('pricing.basic'),
-      price: '$29',
-      features: ['Basic course access', 'Community support', 'Mobile app access', 'Basic analytics']
+      text: t('testimonials.student1'),
+      name: t('testimonials.student1Name')
     },
     {
-      name: t('pricing.premium'),
-      price: '$59',
-      features: ['All basic features', 'Premium courses', 'Priority support', 'Advanced analytics', 'Certificates']
+      text: t('testimonials.student2'),
+      name: t('testimonials.student2Name')
     },
     {
-      name: t('pricing.enterprise'),
-      price: '$99',
-      features: ['All premium features', 'Custom content', 'Dedicated support', 'API access', 'Team management']
+      text: t('testimonials.student3'),
+      name: t('testimonials.student3Name')
     }
   ];
+
+  const plan = {
+    name: t('pricing.monthly'),
+    price: t('pricing.price'),
+    features: [
+      t('pricing.feature1'),
+      t('pricing.feature2'), 
+      t('pricing.feature3'),
+      t('pricing.feature4'),
+      t('pricing.feature5'),
+      t('pricing.feature6')
+    ]
+  };
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            {t('home.title')}
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            {t('home.subtitle')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {!isAuthenticated ? (
-              <>
-                <Link to="/register">
-                  <Button size="lg" className="flex items-center gap-2">
-                    {t('home.getStarted')}
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button variant="outline" size="lg">
-                    {t('home.learnMore')}
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <Link to="/dashboard">
-                <Button size="lg" className="flex items-center gap-2">
-                  Go to Dashboard
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            )}
+      <section className="relative py-24 gradient-hero overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="text-center lg:text-left">
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white drop-shadow-lg">
+                {t('home.title')}
+              </h1>
+              <p className="text-xl text-white/90 mb-4 font-medium">
+                {t('brand.tagline')}
+              </p>
+              <p className="text-lg text-white/80 mb-8 max-w-2xl">
+                {t('home.heroDesc')}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                {!isAuthenticated ? (
+                  <>
+                    <Link to="/register">
+                      <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-libya">
+                        {t('home.getStarted')}
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    </Link>
+                    <Link to="/login">
+                      <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
+                        {t('home.learnMore')}
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <Link to="/dashboard">
+                    <Button size="lg" className="bg-white text-primary hover:bg-white/90">
+                      Go to Dashboard
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+            
+            <div className="h-96 lg:h-[500px]">
+              <Suspense fallback={<div className="w-full h-full bg-white/10 rounded-lg animate-pulse" />}>
+                <Scene3D className="w-full h-full" />
+              </Suspense>
+            </div>
           </div>
         </div>
       </section>
@@ -119,41 +159,31 @@ const Index = () => {
               Choose the perfect plan for your learning journey
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
-              <Card key={index} className={`relative ${index === 1 ? 'border-primary shadow-lg scale-105' : ''}`}>
-                {index === 1 && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                  <div className="text-4xl font-bold text-primary">
-                    {plan.price}
-                    <span className="text-sm text-muted-foreground">{t('pricing.perMonth')}</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3 mb-6">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center gap-2">
-                        <Check className="h-4 w-4 text-green-500" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button 
-                    className="w-full" 
-                    variant={index === 1 ? 'default' : 'outline'}
-                  >
+          <div className="max-w-md mx-auto">
+            <Card className="border-primary shadow-libya">
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                <div className="text-4xl font-bold text-primary">
+                  {plan.price}
+                  <span className="text-sm text-muted-foreground">{t('pricing.perMonth')}</span>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 mb-6">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-primary" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link to="/register">
+                  <Button className="w-full gradient-libya text-white">
                     {t('pricing.selectPlan')}
                   </Button>
-                </CardContent>
-              </Card>
-            ))}
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

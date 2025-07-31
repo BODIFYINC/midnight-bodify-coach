@@ -15,12 +15,12 @@ interface RegisterForm {
   email: string;
   phone: string;
   grade: string;
+  password: string;
+  confirmPassword: string;
 }
 
 const gradeOptions = [
-  'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5',
-  'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10',
-  'Grade 11', 'Grade 12', 'University', 'Graduate'
+  'Grade 9', 'Grade 12'
 ];
 
 export default function Register() {
@@ -35,14 +35,26 @@ export default function Register() {
       name: '',
       email: '',
       phone: '',
-      grade: ''
+      grade: '',
+      password: '',
+      confirmPassword: ''
     }
   });
 
   const onSubmit = async (data: RegisterForm) => {
+    if (data.password !== data.confirmPassword) {
+      toast({
+        variant: 'destructive',
+        title: t('common.error'),
+        description: 'Passwords do not match'
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const success = await registerUser(data);
+      const { confirmPassword, ...userData } = data;
+      const success = await registerUser(userData);
       
       if (success) {
         toast({
@@ -152,6 +164,42 @@ export default function Register() {
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="password"
+                rules={{ 
+                  required: 'Password is required',
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be at least 6 characters'
+                  }
+                }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('auth.password')}</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Create a strong password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                rules={{ required: 'Please confirm your password' }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('auth.confirmPassword')}</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Confirm your password" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
