@@ -222,6 +222,9 @@ const translations = {
     'contact.phone': '+218 926 845 740',
     'contact.email': 'abdullah@libya-can.ly',
     'contact.support': 'احصل على دعم شخصي من مؤسسينا',
+    'contact.ready': 'هل أنت مستعد لتحويل طريقة تعلمك؟',
+    'contact.joinMessage': 'انضم لآلاف الطلاب الذين يطورون تعليمهم معنا',
+    'contact.startToday': 'ابدأ رحلتك اليوم',
     
     // Common
     'common.loading': 'جاري التحميل...',
