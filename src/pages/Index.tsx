@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { Scene3D } from '@/components/3D/Scene3D';
 import { ArrowRight, BookOpen, Users, Globe, Star, Check, MessageCircle, GamepadIcon, BookMarked, Languages, PenTool, NotebookPen } from 'lucide-react';
 
 const Index = () => {
@@ -114,10 +112,10 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="h-96 lg:h-[500px]">
-              <Suspense fallback={<div className="w-full h-full bg-white/10 rounded-lg animate-pulse" />}>
-                <Scene3D className="w-full h-full" />
-              </Suspense>
+            <div className="h-96 lg:h-[500px] flex items-center justify-center">
+              <div className="animate-float">
+                <BookOpen className="w-32 h-32 text-white/80" />
+              </div>
             </div>
           </div>
         </div>
