@@ -11,20 +11,20 @@ export default function Waiting() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-4">
-      <Card className="w-full max-w-lg">
+      <Card className="w-full max-w-lg gradient-card border-0 shadow-elegant">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center">
-            <Clock className="h-8 w-8 text-yellow-600" />
+          <div className="mx-auto mb-4 w-16 h-16 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-glow">
+            <Clock className="h-8 w-8 text-white animate-pulse" />
           </div>
-          <CardTitle className="text-xl">{t('waiting.title')}</CardTitle>
+          <CardTitle className="text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{t('waiting.title')}</CardTitle>
           <CardDescription>
             {t('waiting.message')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="bg-muted/50 p-4 rounded-lg">
-            <h3 className="font-semibold mb-3 flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
+          <div className="glass-card p-4 rounded-lg border border-primary/20">
+            <h3 className="font-semibold mb-3 flex items-center gap-2 text-primary">
+              <MessageCircle className="h-5 w-5" />
               {t('waiting.contact')}
             </h3>
             <div className="space-y-2 text-sm">
@@ -34,7 +34,7 @@ export default function Waiting() {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
-                <span>+218 91 234 5678</span>
+                <span>+218926845740</span>
               </div>
             </div>
           </div>
@@ -43,13 +43,13 @@ export default function Waiting() {
             {t('waiting.checkBack')}
           </p>
           
-          <div className="flex gap-2">
+          <div className="flex gap-3 pt-2">
             <Link to="/" className="flex-1">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full hover-scale">
                 Back to Home
               </Button>
             </Link>
-            <Button variant="outline" onClick={logout} className="flex-1">
+            <Button variant="outline" onClick={logout} className="flex-1 hover-scale">
               {t('nav.logout')}
             </Button>
           </div>
