@@ -30,11 +30,11 @@ export default function Waiting() {
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-muted-foreground" />
-                <span>support@eduplatform.com</span>
+                <span>admin@eduplatform.ly</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
-                <span>+1 (555) 123-4567</span>
+                <span>+218 91 234 5678</span>
               </div>
             </div>
           </div>

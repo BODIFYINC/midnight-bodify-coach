@@ -34,19 +34,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    // Load persisted auth state
-    const savedAuth = localStorage.getItem('auth');
-    const savedUsers = localStorage.getItem('users');
-    
-    if (savedAuth) {
-      const { user: savedUser, isAdmin: savedIsAdmin } = JSON.parse(savedAuth);
-      setUser(savedUser);
-      setIsAdmin(savedIsAdmin);
-    }
-    
-    if (savedUsers) {
-      setUsers(JSON.parse(savedUsers));
-    }
+    // Reset users for fresh start
+    localStorage.removeItem('users');
+    localStorage.removeItem('auth');
+    setUsers([]);
+    setUser(null);
+    setIsAdmin(false);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {

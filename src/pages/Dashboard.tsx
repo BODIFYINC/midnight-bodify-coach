@@ -345,30 +345,9 @@ const Dashboard = () => {
     return <Navigate to="/waiting" replace />;
   }
 
-  // Only show dashboard for Grade 12 students with approved status
-  if (user.grade !== '12' || user.status !== 'approved') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/30">
-        <Card className="max-w-md mx-auto gradient-card border-0 shadow-elegant">
-          <CardHeader className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-2xl">Dashboard Not Available</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-muted-foreground mb-4">
-              {user.grade === '9' 
-                ? "The dashboard is currently available only for Grade 12 students."
-                : "Your account is pending approval. Please wait for admin confirmation."}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Contact: +218 926 845 740 for assistance
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
+  // Only show dashboard for approved users
+  if (user.status !== 'approved') {
+    return <Navigate to="/waiting" replace />;
   }
 
   return (
@@ -381,7 +360,7 @@ const Dashboard = () => {
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Welcome back, {user.name}!
               </h1>
-              <p className="text-xl text-muted-foreground mt-2">Grade 12 English Learning Dashboard</p>
+              <p className="text-xl text-muted-foreground mt-2">{user.grade} English Learning Dashboard</p>
             </div>
             <Badge variant="secondary" className="text-lg px-4 py-2">
               Grade {user.grade}
