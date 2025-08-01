@@ -50,8 +50,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    console.log('Login attempt:', { email, password, users });
+    
     // Admin login
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      console.log('Admin login successful');
       const adminUser: User = {
         id: 'admin',
         email: ADMIN_EMAIL,
@@ -71,13 +74,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Regular user login - check password and status
     const existingUser = users.find(u => u.email === email);
-    if (existingUser && existingUser.password === password && existingUser.status === 'approved') {
-      setUser(existingUser);
-      setIsAdmin(false);
-      localStorage.setItem('auth', JSON.stringify({ user: existingUser, isAdmin: false }));
-      return true;
+    console.log('Found user:', existingUser);
+    
+    if (existingUser) {
+      console.log('Password comparison:', { 
+        provided: password, 
+        stored: existingUser.password, 
+        match: existingUser.password === password,
+        status: existingUser.status 
+      });
+      
+      if (existingUser.password === password && existingUser.status === 'approved') {
+        console.log('User login successful');
+        setUser(existingUser);
+        setIsAdmin(false);
+        localStorage.setItem('auth', JSON.stringify({ user: existingUser, isAdmin: false }));
+        return true;
+      }
     }
 
+    console.log('Login failed');
     return false;
   };
 
