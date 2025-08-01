@@ -66,7 +66,7 @@ export default function Register() {
         toast({
           variant: 'destructive',
           title: t('common.error'),
-          description: 'Registration failed'
+          description: 'An account with this email already exists'
         });
       }
     } catch (error) {

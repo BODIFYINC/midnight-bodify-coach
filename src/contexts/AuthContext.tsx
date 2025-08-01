@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return true;
     }
 
-    // Regular user login - check password and status
+    // Regular user login - check password (allow both approved and pending users)
     const existingUser = users.find(u => u.email === email);
     console.log('Found user:', existingUser);
     
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         status: existingUser.status 
       });
       
-      if (existingUser.password === password && existingUser.status === 'approved') {
+      if (existingUser.password === password && (existingUser.status === 'approved' || existingUser.status === 'pending')) {
         console.log('User login successful');
         setUser(existingUser);
         setIsAdmin(false);
@@ -104,6 +104,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const registerUser = async (userData: Omit<User, 'id' | 'status' | 'createdAt'>): Promise<boolean> => {
+    // Check if user with this email already exists
+    const existingUser = users.find(u => u.email === userData.email);
+    if (existingUser) {
+      return false; // User already exists
+    }
+
     const newUser: User = {
       ...userData,
       id: Date.now().toString(),
