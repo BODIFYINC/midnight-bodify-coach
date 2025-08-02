@@ -129,6 +129,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
     setUsers(updatedUsers);
     localStorage.setItem('users', JSON.stringify(updatedUsers));
+    
+    // Update current user if it's the same user being updated
+    if (user && user.id === userId) {
+      const updatedCurrentUser = { ...user, status };
+      setUser(updatedCurrentUser);
+      localStorage.setItem('auth', JSON.stringify({ user: updatedCurrentUser, isAdmin: false }));
+    }
   };
 
   const deleteUser = (userId: string) => {
