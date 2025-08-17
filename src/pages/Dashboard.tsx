@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Lock, BookOpen, Brain, Zap, Trophy, Star, Play, CheckCircle } from 'lucide-react';
+import { Lock, BookOpen, Brain, Zap, Trophy, Star, Play, CheckCircle, HelpCircle } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
+import Questions from '@/components/Questions';
 
 interface Unit {
   id: number;
@@ -480,13 +481,19 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="vocabulary" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsList className={`grid w-full ${Number(user?.grade) === 12 ? 'grid-cols-3' : 'grid-cols-2'} mb-6`}>
                   <TabsTrigger value="vocabulary" className="text-base">
                     📚 Vocabulary
                   </TabsTrigger>
                   <TabsTrigger value="grammar" className="text-base">
                     📝 Grammar
                   </TabsTrigger>
+                  {Number(user?.grade) === 12 && (
+                    <TabsTrigger value="questions" className="text-base">
+                      <HelpCircle className="w-4 h-4 mr-1" />
+                      Questions
+                    </TabsTrigger>
+                  )}
                 </TabsList>
                 
                 <TabsContent value="vocabulary" className="space-y-4">
@@ -531,6 +538,12 @@ const Dashboard = () => {
                     </Card>
                   ))}
                 </TabsContent>
+                
+                {Number(user?.grade) === 12 && (
+                  <TabsContent value="questions" className="space-y-4">
+                    <Questions unitId={selectedUnit.id} />
+                  </TabsContent>
+                )}
               </Tabs>
             </CardContent>
           </Card>
