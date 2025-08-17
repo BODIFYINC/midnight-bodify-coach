@@ -352,20 +352,25 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background animate-fade-in">
       <div className="container mx-auto px-4 py-8">
-        {/* Welcome Header */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        {/* Enhanced Welcome Header */}
+        <div className="mb-12 text-center lg:text-left">
+          <div className="flex flex-col lg:flex-row items-center justify-between mb-8 gap-6">
+            <div className="space-y-4">
+              <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent animate-float">
                 Welcome back, {user.name}!
               </h1>
-              <p className="text-xl text-muted-foreground mt-2">{user.grade} English Learning Dashboard</p>
+              <p className="text-xl text-muted-foreground">Grade {user.grade} English Learning Dashboard</p>
             </div>
-            <Badge variant="secondary" className="text-lg px-4 py-2">
-              Grade {user.grade}
-            </Badge>
+            <div className="flex items-center gap-4">
+              <Badge variant="secondary" className="text-lg px-6 py-3 rounded-xl clay-card hover-glow">
+                Grade {user.grade}
+              </Badge>
+              <div className="clay-card px-4 py-2">
+                <span className="text-primary font-semibold">Progress: {Math.round(units.filter(u => u.isCompleted).length / units.length * 100)}%</span>
+              </div>
+            </div>
           </div>
           
           {/* Progress Overview */}

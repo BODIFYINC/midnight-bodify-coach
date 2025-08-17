@@ -225,22 +225,24 @@ All colors MUST be HSL.
     border-radius: 1.5rem;
   }
   
-  /* Micro-interactions */
+  /* Enhanced Micro-interactions */
   .hover-lift {
     transition: var(--transition-spring);
+    will-change: transform;
   }
   
   .hover-lift:hover {
-    transform: translateY(-6px) scale(1.02);
+    transform: translateY(-8px) scale(1.03);
     box-shadow: var(--shadow-ambient);
   }
 
   .hover-tilt {
     transition: var(--transition-spring);
+    transform-style: preserve-3d;
   }
 
   .hover-tilt:hover {
-    transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+    transform: perspective(1000px) rotateX(3deg) rotateY(3deg) scale(1.02);
   }
 
   .hover-glow {
@@ -248,7 +250,15 @@ All colors MUST be HSL.
   }
 
   .hover-glow:hover {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.4), 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .hover-scale {
+    transition: transform 0.3s ease;
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
   }
   
   /* Smooth Transitions */
@@ -301,12 +311,34 @@ All colors MUST be HSL.
 
 @keyframes pulse-soft {
   0%, 100% { 
-    opacity: 0.8; 
+    opacity: 0.85; 
     transform: scale(1);
   }
   50% { 
     opacity: 1; 
-    transform: scale(1.02);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

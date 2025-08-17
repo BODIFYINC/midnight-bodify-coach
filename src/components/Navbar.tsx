@@ -16,9 +16,12 @@ export function Navbar() {
   };
 
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-primary">
+        <Link 
+          to="/" 
+          className="text-xl font-bold text-primary hover-scale transition-all duration-300 hover:text-secondary"
+        >
           EduPlatform
         </Link>
 
@@ -29,21 +32,26 @@ export function Navbar() {
             <div className="flex items-center gap-2">
               {isAdmin ? (
                 <Link to="/admin">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 hover-lift rounded-xl">
                     <Shield className="h-4 w-4" />
                     {t('nav.dashboard')}
                   </Button>
                 </Link>
               ) : (
                 <Link to="/profile">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2 hover-lift rounded-xl">
                     <User className="h-4 w-4" />
                     Profile
                   </Button>
                 </Link>
               )}
               
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleLogout} 
+                className="flex items-center gap-2 hover-lift rounded-xl hover:bg-destructive hover:text-destructive-foreground"
+              >
                 <LogOut className="h-4 w-4" />
                 {t('nav.logout')}
               </Button>
@@ -51,12 +59,12 @@ export function Navbar() {
           ) : (
             <div className="flex items-center gap-2">
               <Link to="/login">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="hover-lift rounded-xl">
                   {t('nav.login')}
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="sm">
+                <Button size="sm" className="clay-button rounded-xl">
                   {t('nav.register')}
                 </Button>
               </Link>
