@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Home, 
-  Brain, 
-  ChefHat, 
+  Target, 
+  MessageSquare, 
+  Utensils, 
+  TrendingUp, 
+  BookOpen, 
   Dumbbell, 
-  Heart, 
-  BarChart3, 
   Settings,
   User
 } from 'lucide-react';
@@ -31,40 +31,40 @@ interface AppSidebarProps {
 
 const menuItems = [
   {
-    id: 'dashboard',
+    id: 'welcome',
     title: 'Dashboard',
-    icon: Home,
+    icon: Target,
     description: 'Your fitness overview'
   },
   {
-    id: 'ai-coaching',
+    id: 'chat',
     title: 'AI Coach',
-    icon: Brain,
+    icon: MessageSquare,
     description: 'Get personalized guidance'
+  },
+  {
+    id: 'meals',
+    title: 'Meals',
+    icon: Utensils,
+    description: 'Daily meal plans'
+  },
+  {
+    id: 'progress',
+    title: 'Progress',
+    icon: TrendingUp,
+    description: 'Track your goals'
   },
   {
     id: 'recipes',
     title: 'Recipes',
-    icon: ChefHat,
+    icon: BookOpen,
     description: 'Discover healthy meals'
   },
   {
-    id: 'workouts',
+    id: 'creative',
     title: 'Workouts',
     icon: Dumbbell,
-    description: 'Train effectively'
-  },
-  {
-    id: 'wellness',
-    title: 'Wellness',
-    icon: Heart,
-    description: 'Track your wellbeing'
-  },
-  {
-    id: 'progress',
-    title: 'Analytics',
-    icon: BarChart3,
-    description: 'View your progress'
+    description: 'AI workout plans'
   },
   {
     id: 'settings',

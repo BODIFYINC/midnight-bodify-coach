@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { MessageSquare, Settings, Utensils, TrendingUp, BookOpen, Dumbbell, Target, Clock, Award, Zap, Heart, Star } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AnimatedButton } from '@/components/ui/animated-button';
 import { Badge } from '@/components/ui/badge';
@@ -13,8 +12,12 @@ import { ProgressTab } from '@/components/dashboard/ProgressTab';
 import { RecipesTab } from '@/components/dashboard/RecipesTab';
 import { CreativeTab } from '@/components/dashboard/CreativeTab';
 
-const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('welcome');
+interface DashboardProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ activeTab, setActiveTab }) => {
   const [userStats, setUserStats] = useState({
     name: 'Abdullah',
     dailyCalories: 2200,
@@ -63,37 +66,13 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="relative z-10 container mx-auto p-6 max-w-7xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 text-center"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 kinetic-typography">
-            <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">
-              Bodify Dashboard
-            </span>
-          </h1>
-          <p className="text-white/70 text-lg">Your AI-powered fitness companion</p>
-        </motion.div>
 
-        {/* Dashboard Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="glassmorphism-card w-full justify-start mb-8 p-2 rounded-2xl border border-white/10">
-            {tabs.map((tab) => (
-              <TabsTrigger
-                key={tab.id}
-                value={tab.id}
-                className="flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-300 hover-scale data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-glow"
-              >
-                <tab.icon className="w-5 h-5" />
-                <span className="font-medium">{tab.label}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
+        {/* Content based on activeTab from sidebar */}
+        <div className="w-full">
 
           {/* Welcome Dashboard */}
-          <TabsContent value="welcome" className="space-y-8">
+          {activeTab === 'welcome' && (
+            <div className="space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -304,21 +283,24 @@ const Dashboard: React.FC = () => {
                 </Card>
               </motion.div>
             </motion.div>
-          </TabsContent>
+          </div>
+          )}
 
           {/* Other Tab Content */}
           {tabs.filter(tab => tab.component).map((tab) => (
-            <TabsContent key={tab.id} value={tab.id} className="space-y-6">
+            activeTab === tab.id && (
               <motion.div
+                key={tab.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
+                className="space-y-6"
               >
                 <tab.component />
               </motion.div>
-            </TabsContent>
+            )
           ))}
-        </Tabs>
+        </div>
       </div>
     </div>
   );

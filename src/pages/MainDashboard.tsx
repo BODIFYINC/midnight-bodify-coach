@@ -12,7 +12,7 @@ import Progress from './Progress';
 import Settings from './Settings';
 
 const MainDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('ai-coaching');
+  const [activeTab, setActiveTab] = useState('welcome');
 
   const renderContent = () => {
     const contentVariants = {
@@ -22,10 +22,10 @@ const MainDashboard: React.FC = () => {
     };
 
     switch (activeTab) {
-      case 'dashboard':
+      case 'welcome':
         return (
           <motion.div
-            key="dashboard"
+            key="welcome"
             variants={contentVariants}
             initial="initial"
             animate="animate"
@@ -33,13 +33,13 @@ const MainDashboard: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
           >
-            <Dashboard />
+            <Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />
           </motion.div>
         );
-      case 'ai-coaching':
+      case 'chat':
         return (
           <motion.div
-            key="ai-coaching"
+            key="chat"
             variants={contentVariants}
             initial="initial"
             animate="animate"
@@ -47,13 +47,13 @@ const MainDashboard: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
           >
-            <AICoaching />
+            <Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />
           </motion.div>
         );
-      case 'recipes':
+      case 'meals':
         return (
           <motion.div
-            key="recipes"
+            key="meals"
             variants={contentVariants}
             initial="initial"
             animate="animate"
@@ -61,35 +61,7 @@ const MainDashboard: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
           >
-            <Recipes />
-          </motion.div>
-        );
-      case 'workouts':
-        return (
-          <motion.div
-            key="workouts"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-            className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
-          >
-            <Workouts />
-          </motion.div>
-        );
-      case 'wellness':
-        return (
-          <motion.div
-            key="wellness"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-            className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
-          >
-            <Wellness />
+            <Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />
           </motion.div>
         );
       case 'progress':
@@ -103,7 +75,35 @@ const MainDashboard: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
           >
-            <Progress />
+            <Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />
+          </motion.div>
+        );
+      case 'recipes':
+        return (
+          <motion.div
+            key="recipes"
+            variants={contentVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+            className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
+          >
+            <Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />
+          </motion.div>
+        );
+      case 'creative':
+        return (
+          <motion.div
+            key="creative"
+            variants={contentVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+            className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
+          >
+            <Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />
           </motion.div>
         );
       case 'settings':
@@ -117,11 +117,11 @@ const MainDashboard: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker"
           >
-            <Settings />
+            <Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />
           </motion.div>
         );
       default:
-        return <Dashboard />;
+        return <Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />;
     }
   };
 
