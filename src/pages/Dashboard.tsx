@@ -42,7 +42,6 @@ const Dashboard: React.FC = () => {
     { id: 'progress', label: 'Progress', icon: TrendingUp, component: ProgressTab },
     { id: 'recipes', label: 'Recipes', icon: BookOpen, component: RecipesTab },
     { id: 'creative', label: 'Workouts', icon: Dumbbell, component: CreativeTab },
-    { id: 'settings', label: 'Settings', icon: Settings, component: SettingsTab },
   ];
 
   const calculateProgress = (current: number, target: number) => (current / target) * 100;
