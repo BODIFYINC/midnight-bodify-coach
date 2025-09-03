@@ -17,19 +17,31 @@ const BodifyLogo: React.FC<LogoProps> = ({
     <motion.img
       src={bodifyLogoUrl}
       alt={alt}
-      className={`${className} transition-all duration-500 filter drop-shadow-[0_10px_30px_hsl(var(--primary)/0.35)] saturate-125`}
-      initial={{ opacity: 0, scale: 0.95 }}
+      className={`${className} transition-all duration-300 saturate-110`}
+      initial={{ opacity: 0, scale: 0.8, y: 20 }}
       animate={{
         opacity: 1,
-        scale: 1,
-        rotateY: [0, 5, -5, 0]
+        scale: [1, 1.05, 1],
+        y: [0, -8, 0],
+        rotateZ: [0, 2, -2, 0],
+        filter: [
+          "drop-shadow(0 10px 30px hsl(var(--primary)/0.3))",
+          "drop-shadow(0 15px 40px hsl(var(--primary)/0.5))",
+          "drop-shadow(0 10px 30px hsl(var(--primary)/0.3))"
+        ]
       }}
       transition={{ 
-        opacity: { duration: 0.8 },
-        scale: { duration: 0.8 },
-        rotateY: { duration: 4, repeat: Infinity, ease: 'easeInOut' }
+        opacity: { duration: 1 },
+        scale: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+        y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+        rotateZ: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+        filter: { duration: 2.5, repeat: Infinity, ease: 'easeInOut' }
       }}
-      whileHover={{ scale: 1.06 }}
+      whileHover={{ 
+        scale: 1.1, 
+        rotateZ: 5,
+        filter: "drop-shadow(0 20px 50px hsl(var(--primary)/0.6))"
+      }}
     />
   );
 };
