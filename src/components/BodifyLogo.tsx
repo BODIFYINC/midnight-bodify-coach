@@ -18,9 +18,8 @@ const BodifyLogo: React.FC<LogoProps> = ({
       src={bodifyLogoUrl}
       alt={alt}
       className={`${className} transition-all duration-300 saturate-110`}
-      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      initial={{ scale: 1, y: 0 }}
       animate={{
-        opacity: 1,
         scale: [1, 1.05, 1],
         y: [0, -8, 0],
         rotateZ: [0, 2, -2, 0],
@@ -31,7 +30,6 @@ const BodifyLogo: React.FC<LogoProps> = ({
         ]
       }}
       transition={{ 
-        opacity: { duration: 1 },
         scale: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
         y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
         rotateZ: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
