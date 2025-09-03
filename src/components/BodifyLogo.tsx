@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import bodifyLogo from '@/assets/bodify-logo-official.png';
+const bodifyLogoUrl = '/lovable-uploads/daf4bc26-57ab-44c5-a111-adbfb48895d4.png';
 
 interface LogoProps {
   className?: string;
@@ -15,7 +15,7 @@ const BodifyLogo: React.FC<LogoProps> = ({
 }) => {
   return (
     <motion.img
-      src={bodifyLogo}
+      src={bodifyLogoUrl}
       alt={alt}
       className={`${className} transition-all duration-500 filter drop-shadow-[0_10px_30px_hsl(var(--primary)/0.35)] saturate-125`}
       initial={{ opacity: 0, scale: 0.95 }}
