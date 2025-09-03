@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import bodifyLogo from '@/assets/bodify-logo-static-removebg-preview.png';
+import bodifyLogo from '@/assets/bodify-logo-official.png';
 
 interface LogoProps {
   className?: string;
@@ -18,13 +18,17 @@ const BodifyLogo: React.FC<LogoProps> = ({
       src={bodifyLogo}
       alt={alt}
       className={`${className} transition-all duration-500 filter drop-shadow-[0_10px_30px_hsl(var(--primary)/0.35)] saturate-125`}
-      initial={{ opacity: 0, y: -6, scale: 0.98 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{
         opacity: 1,
-        y: [0, -3, 0],
-        scale: [1, 1.03, 1]
+        scale: 1,
+        rotateY: [0, 5, -5, 0]
       }}
-      transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+      transition={{ 
+        opacity: { duration: 0.8 },
+        scale: { duration: 0.8 },
+        rotateY: { duration: 4, repeat: Infinity, ease: 'easeInOut' }
+      }}
       whileHover={{ scale: 1.06 }}
     />
   );
