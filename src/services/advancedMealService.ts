@@ -34,6 +34,13 @@ export function generateAdvancedMealPlan(): EnhancedMealPlan {
   };
 
   const targets = AccurateNutritionTracker.calculateNutritionTargets(profile);
+  // Prefer explicit targets saved from Settings, if present
+  if (userPrefs && typeof userPrefs.targetCalories === 'number') {
+    targets.calories = Math.round(userPrefs.targetCalories);
+  }
+  if (userPrefs && typeof userPrefs.targetProtein === 'number') {
+    targets.protein = Math.round(userPrefs.targetProtein);
+  }
   console.log('Meal generation targets:', targets);
   
   // Get goal-specific meals

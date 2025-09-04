@@ -148,6 +148,25 @@ export const MealsTab: React.FC = () => {
         }
       }
 
+      // Final normalization: scale all meals to match target exactly (within rounding)
+      const target = workingPlan.nutrition.calorieTarget;
+      const total = workingPlan.nutrition.totalCalories;
+      if (total > 0 && Math.abs(total - target) > 0) {
+        const scale = target / total;
+        const scaleMeal = (m: any) => ({
+          ...m,
+          calories: Math.max(0, Math.round(m.calories * scale)),
+          protein: Math.max(0, Math.round(m.protein * scale)),
+          carbs: Math.max(0, Math.round(m.carbs * scale)),
+          fat: Math.max(0, Math.round(m.fat * scale)),
+        });
+        workingPlan.breakfast = scaleMeal(workingPlan.breakfast);
+        workingPlan.lunch = scaleMeal(workingPlan.lunch);
+        workingPlan.dinner = scaleMeal(workingPlan.dinner);
+        workingPlan.snacks = workingPlan.snacks.map(scaleMeal);
+        workingPlan = recalcTotals(workingPlan);
+      }
+
       // Add alternatives for each meal and finalize
       const enhancedPlan = {
         ...workingPlan,
