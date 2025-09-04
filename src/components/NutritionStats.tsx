@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Target, Zap } from 'lucide-react';
 import { EnhancedCard, CardContent } from './ui/enhanced-card';
 import { AccurateNutritionTracker, type UserProfile, type NutritionTargets } from '@/services/accurateNutritionTracker';
+import { getUnifiedTargets } from '@/services/unifiedTargets';
 
 interface NutritionStatsProps {
   // Remove the old props, we'll calculate everything accurately
@@ -37,8 +38,8 @@ export const NutritionStats: React.FC<NutritionStatsProps> = () => {
 
         console.log('User profile:', profile);
 
-        // Calculate accurate targets
-        const nutritionTargets = AccurateNutritionTracker.calculateNutritionTargets(profile);
+        // Unified targets (use saved targets if present)
+        const nutritionTargets = getUnifiedTargets();
         setTargets(nutritionTargets);
 
         // Get actual nutrition from completed meals

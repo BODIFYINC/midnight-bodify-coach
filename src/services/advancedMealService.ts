@@ -2,6 +2,7 @@ import { getMealsByGoal, getAllRealisticMeals } from './realMealDatabase';
 import { Meal, MealType } from './enhancedMealService';
 import { AccurateNutritionTracker } from './accurateNutritionTracker';
 import { getFitnessResponse } from './aiService';
+import { getUnifiedTargets } from './unifiedTargets';
 
 export interface EnhancedMealPlan {
   // Meal properties
