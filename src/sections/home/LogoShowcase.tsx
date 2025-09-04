@@ -47,7 +47,7 @@ export default function HeroSection() {
 
       <div className="container mx-auto px-6 max-w-6xl relative z-10">
         <div className="text-center">
-          {/* Static Logo */}
+          {/* Beautiful Hero Element */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ 
@@ -59,11 +59,52 @@ export default function HeroSection() {
               duration: 1.2, 
               ease: "easeOut"
             }}
-            className="mb-8 cursor-pointer"
+            className="mb-8 relative"
           >
-            <BodifyLogo 
-              className="h-24 w-auto mx-auto"
-              alt="Bodify Logo"
+            <motion.div
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                scale: [1, 1.02, 1]
+              }}
+              transition={{
+                backgroundPosition: { duration: 6, repeat: Infinity },
+                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="text-6xl md:text-8xl lg:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent bg-[length:200%_100%]"
+              style={{
+                textShadow: "0 0 60px hsl(var(--primary) / 0.3)"
+              }}
+            >
+              BODIFY
+            </motion.div>
+            
+            {/* Floating energy particles */}
+            <motion.div
+              animate={{ 
+                y: [-20, 20, -20],
+                x: [-10, 10, -10],
+                opacity: [0.4, 1, 0.4]
+              }}
+              transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
+              className="absolute -top-6 -right-8 w-4 h-4 bg-gradient-to-r from-primary to-secondary rounded-full blur-sm"
+            />
+            <motion.div
+              animate={{ 
+                y: [15, -15, 15],
+                x: [8, -8, 8],
+                opacity: [0.6, 1, 0.6]
+              }}
+              transition={{ duration: 3.5, repeat: Infinity, delay: 1 }}
+              className="absolute -bottom-4 -left-6 w-3 h-3 bg-gradient-to-r from-secondary to-accent rounded-full blur-sm"
+            />
+            <motion.div
+              animate={{ 
+                y: [-10, 10, -10],
+                opacity: [0.3, 0.8, 0.3],
+                scale: [1, 1.3, 1]
+              }}
+              transition={{ duration: 5, repeat: Infinity, delay: 1.5 }}
+              className="absolute top-1/2 -right-12 w-2 h-2 bg-gradient-to-r from-accent to-primary rounded-full"
             />
           </motion.div>
 
