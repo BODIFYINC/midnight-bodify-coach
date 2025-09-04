@@ -1,1 +1,10 @@
 project_id = "pxoiavmnxlqmqekwbkwu"
+
+[functions.generate-personalized-meal-plan]
+verify_jwt = false
+
+[functions.generate-personalized-workout]
+verify_jwt = false
+
+[functions.track-nutrition-progress]
+verify_jwt = false
