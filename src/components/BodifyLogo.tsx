@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-const bodifyLogoUrl = '/lovable-uploads/daf4bc26-57ab-44c5-a111-adbfb48895d4.png';
+import bodifyLogoUrl from '../assets/ChatGPT Image Sep 3, 2025, 01_33_37 AM.png';
 
 interface LogoProps {
   className?: string;
