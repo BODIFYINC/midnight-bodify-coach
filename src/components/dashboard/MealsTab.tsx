@@ -9,6 +9,7 @@ import { toast } from '@/hooks/use-toast';
 import { generateAdvancedMealPlan } from '@/services/advancedMealService';
 import { Meal, MealType } from '@/services/enhancedMealService';
 import { generateMealImage, getFallbackImage } from '@/services/imageService';
+import { getMealsByGoal } from '@/services/realMealDatabase';
 
 interface MealAlternative {
   id: string;
@@ -81,7 +82,73 @@ export const MealsTab: React.FC = () => {
         toast({ title: 'Adjusted to your daily target', description: 'Meals were scaled to fit your calories.' });
       }
 
-      // Add alternatives for each meal
+      // If we're under target, intelligently add snacks until within 2% of target
+      if (workingPlan.nutrition.totalCalories < workingPlan.nutrition.calorieTarget * 0.98) {
+        const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+        const userPrefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+        const goal = userSettings.goal || userPrefs.goal || 'weight_loss';
+        const disliked: string[] = (userPrefs.dislikedFoods || []).map((d: string) => (d || '').toLowerCase().trim());
+        const containsDisliked = (meal: any) => {
+          const text = (meal.title + ' ' + (meal.ingredients || []).join(' ')).toLowerCase();
+          const variations: Record<string, string[]> = {
+            rice: ['rice', 'brown rice', 'white rice', 'wild rice', 'jasmine', 'basmati'],
+            chicken: ['chicken', 'poultry'],
+            fish: ['fish', 'salmon', 'tuna', 'cod', 'tilapia'],
+            beef: ['beef', 'steak'],
+            eggs: ['egg', 'eggs'],
+            dairy: ['milk', 'cheese', 'yogurt', 'butter', 'cream'],
+            nuts: ['nuts', 'almond', 'peanut', 'walnut', 'cashew', 'pecan', 'pistachio']
+          };
+          return disliked.some((d) => {
+            const vars = variations[d] || [d];
+            return vars.some((v) => text.includes(v));
+          });
+        };
+
+        const goalMeals = getMealsByGoal(goal as 'weight_loss' | 'muscle_gain');
+        const existingIds = new Set<string>([
+          workingPlan.breakfast.id,
+          workingPlan.lunch.id,
+          workingPlan.dinner.id,
+          ...workingPlan.snacks.map((s: any) => s.id)
+        ]);
+        let candidates = (goalMeals.snacks || []).filter((m: any) => !existingIds.has(m.id) && !containsDisliked(m));
+
+        const pickScore = (snack: any) => {
+          const remainingCal = Math.max(0, workingPlan.nutrition.calorieTarget - (workingPlan.nutrition.totalCalories + snack.calories));
+          const remainingPro = Math.max(0, workingPlan.nutrition.proteinTarget - (workingPlan.nutrition.totalProtein + snack.protein));
+          const calDev = remainingCal / Math.max(1, workingPlan.nutrition.calorieTarget);
+          const proDev = remainingPro / Math.max(1, workingPlan.nutrition.proteinTarget);
+          const proteinWeight = (workingPlan.nutrition.totalProtein < workingPlan.nutrition.proteinTarget * 0.9) ? 0.6 : 0.4;
+          const calorieWeight = 1 - proteinWeight;
+          return calDev * calorieWeight + proDev * proteinWeight;
+        };
+
+        const maxSnacks = 12;
+        while (
+          workingPlan.nutrition.totalCalories < workingPlan.nutrition.calorieTarget * 0.98 &&
+          workingPlan.snacks.length < maxSnacks &&
+          candidates.length > 0
+        ) {
+          candidates.sort((a, b) => pickScore(a) - pickScore(b));
+          const next = candidates.shift();
+          if (!next) break;
+
+          const wouldCalories = workingPlan.nutrition.totalCalories + next.calories;
+          // Avoid overshooting by >3% unless still low protein
+          if (
+            wouldCalories > workingPlan.nutrition.calorieTarget * 1.03 &&
+            workingPlan.nutrition.totalProtein >= workingPlan.nutrition.proteinTarget * 0.9
+          ) {
+            continue;
+          }
+
+          workingPlan.snacks.push(next);
+          workingPlan = recalcTotals(workingPlan);
+        }
+      }
+
+      // Add alternatives for each meal and finalize
       const enhancedPlan = {
         ...workingPlan,
         breakfast: { ...workingPlan.breakfast, alternatives: generateAlternatives(workingPlan.breakfast) },
@@ -94,7 +161,7 @@ export const MealsTab: React.FC = () => {
       
       toast({
         title: "Meal Plan Ready ✅",
-        description: "Macros capped to your daily targets."
+        description: "Daily totals aligned to your targets."
       });
     } catch (error) {
       toast({

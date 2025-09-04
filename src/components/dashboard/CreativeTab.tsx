@@ -191,24 +191,54 @@ export const CreativeTab: React.FC = () => {
       const desiredMinutes = parseInt(preferences.duration);
       const program: Exercise[] = [];
 
-      // Start with seed exercises
-      seedExercises.map(adjustExercise).forEach(ex => program.push(ex));
+      // Build a large, deduped pool across selected muscles to avoid repeats
+      const targetGroups = (preferences.targetMuscles.length > 0 ? preferences.targetMuscles : ['Chest','Back','Legs','Shoulders','Arms','Core'])
+        .map(m => m.toLowerCase());
 
-      // Fill until desired duration is reached
-      const pickPool = [...seedExercises];
-      let totalMinutes = program.reduce((sum, ex) => sum + estimateExerciseMinutes(ex), 0);
-      let i = 0;
-      while (totalMinutes < desiredMinutes && program.length < 24) {
-        const base = pickPool[i % pickPool.length] || pickPool[0];
-        const variant = adjustExercise(base);
-        // Slightly vary sets for variety
-        if (preferences.goal !== 'strength') {
-          variant.sets = Math.min(5, Math.max(2, variant.sets + ((i % 2 === 0) ? 1 : 0)));
-        }
-        program.push(variant);
-        totalMinutes = program.reduce((sum, ex) => sum + estimateExerciseMinutes(ex), 0);
-        i++;
+      const filterByPrefs = (ex: Exercise) => {
+        const equipmentMatch = preferences.equipment === 'bodyweight' 
+          ? ex.equipment === 'bodyweight'
+          : ex.equipment === 'gym' || ex.equipment === 'bodyweight';
+        const difficultyMatch = preferences.experience === 'beginner' 
+          ? ex.difficulty === 'beginner'
+          : preferences.experience === 'intermediate' 
+          ? ex.difficulty !== 'advanced'
+          : true;
+        return equipmentMatch && difficultyMatch;
+      };
+
+      // Collect and dedupe by name
+      const allAvailable: Exercise[] = Array.from(new Map(
+        targetGroups.flatMap(key => (exerciseDatabase[key] || [])).filter(filterByPrefs)
+          .map(ex => [ex.name, ex] as [string, Exercise])
+      ).values());
+
+      // Fallback to any pool if filter too strict
+      if (allAvailable.length === 0) {
+        const anyPool = Object.keys(exerciseDatabase).flatMap(k => exerciseDatabase[k as keyof typeof exerciseDatabase]);
+        anyPool.filter(filterByPrefs).forEach(ex => allAvailable.push(ex));
       }
+
+      // Shuffle for variety
+      for (let i = allAvailable.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allAvailable[i], allAvailable[j]] = [allAvailable[j], allAvailable[i]];
+      }
+
+      const usedNames = new Set<string>();
+      let totalMinutes = 0;
+      let idx = 0;
+      const hardCap = 30;
+      while (totalMinutes < desiredMinutes && program.length < hardCap && allAvailable.length > 0) {
+        const base = allAvailable[idx % allAvailable.length];
+        idx++;
+        if (usedNames.has(base.name)) continue;
+        const ex = adjustExercise(base);
+        program.push(ex);
+        usedNames.add(base.name);
+        totalMinutes = program.reduce((sum, e) => sum + estimateExerciseMinutes(e), 0);
+      }
+
 
       const estimatedCalories = Math.round(desiredMinutes * 8 * (preferences.experience === 'advanced' ? 1.2 : 1));
 

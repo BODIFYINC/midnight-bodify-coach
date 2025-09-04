@@ -167,34 +167,63 @@ function selectBestMeal(meals: Meal[], targetCalories: number, targetProtein: nu
 
 function selectSnacksToReachTarget(snacks: Meal[], targetCalories: number, targetProtein: number): Meal[] {
   if (snacks.length === 0) return [];
-  
+
   const selectedSnacks: Meal[] = [];
   let currentCalories = 0;
   let currentProtein = 0;
-  
-  // Sort snacks by protein content (descending)
-  const sortedSnacks = [...snacks].sort((a, b) => b.protein - a.protein);
-  
-  for (const snack of sortedSnacks) {
-    // Do not exceed targets by more than 5%
+
+  // Greedy selection: prefer items that move us closest to both targets
+  const available = [...snacks];
+  const usedIds = new Set<string>();
+
+  const scoreSnack = (snack: Meal) => {
     const wouldCalories = currentCalories + snack.calories;
     const wouldProtein = currentProtein + snack.protein;
+    const calDev = Math.abs(wouldCalories - targetCalories) / Math.max(1, targetCalories);
+    const proDev = Math.abs(wouldProtein - targetProtein) / Math.max(1, targetProtein);
+    // Weight protein higher if we're under protein
+    const proteinWeight = currentProtein < targetProtein ? 0.6 : 0.4;
+    const calorieWeight = 1 - proteinWeight;
+    return calDev * calorieWeight + proDev * proteinWeight;
+  };
 
-    // If we already meet 95% of both targets, stop
-    if (currentCalories >= targetCalories * 0.95 && currentProtein >= targetProtein * 0.95) break;
+  // Cap snacks reasonably high to support high-calorie targets
+  const maxSnacks = 12;
 
-    // Prefer snacks that move us toward both targets without large overshoot
-    if (wouldCalories <= targetCalories * 1.05) {
-      selectedSnacks.push(snack);
-      currentCalories = wouldCalories;
-      currentProtein = wouldProtein;
+  while (selectedSnacks.length < maxSnacks) {
+    // Stop if we're within 2% of calories and 5% of protein
+    const calOk = currentCalories >= targetCalories * 0.98 && currentCalories <= targetCalories * 1.02;
+    const proOk = currentProtein >= targetProtein * 0.95;
+    if (calOk && proOk) break;
+
+    // Pick best next snack not yet used
+    const candidates = available.filter(s => !usedIds.has(s.id));
+    if (candidates.length === 0) break;
+
+    candidates.sort((a, b) => scoreSnack(a) - scoreSnack(b));
+    const best = candidates[0];
+
+    // Avoid large overshoot (>3%) unless still far under protein
+    const wouldCalories = currentCalories + best.calories;
+    if (wouldCalories > targetCalories * 1.03 && currentProtein >= targetProtein * 0.9) {
+      // Try next candidate
+      const alt = candidates.find(c => currentCalories + c.calories <= targetCalories * 1.03);
+      if (!alt) break;
+      usedIds.add(alt.id);
+      selectedSnacks.push(alt);
+      currentCalories += alt.calories;
+      currentProtein += alt.protein;
+      continue;
     }
 
-    if (selectedSnacks.length >= 4) break; // hard cap snacks
+    usedIds.add(best.id);
+    selectedSnacks.push(best);
+    currentCalories += best.calories;
+    currentProtein += best.protein;
   }
 
-  // If we overshot calories, remove last snack(s) until under target
-  while (currentCalories > targetCalories * 1.05 && selectedSnacks.length > 0) {
+  // If we overshot slightly on calories (>2%), remove last item(s) until within bounds
+  while (currentCalories > targetCalories * 1.02 && selectedSnacks.length > 0) {
     const removed = selectedSnacks.pop()!;
     currentCalories -= removed.calories;
     currentProtein -= removed.protein;
