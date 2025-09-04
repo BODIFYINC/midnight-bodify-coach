@@ -11,6 +11,7 @@ import { MealsTab } from '@/components/dashboard/MealsTab';
 import { ProgressTab } from '@/components/dashboard/ProgressTab';
 import { RecipesTab } from '@/components/dashboard/RecipesTab';
 import { CreativeTab } from '@/components/dashboard/CreativeTab';
+import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
 
 interface DashboardProps {
   activeTab: string;
@@ -38,6 +39,47 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, setActiveTab }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const updateStats = () => {
+      try {
+        const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+        const profile: UserProfile = {
+          weight: userSettings.weight || 70,
+          height: userSettings.height || 175,
+          age: userSettings.age || 25,
+          gender: userSettings.gender || 'male',
+          activityLevel: userSettings.activityLevel || 'moderate',
+          goal: userSettings.goal || 'weight_loss',
+          bodyFat: userSettings.bodyFat
+        };
+        const targets = AccurateNutritionTracker.calculateNutritionTargets(profile);
+        const actual = AccurateNutritionTracker.calculateActualNutrition();
+        const streakToday = (actual.calories >= targets.calories * 0.8 && actual.protein >= targets.protein * 0.8) ? 1 : 0;
+        setUserStats(prev => ({
+          ...prev,
+          dailyCalories: Math.round(targets.calories),
+          currentCalories: Math.round(actual.calories),
+          protein: { current: Math.round(actual.protein), target: Math.round(targets.protein) },
+          carbs: { current: Math.round(actual.carbs), target: Math.round(targets.carbs) },
+          fats: { current: Math.round(actual.fat), target: Math.round(targets.fat) },
+          streak: streakToday
+        }));
+      } catch (e) {
+        console.error('Failed to update dashboard stats', e);
+      }
+    };
+
+    updateStats();
+    const onMeal = () => updateStats();
+    const onPrefs = () => updateStats();
+    window.addEventListener('mealCompleted', onMeal);
+    window.addEventListener('userPreferencesUpdated', onPrefs as EventListener);
+    return () => {
+      window.removeEventListener('mealCompleted', onMeal);
+      window.removeEventListener('userPreferencesUpdated', onPrefs as EventListener);
+    };
+  }, []);
+
   const tabs = [
     { id: 'welcome', label: 'Dashboard', icon: Target, component: null },
     { id: 'chat', label: 'AI Coach', icon: MessageSquare, component: AIChatTab },
@@ -45,6 +87,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, setActiveTab }) => {
     { id: 'progress', label: 'Progress', icon: TrendingUp, component: ProgressTab },
     { id: 'recipes', label: 'Recipes', icon: BookOpen, component: RecipesTab },
     { id: 'creative', label: 'Workouts', icon: Dumbbell, component: CreativeTab },
+    { id: 'settings', label: 'Settings', icon: Settings, component: SettingsTab },
   ];
 
   const calculateProgress = (current: number, target: number) => (current / target) * 100;

@@ -93,9 +93,50 @@ export const SettingsTab: React.FC = () => {
     try {
       // Save to localStorage
       localStorage.setItem('userSettings', JSON.stringify(settings));
+
+      // Build and save userPreferences for downstream features
+      const profile: UserProfile = {
+        weight: settings.weight,
+        height: settings.height,
+        age: settings.age,
+        gender: settings.gender,
+        activityLevel: settings.activityLevel,
+        goal: settings.goal,
+        bodyFat: settings.bodyFat
+      };
+      const targets = AccurateNutritionTracker.calculateNutritionTargets(profile);
+      const userPrefs = {
+        goal: settings.goal,
+        daysPerWeek: settings.daysPerWeek,
+        fitnessLevel: settings.fitnessLevel,
+        dislikedFoods: settings.dislikedFoods
+          .split(',')
+          .map(f => f.trim().toLowerCase())
+          .filter(Boolean),
+        allergies: settings.allergies
+          .split(',')
+          .map(a => a.trim().toLowerCase())
+          .filter(Boolean),
+        dietaryRestrictions: settings.dietaryRestrictions
+          .split(',')
+          .map(d => d.trim().toLowerCase())
+          .filter(Boolean),
+        weight: settings.weight,
+        height: settings.height,
+        age: settings.age,
+        activityLevel: settings.activityLevel,
+        targetCalories: targets.calories,
+        targetProtein: targets.protein,
+        targetCarbs: targets.carbs,
+        targetFat: targets.fat,
+      };
+      localStorage.setItem('userPreferences', JSON.stringify(userPrefs));
+
+      // Notify app to refresh plans based on new prefs
+      window.dispatchEvent(new CustomEvent('userPreferencesUpdated', { detail: { settings, preferences: userPrefs } }));
       
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       toast({
         title: "Settings saved! ✅",

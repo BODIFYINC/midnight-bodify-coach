@@ -32,6 +32,13 @@ export const MealsTab: React.FC = () => {
   useEffect(() => {
     loadMealPlan();
     loadCompletedMeals();
+
+    const onPrefs = () => {
+      setCompletedMeals(new Set());
+      loadMealPlan();
+    };
+    window.addEventListener('userPreferencesUpdated', onPrefs as EventListener);
+    return () => window.removeEventListener('userPreferencesUpdated', onPrefs as EventListener);
   }, []);
 
   const loadMealPlan = async () => {

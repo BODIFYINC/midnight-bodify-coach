@@ -172,45 +172,32 @@ function selectSnacksToReachTarget(snacks: Meal[], targetCalories: number, targe
   let currentCalories = 0;
   let currentProtein = 0;
   
-  // Sort snacks by protein content (descending) for hitting protein target
+  // Sort snacks by protein content (descending)
   const sortedSnacks = [...snacks].sort((a, b) => b.protein - a.protein);
   
-  // Add snacks to primarily meet protein target
   for (const snack of sortedSnacks) {
-    // Stop if adding this snack would significantly overshoot calories
-    if (currentCalories + snack.calories > targetCalories * 1.15 && selectedSnacks.length > 0) { // Allow 15% overshoot if needed to hit protein
-      continue;
+    // Do not exceed targets by more than 5%
+    const wouldCalories = currentCalories + snack.calories;
+    const wouldProtein = currentProtein + snack.protein;
+
+    // If we already meet 95% of both targets, stop
+    if (currentCalories >= targetCalories * 0.95 && currentProtein >= targetProtein * 0.95) break;
+
+    // Prefer snacks that move us toward both targets without large overshoot
+    if (wouldCalories <= targetCalories * 1.05) {
+      selectedSnacks.push(snack);
+      currentCalories = wouldCalories;
+      currentProtein = wouldProtein;
     }
 
-    // Stop if we have enough protein and adding this snack adds too many calories
-    if (currentProtein >= targetProtein && currentCalories + snack.calories > targetCalories * 1.05 && selectedSnacks.length > 0) {
-      continue;
-    }
-    
-    // Add the snack
-    selectedSnacks.push(snack);
-    currentCalories += snack.calories;
-    currentProtein += snack.protein;
-    console.log(`Added snack: ${snack.title} (${snack.calories} cal, ${snack.protein}g protein). Current total: ${currentCalories} cal, ${currentProtein}g protein`);
-    
-    // Stop if we are close to both targets or added too many snacks
-    if (currentProtein >= targetProtein * 0.9 && currentCalories >= targetCalories * 0.9 && selectedSnacks.length >= 1) break;
-    if (selectedSnacks.length >= 3) break; // Limit number of snacks
+    if (selectedSnacks.length >= 4) break; // hard cap snacks
   }
 
-  // If protein target is still not met, try adding more protein-focused snacks regardless of calorie overshoot (within reason)
-  if (currentProtein < targetProtein * 0.9 && selectedSnacks.length < 4) { // Allow up to 4 snacks if protein is low
-    for (const snack of sortedSnacks) {
-      if (selectedSnacks.find(s => s.id === snack.id)) continue;
-      if (currentCalories + snack.calories > targetCalories * 1.25 && selectedSnacks.length > 0) { // Allow up to 25% overshoot if desperate for protein
-        continue;
-      }
-      selectedSnacks.push(snack);
-      currentCalories += snack.calories;
-      currentProtein += snack.protein;
-      console.log(`Added extra protein snack: ${snack.title} (${snack.calories} cal, ${snack.protein}g protein). Current total: ${currentCalories} cal, ${currentProtein}g protein`);
-      if (currentProtein >= targetProtein * 0.95 || selectedSnacks.length >= 4) break; // Stop if protein target is almost met or hit max snacks
-    }
+  // If we overshot calories, remove last snack(s) until under target
+  while (currentCalories > targetCalories * 1.05 && selectedSnacks.length > 0) {
+    const removed = selectedSnacks.pop()!;
+    currentCalories -= removed.calories;
+    currentProtein -= removed.protein;
   }
 
   return selectedSnacks;
