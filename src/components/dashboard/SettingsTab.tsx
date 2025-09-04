@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Calculator, Target, Save, RefreshCw } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -105,22 +106,26 @@ export const SettingsTab: React.FC = () => {
         bodyFat: settings.bodyFat
       };
       const targets = AccurateNutritionTracker.calculateNutritionTargets(profile);
+      const dislikedFoodsArr = settings.dislikedFoods
+        .split(',')
+        .map(f => f.trim().toLowerCase())
+        .filter(Boolean);
+      const allergiesArr = settings.allergies
+        .split(',')
+        .map(a => a.trim().toLowerCase())
+        .filter(Boolean);
+      const restrictionsArr = settings.dietaryRestrictions
+        .split(',')
+        .map(d => d.trim().toLowerCase())
+        .filter(Boolean);
+
       const userPrefs = {
         goal: settings.goal,
         daysPerWeek: settings.daysPerWeek,
         fitnessLevel: settings.fitnessLevel,
-        dislikedFoods: settings.dislikedFoods
-          .split(',')
-          .map(f => f.trim().toLowerCase())
-          .filter(Boolean),
-        allergies: settings.allergies
-          .split(',')
-          .map(a => a.trim().toLowerCase())
-          .filter(Boolean),
-        dietaryRestrictions: settings.dietaryRestrictions
-          .split(',')
-          .map(d => d.trim().toLowerCase())
-          .filter(Boolean),
+        dislikedFoods: dislikedFoodsArr,
+        allergies: allergiesArr,
+        dietaryRestrictions: restrictionsArr,
         weight: settings.weight,
         height: settings.height,
         age: settings.age,
@@ -132,15 +137,53 @@ export const SettingsTab: React.FC = () => {
       };
       localStorage.setItem('userPreferences', JSON.stringify(userPrefs));
 
+      // Try to persist to Supabase profile if authenticated
+      try {
+        const { data: authData } = await supabase.auth.getUser();
+        const user = authData?.user;
+        if (user) {
+          const activityMap: Record<string, string> = {
+            sedentary: 'sedentary',
+            light: 'lightly_active',
+            moderate: 'moderately_active',
+            active: 'very_active',
+            very_active: 'extremely_active'
+          };
+          const goalMap: Record<string, string> = {
+            muscle_gain: 'build_muscle',
+            weight_loss: 'lose_weight',
+            maintenance: 'maintenance'
+          };
+          const { error: upsertError } = await supabase
+            .from('profiles')
+            .upsert({
+              user_id: user.id,
+              email: settings.email || user.email,
+              name: settings.name,
+              age: settings.age,
+              height_cm: settings.height,
+              weight_kg: settings.weight,
+              gender: settings.gender,
+              activity_level: activityMap[settings.activityLevel] || 'moderately_active',
+              goal: goalMap[settings.goal] || 'maintenance',
+              dietary_restrictions: restrictionsArr,
+              disliked_foods: dislikedFoodsArr,
+              updated_at: new Date().toISOString(),
+            }, { onConflict: 'user_id' });
+          if (upsertError) {
+            console.warn('Profile sync failed (non-blocking):', upsertError.message);
+          }
+        }
+      } catch (e) {
+        console.warn('Auth/profile update skipped:', (e as Error).message);
+      }
+
       // Notify app to refresh plans based on new prefs
       window.dispatchEvent(new CustomEvent('userPreferencesUpdated', { detail: { settings, preferences: userPrefs } }));
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       toast({
         title: "Settings saved! ✅",
-        description: "Your profile has been updated successfully."
+        description: "Your profile and targets were updated."
       });
     } catch (error) {
       toast({

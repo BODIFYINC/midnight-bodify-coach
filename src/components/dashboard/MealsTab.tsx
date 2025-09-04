@@ -44,26 +44,57 @@ export const MealsTab: React.FC = () => {
   const loadMealPlan = async () => {
     setLoading(true);
     try {
-      // Simulate AI meal plan generation with exclusions
-      const userSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
-      const excludedFoods = userSettings.dislikedFoods?.split(',') || [];
-      
+      // Generate meal plan locally first (fast), then enforce strict caps
       const plan = generateAdvancedMealPlan();
-      
+
+      // Remove snacks if we already exceed targets
+      let workingPlan = { ...plan, snacks: [...plan.snacks] } as any;
+      const recalcTotals = (p: any) => ({
+        ...p,
+        nutrition: {
+          ...p.nutrition,
+          totalCalories: p.breakfast.calories + p.lunch.calories + p.dinner.calories + p.snacks.reduce((s: number, sn: any) => s + sn.calories, 0),
+          totalProtein: p.breakfast.protein + p.lunch.protein + p.dinner.protein + p.snacks.reduce((s: number, sn: any) => s + sn.protein, 0),
+        }
+      });
+
+      workingPlan = recalcTotals(workingPlan);
+      if (workingPlan.nutrition.totalCalories > workingPlan.nutrition.calorieTarget) {
+        workingPlan.snacks = [];
+        workingPlan = recalcTotals(workingPlan);
+      }
+
+      // If still over target, scale meals down proportionally (do not exceed daily target)
+      if (workingPlan.nutrition.totalCalories > workingPlan.nutrition.calorieTarget) {
+        const scale = workingPlan.nutrition.calorieTarget / Math.max(1, workingPlan.nutrition.totalCalories);
+        const scaleMeal = (m: any) => ({
+          ...m,
+          calories: Math.max(0, Math.round(m.calories * scale)),
+          protein: Math.max(0, Math.round(m.protein * scale)),
+          carbs: Math.max(0, Math.round(m.carbs * scale)),
+          fat: Math.max(0, Math.round(m.fat * scale)),
+        });
+        workingPlan.breakfast = scaleMeal(workingPlan.breakfast);
+        workingPlan.lunch = scaleMeal(workingPlan.lunch);
+        workingPlan.dinner = scaleMeal(workingPlan.dinner);
+        workingPlan = recalcTotals(workingPlan);
+        toast({ title: 'Adjusted to your daily target', description: 'Meals were scaled to fit your calories.' });
+      }
+
       // Add alternatives for each meal
       const enhancedPlan = {
-        ...plan,
-        breakfast: { ...plan.breakfast, alternatives: generateAlternatives(plan.breakfast) },
-        lunch: { ...plan.lunch, alternatives: generateAlternatives(plan.lunch) },
-        dinner: { ...plan.dinner, alternatives: generateAlternatives(plan.dinner) },
-        snacks: plan.snacks.map(snack => ({ ...snack, alternatives: generateAlternatives(snack) }))
+        ...workingPlan,
+        breakfast: { ...workingPlan.breakfast, alternatives: generateAlternatives(workingPlan.breakfast) },
+        lunch: { ...workingPlan.lunch, alternatives: generateAlternatives(workingPlan.lunch) },
+        dinner: { ...workingPlan.dinner, alternatives: generateAlternatives(workingPlan.dinner) },
+        snacks: workingPlan.snacks.map((snack: any) => ({ ...snack, alternatives: generateAlternatives(snack) }))
       };
 
       setMealPlan(enhancedPlan);
       
       toast({
-        title: "AI Meal Plan Generated! 🤖",
-        description: "Personalized meals matching your goals and preferences."
+        title: "Meal Plan Ready ✅",
+        description: "Macros capped to your daily targets."
       });
     } catch (error) {
       toast({

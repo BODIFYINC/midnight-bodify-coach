@@ -113,13 +113,13 @@ export const CreativeTab: React.FC = () => {
     setLoading(true);
     try {
       // Simulate AI workout generation
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const targetMuscles = preferences.targetMuscles.length > 0 
         ? preferences.targetMuscles 
         : ['Chest', 'Back', 'Legs']; // Default full body
 
-      const exercises: Exercise[] = [];
+      const seedExercises: Exercise[] = [];
       
       // Select exercises based on preferences
       targetMuscles.forEach(muscle => {
@@ -141,15 +141,14 @@ export const CreativeTab: React.FC = () => {
           return equipmentMatch && difficultyMatch;
         });
 
-        // Add 1-2 exercises per muscle group
+        // Add 1-2 seed exercises per muscle group
         const exerciseCount = preferences.goal === 'strength' ? 1 : 2;
-        filteredExercises.slice(0, exerciseCount).forEach(ex => exercises.push(ex));
+        filteredExercises.slice(0, exerciseCount).forEach(ex => seedExercises.push(ex));
       });
 
       // Adjust sets/reps based on goal
-      const adjustedExercises = exercises.map(ex => {
-        let newEx = { ...ex };
-        
+      const adjustExercise = (ex: Exercise): Exercise => {
+        const newEx = { ...ex } as Exercise;
         switch (preferences.goal) {
           case 'strength':
             newEx.sets = Math.min(ex.sets + 1, 5);
@@ -166,19 +165,59 @@ export const CreativeTab: React.FC = () => {
             newEx.reps = '12-15';
             newEx.rest = '45-60 sec';
             break;
+          default:
+            newEx.rest = newEx.rest || '60-90 sec';
         }
-        
         return newEx;
-      });
+      };
 
-      const estimatedCalories = Math.round(parseInt(preferences.duration) * 8 * (preferences.experience === 'advanced' ? 1.2 : 1));
+      const parseRestSec = (rest: string | undefined): number => {
+        if (!rest) return 60;
+        const m = rest.toLowerCase();
+        if (m.includes('min')) {
+          const n = parseInt(m);
+          return (isNaN(n) ? 1 : n) * 60;
+        }
+        const n = parseInt(m);
+        return isNaN(n) ? 60 : n;
+      };
+
+      const estimateExerciseMinutes = (ex: Exercise): number => {
+        const rest = parseRestSec(ex.rest);
+        const perSetActive = preferences.goal === 'strength' ? 35 : preferences.goal === 'endurance' ? 25 : 30;
+        return Math.ceil((ex.sets * (perSetActive + rest)) / 60);
+      };
+
+      const desiredMinutes = parseInt(preferences.duration);
+      const program: Exercise[] = [];
+
+      // Start with seed exercises
+      seedExercises.map(adjustExercise).forEach(ex => program.push(ex));
+
+      // Fill until desired duration is reached
+      const pickPool = [...seedExercises];
+      let totalMinutes = program.reduce((sum, ex) => sum + estimateExerciseMinutes(ex), 0);
+      let i = 0;
+      while (totalMinutes < desiredMinutes && program.length < 24) {
+        const base = pickPool[i % pickPool.length] || pickPool[0];
+        const variant = adjustExercise(base);
+        // Slightly vary sets for variety
+        if (preferences.goal !== 'strength') {
+          variant.sets = Math.min(5, Math.max(2, variant.sets + ((i % 2 === 0) ? 1 : 0)));
+        }
+        program.push(variant);
+        totalMinutes = program.reduce((sum, ex) => sum + estimateExerciseMinutes(ex), 0);
+        i++;
+      }
+
+      const estimatedCalories = Math.round(desiredMinutes * 8 * (preferences.experience === 'advanced' ? 1.2 : 1));
 
       const newWorkout: WorkoutPlan = {
         title: `AI-Generated ${preferences.goal.replace('_', ' ').toUpperCase()} Workout`,
-        duration: parseInt(preferences.duration),
+        duration: desiredMinutes,
         difficulty: preferences.experience,
         targetMuscles,
-        exercises: adjustedExercises,
+        exercises: program,
         estimatedCalories
       };
 
@@ -187,7 +226,7 @@ export const CreativeTab: React.FC = () => {
       
       toast({
         title: "Workout Generated! 🏋️",
-        description: `Custom ${preferences.duration}-minute workout ready for you.`
+        description: `Custom ${desiredMinutes}-minute workout with ${program.length} exercises.`
       });
 
     } catch (error) {
