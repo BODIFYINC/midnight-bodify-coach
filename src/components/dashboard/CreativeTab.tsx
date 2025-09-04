@@ -106,6 +106,18 @@ export const CreativeTab: React.FC = () => {
       { name: 'Plank', sets: 3, reps: '30-60 sec', rest: '60 sec', muscle: 'Core', equipment: 'bodyweight', difficulty: 'beginner' },
       { name: 'Russian Twists', sets: 3, reps: '20/side', rest: '60 sec', muscle: 'Core', equipment: 'bodyweight', difficulty: 'intermediate' },
       { name: 'Mountain Climbers', sets: 3, reps: '30 sec', rest: '60 sec', muscle: 'Core', equipment: 'bodyweight', difficulty: 'beginner' }
+    ],
+    glutes: [
+      { name: 'Hip Thrusts', sets: 4, reps: '12-15', rest: '90 sec', muscle: 'Glutes', equipment: 'gym', difficulty: 'intermediate' },
+      { name: 'Bulgarian Split Squats', sets: 3, reps: '10/leg', rest: '90 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'intermediate' },
+      { name: 'Glute Bridges', sets: 3, reps: '15-20', rest: '60 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
+      { name: 'Single-leg Glute Bridge', sets: 3, reps: '10/leg', rest: '60 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'intermediate' },
+      { name: 'Clamshells', sets: 3, reps: '15/side', rest: '45 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
+      { name: 'Fire Hydrants', sets: 3, reps: '12/side', rest: '45 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
+      { name: 'Romanian Deadlifts', sets: 4, reps: '10-12', rest: '2 min', muscle: 'Glutes', equipment: 'gym', difficulty: 'intermediate' },
+      { name: 'Sumo Squats', sets: 3, reps: '12-15', rest: '90 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
+      { name: 'Wall Sit', sets: 3, reps: '30-45 sec', rest: '60 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
+      { name: 'Step-ups', sets: 3, reps: '10/leg', rest: '60 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' }
     ]
   };
 

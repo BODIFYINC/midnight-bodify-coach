@@ -57,12 +57,12 @@ export class AccurateNutritionTracker {
     // Calorie targets based on goal with safe limits
     switch (profile.goal) {
       case 'weight_loss':
-        // Safe deficit of 500-750 calories (0.5-0.75 kg per week)
-        targetCalories = Math.max(tdee - 600, 1200); // Never below 1200 for safety
+        // Safe deficit of 300-500 calories (0.3-0.5 kg per week)
+        targetCalories = Math.max(tdee - 400, 1200); // Never below 1200 for safety
         break;
       case 'muscle_gain':
-        // Moderate surplus of 300-500 calories (0.3-0.5 kg per week)
-        targetCalories = tdee + 400;
+        // Moderate surplus of 200-300 calories (0.2-0.3 kg per week)
+        targetCalories = tdee + 250;
         break;
       case 'maintenance':
       default:
