@@ -113,10 +113,10 @@ const Navbar = () => {
           </NavigationMenu>
           
           <div className="flex items-center space-x-4 ml-8">
-            <a href="https://instagram.com/bodify.inc" target="_blank" rel="noreferrer" className="text-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-muted/80">
+            <a href="https://instagram.com/bodify.inc" target="_blank" rel="noreferrer" className="p-2 rounded-lg bg-card/70 border border-primary/20 text-foreground hover:text-primary hover:bg-card/90 hover:border-primary/40 shadow-sm transition-all">
               <Instagram size={20} />
             </a>
-            <a href="https://tiktok.com/@bodify_inc" target="_blank" rel="noreferrer" className="text-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-muted/80">
+            <a href="https://tiktok.com/@bodify_inc" target="_blank" rel="noreferrer" className="p-2 rounded-lg bg-card/70 border border-primary/20 text-foreground hover:text-primary hover:bg-card/90 hover:border-primary/40 shadow-sm transition-all">
               <TikTokIcon />
             </a>
               <Link to="/login">

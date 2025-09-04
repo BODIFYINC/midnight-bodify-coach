@@ -81,7 +81,7 @@ const Index = () => {
         {/* Clean Gradient Background */}
         <div className="absolute inset-0">
           {/* Smooth gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20" />
+          <div className="absolute inset-0 bg-[radial-gradient(900px_900px_at_20%_15%,hsl(var(--primary)/0.22),transparent_60%),radial-gradient(800px_800px_at_80%_75%,hsl(var(--secondary)/0.22),transparent_60%)]" />
           
           {/* Subtle animated orbs for depth - much cleaner */}
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-primary/8 to-transparent rounded-full blur-3xl animate-pulse-slow" />
