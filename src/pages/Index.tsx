@@ -89,18 +89,81 @@ const Index = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-6 text-center">
-          {/* Bodify Logo */}
+          {/* Beautiful Hero Element */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.2, ease: 'easeOut' }}
             className="mb-16 relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-2xl scale-150" />
-            <BodifyLogo 
-              className="h-24 md:h-32 w-auto mx-auto relative z-10 filter drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
-              alt="Bodify - Transform Your Body with AI"
+            {/* Animated gradient orbs */}
+            <motion.div
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.6, 0.3],
+                rotate: [0, 180, 360]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-3xl scale-150"
             />
+            <motion.div
+              animate={{ 
+                scale: [1.2, 1, 1.2],
+                opacity: [0.2, 0.5, 0.2],
+                rotate: [360, 180, 0]
+              }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-0 bg-gradient-to-l from-accent/20 to-primary/20 rounded-full blur-2xl scale-125"
+            />
+            
+            {/* Central energy core */}
+            <motion.div
+              animate={{
+                boxShadow: [
+                  "0 0 20px hsl(var(--primary)/0.3)",
+                  "0 0 60px hsl(var(--secondary)/0.5)",
+                  "0 0 20px hsl(var(--primary)/0.3)"
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="relative z-10 w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-primary/30 via-secondary/20 to-accent/30 backdrop-blur-sm border border-primary/30 flex items-center justify-center"
+            >
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary opacity-80"
+              />
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute w-16 h-16 rounded-full bg-gradient-to-br from-white/20 to-transparent backdrop-blur-sm"
+              />
+            </motion.div>
+            
+            {/* Floating particles */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                animate={{
+                  y: [-20, 20, -20],
+                  x: [Math.sin(i) * 30, Math.cos(i) * 30, Math.sin(i) * 30],
+                  opacity: [0.3, 1, 0.3]
+                }}
+                transition={{
+                  duration: 4 + i * 0.5,
+                  repeat: Infinity,
+                  delay: i * 0.3
+                }}
+                className={`absolute w-2 h-2 rounded-full bg-gradient-to-r from-primary to-secondary blur-sm`}
+                style={{
+                  top: `${20 + (i * 10)}%`,
+                  left: `${30 + (i * 8)}%`
+                }}
+              />
+            ))}
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>

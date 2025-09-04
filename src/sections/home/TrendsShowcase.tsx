@@ -8,6 +8,7 @@ export default function TrendsShowcase() {
         <div className="relative flex flex-col items-center text-center">
           <div aria-hidden className="absolute -top-10 h-64 w-64 md:h-80 md:w-80 rounded-full bg-bodify-gradient blur-3xl opacity-20 animate-pulse" />
 
+          {/* Beautiful Brand Element */}
           <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.98 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -16,7 +17,29 @@ export default function TrendsShowcase() {
             transition={{ duration: 0.4 }}
             className="relative z-10"
           >
-            <BodifyLogo className="h-14 md:h-20 w-auto" />
+            <motion.div
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                scale: [1, 1.02, 1]
+              }}
+              transition={{
+                backgroundPosition: { duration: 8, repeat: Infinity },
+                scale: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent bg-[length:200%_100%] mb-4"
+            >
+              FITNESS REDEFINED
+            </motion.div>
+            
+            {/* Glowing underline */}
+            <motion.div
+              animate={{ 
+                opacity: [0.5, 1, 0.5],
+                scaleX: [0.8, 1, 0.8]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="w-32 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full blur-sm"
+            />
           </motion.div>
 
           <motion.p
