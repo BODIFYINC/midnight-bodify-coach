@@ -76,20 +76,34 @@ const Index = () => {
 
       <Navbar />
 
-      {/* Clean Hero Section */}
+      {/* Enhanced Hero Section with Theme Colors */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Simple Background Pattern */}
+        {/* Dynamic Background with Theme Colors */}
         <div className="absolute inset-0 bg-background">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+          {/* Animated gradient orbs using theme colors */}
+          <div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-br from-primary/20 to-secondary/10 rounded-full blur-3xl animate-pulse-slow" />
+          <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-bl from-secondary/25 to-accent/15 rounded-full blur-3xl animate-float" />
+          <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-tr from-accent/15 to-primary/20 rounded-full blur-2xl animate-pulse-premium" />
+          
+          {/* Enhanced grid with theme colors */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--primary)/0.1)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary)/0.1)_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+          
+          {/* Floating theme color particles */}
+          <div className="absolute inset-0">
+            <div className="absolute top-32 right-32 w-4 h-4 bg-primary rounded-full animate-pulse opacity-60" />
+            <div className="absolute top-64 left-32 w-3 h-3 bg-secondary rounded-full animate-float opacity-50" />
+            <div className="absolute bottom-64 right-64 w-2 h-2 bg-accent rounded-full animate-pulse-slow opacity-40" />
+          </div>
         </div>
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-6 text-center">
-          {/* Simple Hero Badge */}
+          {/* Enhanced Hero Badge with Theme Colors */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <Badge className="mb-8 px-6 py-2 text-sm font-semibold bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 transition-colors">
-              <Sparkles className="w-4 h-4 mr-2" /> 
+            <Badge className="mb-8 px-8 py-3 text-base font-bold bg-gradient-to-r from-primary/20 via-secondary/15 to-accent/20 border border-primary/30 text-white hover:from-primary/30 hover:via-secondary/25 hover:to-accent/30 hover:border-primary/50 transition-all duration-500 glow-effect backdrop-blur-xl shadow-glow">
+              <Sparkles className="w-5 h-5 mr-3 text-primary animate-pulse" /> 
               AI-Powered Fitness Platform
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-full animate-pulse" />
             </Badge>
           </motion.div>
 
@@ -97,10 +111,12 @@ const Index = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-6xl md:text-8xl lg:text-9xl font-black mb-6 leading-[0.9]"
+            className="text-6xl md:text-8xl lg:text-9xl font-black mb-6 leading-[0.9] relative"
           >
-            <span className="block text-foreground drop-shadow-2xl tracking-tight">BODIFY YOUR</span>
-            <span className="block text-gradient drop-shadow-2xl tracking-tight animate-gradient">
+            {/* Background glow effect */}
+            <div className="absolute inset-0 blur-3xl bg-gradient-to-r from-primary/30 via-secondary/20 to-accent/30 animate-pulse-slow" />
+            <span className="relative block text-foreground drop-shadow-2xl tracking-tight glow-effect">BODIFY YOUR</span>
+            <span className="relative block bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent drop-shadow-2xl tracking-tight animate-gradient glow-effect">
               BODY
             </span>
           </motion.h1>
@@ -109,11 +125,13 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mb-10"
+            className="mb-10 relative"
           >
-            <p className="text-3xl md:text-4xl font-bold text-primary drop-shadow-lg tracking-wide">
+            <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent drop-shadow-lg tracking-wide glow-effect">
               Your Ultimate AI Fitness Companion
             </p>
+            {/* Subtle background glow */}
+            <div className="absolute inset-0 blur-xl bg-gradient-to-r from-primary/20 to-secondary/15 animate-pulse-premium" />
           </motion.div>
 
           <motion.p
@@ -183,20 +201,22 @@ const Index = () => {
              className="flex flex-col items-center gap-12 mt-16"
            >
              {/* Main CTA Button with enhanced effects */}
-             <motion.div
-               whileHover={{ scale: 1.08, y: -4 }}
-               whileTap={{ scale: 0.95 }}
-               className="relative group"
-             >
-               <div className="absolute -inset-2 bg-gradient-to-r from-primary/30 to-secondary/30 rounded-full blur-lg group-hover:blur-xl transition-all duration-500 opacity-75 group-hover:opacity-100" />
-               <button className="relative btn-primary px-20 py-6 rounded-full text-2xl font-bold transition-all duration-300 shadow-2xl hover:shadow-primary/30 border-2 border-primary/20 bg-gradient-to-r from-primary via-primary to-secondary hover:from-secondary hover:to-primary glow-effect">
-                 <Link to="/get-started" className="flex items-center gap-4">
-                   <Sparkles className="w-7 h-7 animate-pulse" />
-                   Start Your AI Fitness Journey
-                   <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
-                 </Link>
-               </button>
-             </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.08, y: -4 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative group"
+              >
+                {/* Enhanced multi-layer glow effect */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-secondary/30 to-accent/40 rounded-full blur-xl group-hover:blur-2xl transition-all duration-700 opacity-60 group-hover:opacity-100 animate-pulse-slow" />
+                <div className="absolute -inset-2 bg-gradient-to-r from-secondary/50 to-primary/50 rounded-full blur-md group-hover:blur-lg transition-all duration-500 opacity-70 group-hover:opacity-100" />
+                <button className="relative px-20 py-6 rounded-full text-2xl font-bold transition-all duration-300 shadow-2xl hover:shadow-primary/50 border-2 border-primary/30 bg-gradient-to-r from-primary via-secondary to-accent hover:from-accent hover:via-primary hover:to-secondary text-primary-foreground glow-effect backdrop-blur-sm">
+                  <Link to="/get-started" className="flex items-center gap-4">
+                    <Sparkles className="w-7 h-7 animate-pulse text-white" />
+                    <span className="text-white font-black">Start Your AI Fitness Journey</span>
+                    <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform text-white" />
+                  </Link>
+                </button>
+              </motion.div>
              
               {/* Enhanced Stats */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-muted-foreground">
