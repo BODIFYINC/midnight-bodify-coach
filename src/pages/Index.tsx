@@ -76,133 +76,24 @@ const Index = () => {
 
       <Navbar />
 
-      {/* Hero Section with Emerald/Turquoise Theme */}
-      <section ref={heroRef} className="relative min-h-screen bg-gradient-to-br from-background via-card to-background flex items-center justify-center overflow-hidden">
-        {/* Ambient Lighting Effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/8 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
-          <div className="absolute top-1/2 left-0 w-64 h-64 bg-accent/6 rounded-full blur-2xl animate-pulse" style={{animationDelay: '4s'}} />
+      {/* Clean Hero Section */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Simple Background Pattern */}
+        <div className="absolute inset-0 bg-background">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
         </div>
-        {/* Enhanced 3D Floating Elements */}
-
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-6 text-center">
-          {/* Stunning Hero Visual */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="mb-16 relative"
-          >
-            {/* Dynamic gradient mesh background */}
-            <div className="absolute inset-0 -inset-x-32 -inset-y-16 overflow-hidden">
-              <motion.div
-                animate={{
-                  background: [
-                    "radial-gradient(circle at 20% 20%, hsl(var(--primary)/0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, hsl(var(--secondary)/0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, hsl(var(--accent)/0.2) 0%, transparent 50%)",
-                    "radial-gradient(circle at 80% 20%, hsl(var(--secondary)/0.3) 0%, transparent 50%), radial-gradient(circle at 20% 80%, hsl(var(--accent)/0.3) 0%, transparent 50%), radial-gradient(circle at 60% 40%, hsl(var(--primary)/0.2) 0%, transparent 50%)",
-                    "radial-gradient(circle at 40% 80%, hsl(var(--accent)/0.3) 0%, transparent 50%), radial-gradient(circle at 60% 20%, hsl(var(--primary)/0.3) 0%, transparent 50%), radial-gradient(circle at 80% 60%, hsl(var(--secondary)/0.2) 0%, transparent 50%)"
-                  ]
-                }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="w-full h-full absolute inset-0 blur-3xl"
-              />
-            </div>
-
-            {/* Floating geometric elements */}
-            <div className="relative z-10">
-              {/* Main centerpiece - abstract fitness symbol */}
-              <motion.div
-                animate={{
-                  rotateY: [0, 360],
-                  rotateX: [0, 15, 0]
-                }}
-                transition={{ 
-                  rotateY: { duration: 20, repeat: Infinity, ease: "linear" },
-                  rotateX: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-                }}
-                className="relative w-48 h-48 mx-auto mb-8"
-                style={{ perspective: "1000px" }}
-              >
-                {/* Outer ring */}
-                <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-0 border-2 border-gradient-to-r from-primary/60 to-secondary/60 rounded-full"
-                  style={{
-                    background: "conic-gradient(from 0deg, hsl(var(--primary)/0.1), hsl(var(--secondary)/0.3), hsl(var(--accent)/0.1), hsl(var(--primary)/0.1))"
-                  }}
-                />
-                
-                {/* Inner elements */}
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.1, 1],
-                    opacity: [0.8, 1, 0.8]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="absolute inset-8 rounded-full bg-gradient-to-br from-primary/20 via-secondary/30 to-accent/20 backdrop-blur-xl border border-white/10"
-                />
-                
-                {/* Central core with pulsing effect */}
-                <motion.div
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    boxShadow: [
-                      "0 0 20px hsl(var(--primary)/0.5), 0 0 40px hsl(var(--secondary)/0.3)",
-                      "0 0 40px hsl(var(--secondary)/0.7), 0 0 80px hsl(var(--primary)/0.5)",
-                      "0 0 20px hsl(var(--primary)/0.5), 0 0 40px hsl(var(--secondary)/0.3)"
-                    ]
-                  }}
-                  transition={{ duration: 2.5, repeat: Infinity }}
-                  className="absolute inset-16 rounded-full bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm border border-white/20"
-                />
-                
-                {/* Dynamic inner glow */}
-                <motion.div
-                  animate={{ rotate: [0, -360] }}
-                  transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-20 rounded-full bg-gradient-to-r from-primary via-transparent to-secondary opacity-60"
-                />
-              </motion.div>
-
-              {/* Floating accent elements */}
-              {[...Array(8)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  animate={{
-                    y: [0, -30, 0],
-                    x: [0, Math.sin(i) * 20, 0],
-                    opacity: [0.4, 1, 0.4],
-                    scale: [1, 1.2, 1]
-                  }}
-                  transition={{
-                    duration: 4 + i * 0.3,
-                    repeat: Infinity,
-                    delay: i * 0.2,
-                    ease: "easeInOut"
-                  }}
-                  className="absolute w-3 h-3 rounded-full bg-gradient-to-r from-primary to-secondary"
-                  style={{
-                    top: `${20 + Math.sin(i * 0.8) * 30}%`,
-                    left: `${30 + Math.cos(i * 0.8) * 40}%`,
-                    filter: "blur(0.5px)"
-                  }}
-                />
-              ))}
-            </div>
-          </motion.div>
-
+          {/* Simple Hero Badge */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <Badge className="mb-10 px-12 py-5 text-lg font-bold bg-gradient-to-r from-primary/30 via-primary/25 to-secondary/30 backdrop-blur-xl border border-primary/50 text-white shadow-2xl shadow-primary/25 hover:shadow-primary/40 hover:scale-110 hover:from-primary/40 hover:to-secondary/40 transition-all duration-500 hover:border-primary/70 glow-effect">
-              <Sparkles className="w-6 h-6 mr-4 text-white animate-pulse drop-shadow-lg" /> 
-              <span className="drop-shadow-lg">AI-Powered Fitness Revolution</span>
+            <Badge className="mb-8 px-6 py-2 text-sm font-semibold bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 transition-colors">
+              <Sparkles className="w-4 h-4 mr-2" /> 
+              AI-Powered Fitness Platform
             </Badge>
           </motion.div>
 
-           <motion.h1
+          <motion.h1
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
@@ -307,59 +198,38 @@ const Index = () => {
                </button>
              </motion.div>
              
-             {/* Enhanced Stats */}
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-muted-foreground">
-               {[
-                 { icon: <Users className="w-6 h-6" />, text: '50K+ Users Transformed', subtext: 'Join the community' },
-                 { icon: <Trophy className="w-6 h-6" />, text: '98% Goal Achievement', subtext: 'Proven results' },
-                 { icon: <Zap className="w-6 h-6" />, text: '24/7 AI Support', subtext: 'Always available' }
-               ].map((stat, i) => (
-                 <motion.div
-                   key={i}
-                   initial={{ opacity: 0, y: 10 }}
-                   animate={{ opacity: 1, y: 0 }}
-                   transition={{ delay: 0.6 + i * 0.1 }}
-                   className="flex flex-col items-center gap-3 p-6 glassmorphism rounded-2xl hover:scale-105 transition-all duration-300 cursor-pointer group"
-                 >
-                   <div className="text-primary group-hover:scale-110 transition-transform">{stat.icon}</div>
-                   <div className="text-center">
-                     <span className="font-bold text-lg block text-foreground">{stat.text}</span>
-                     <span className="text-sm text-muted-foreground">{stat.subtext}</span>
-                   </div>
-                 </motion.div>
-               ))}
-             </div>
-           </motion.div>
-
-          {/* Floating Stats Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
-          >
-            {[
-              { number: '50K+', label: 'Active Users', icon: <Users className="w-6 h-6" /> },
-              { number: '98%', label: 'Success Rate', icon: <Trophy className="w-6 h-6" /> },
-              { number: '24/7', label: 'AI Support', icon: <Zap className="w-6 h-6" /> },
-            ].map((stat, i) => (
-              <HeroCard key={i} delay={0.2 + i * 0.1}>
-                <div className="flex items-center justify-center mb-3 text-primary">{stat.icon}</div>
-                <div className="text-3xl font-bold mb-1 text-gradient">{stat.number}</div>
-                <div className="text-muted-foreground">{stat.label}</div>
-              </HeroCard>
-            ))}
-          </motion.div>
-
-          {/* Scroll Indicator */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 0.6 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
-            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity }} className="text-muted-foreground">
-              <ChevronDown className="w-8 h-8" />
+              {/* Enhanced Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-muted-foreground">
+                {[
+                  { icon: <Users className="w-6 h-6" />, text: '50K+ Users Transformed', subtext: 'Join the community' },
+                  { icon: <Trophy className="w-6 h-6" />, text: '98% Goal Achievement', subtext: 'Proven results' },
+                  { icon: <Zap className="w-6 h-6" />, text: '24/7 AI Support', subtext: 'Always available' }
+                ].map((stat, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 + i * 0.1 }}
+                    className="flex flex-col items-center gap-3 p-6 glassmorphism rounded-2xl hover:scale-105 transition-all duration-300 cursor-pointer group"
+                  >
+                    <div className="text-primary group-hover:scale-110 transition-transform">{stat.icon}</div>
+                    <div className="text-center">
+                      <span className="font-bold text-lg block text-foreground">{stat.text}</span>
+                      <span className="text-sm text-muted-foreground">{stat.subtext}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
-          </motion.div>
-        </div>
-      </section>
+
+            {/* Scroll Indicator */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 0.6 }} className="absolute bottom-8 left-1/2 -translate-x-1/2">
+              <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity }} className="text-muted-foreground">
+                <ChevronDown className="w-8 h-8" />
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
 
       {/* Interactive Features Section */}
       <section ref={featuresRef} className="py-28 bg-gradient-to-b from-background to-muted/30">
