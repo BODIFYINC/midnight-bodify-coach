@@ -89,81 +89,110 @@ const Index = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-6 text-center">
-          {/* Beautiful Hero Element */}
+          {/* Stunning Hero Visual */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
             className="mb-16 relative"
           >
-            {/* Animated gradient orbs */}
-            <motion.div
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.6, 0.3],
-                rotate: [0, 180, 360]
-              }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-3xl scale-150"
-            />
-            <motion.div
-              animate={{ 
-                scale: [1.2, 1, 1.2],
-                opacity: [0.2, 0.5, 0.2],
-                rotate: [360, 180, 0]
-              }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute inset-0 bg-gradient-to-l from-accent/20 to-primary/20 rounded-full blur-2xl scale-125"
-            />
-            
-            {/* Central energy core */}
-            <motion.div
-              animate={{
-                boxShadow: [
-                  "0 0 20px hsl(var(--primary)/0.3)",
-                  "0 0 60px hsl(var(--secondary)/0.5)",
-                  "0 0 20px hsl(var(--primary)/0.3)"
-                ]
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="relative z-10 w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-primary/30 via-secondary/20 to-accent/30 backdrop-blur-sm border border-primary/30 flex items-center justify-center"
-            >
+            {/* Dynamic gradient mesh background */}
+            <div className="absolute inset-0 -inset-x-32 -inset-y-16 overflow-hidden">
               <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary opacity-80"
-              />
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.1, 1],
-                  opacity: [0.7, 1, 0.7]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute w-16 h-16 rounded-full bg-gradient-to-br from-white/20 to-transparent backdrop-blur-sm"
-              />
-            </motion.div>
-            
-            {/* Floating particles */}
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
                 animate={{
-                  y: [-20, 20, -20],
-                  x: [Math.sin(i) * 30, Math.cos(i) * 30, Math.sin(i) * 30],
-                  opacity: [0.3, 1, 0.3]
+                  background: [
+                    "radial-gradient(circle at 20% 20%, hsl(var(--primary)/0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, hsl(var(--secondary)/0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, hsl(var(--accent)/0.2) 0%, transparent 50%)",
+                    "radial-gradient(circle at 80% 20%, hsl(var(--secondary)/0.3) 0%, transparent 50%), radial-gradient(circle at 20% 80%, hsl(var(--accent)/0.3) 0%, transparent 50%), radial-gradient(circle at 60% 40%, hsl(var(--primary)/0.2) 0%, transparent 50%)",
+                    "radial-gradient(circle at 40% 80%, hsl(var(--accent)/0.3) 0%, transparent 50%), radial-gradient(circle at 60% 20%, hsl(var(--primary)/0.3) 0%, transparent 50%), radial-gradient(circle at 80% 60%, hsl(var(--secondary)/0.2) 0%, transparent 50%)"
+                  ]
                 }}
-                transition={{
-                  duration: 4 + i * 0.5,
-                  repeat: Infinity,
-                  delay: i * 0.3
-                }}
-                className={`absolute w-2 h-2 rounded-full bg-gradient-to-r from-primary to-secondary blur-sm`}
-                style={{
-                  top: `${20 + (i * 10)}%`,
-                  left: `${30 + (i * 8)}%`
-                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                className="w-full h-full absolute inset-0 blur-3xl"
               />
-            ))}
+            </div>
+
+            {/* Floating geometric elements */}
+            <div className="relative z-10">
+              {/* Main centerpiece - abstract fitness symbol */}
+              <motion.div
+                animate={{
+                  rotateY: [0, 360],
+                  rotateX: [0, 15, 0]
+                }}
+                transition={{ 
+                  rotateY: { duration: 20, repeat: Infinity, ease: "linear" },
+                  rotateX: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                }}
+                className="relative w-48 h-48 mx-auto mb-8"
+                style={{ perspective: "1000px" }}
+              >
+                {/* Outer ring */}
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 border-2 border-gradient-to-r from-primary/60 to-secondary/60 rounded-full"
+                  style={{
+                    background: "conic-gradient(from 0deg, hsl(var(--primary)/0.1), hsl(var(--secondary)/0.3), hsl(var(--accent)/0.1), hsl(var(--primary)/0.1))"
+                  }}
+                />
+                
+                {/* Inner elements */}
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    opacity: [0.8, 1, 0.8]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute inset-8 rounded-full bg-gradient-to-br from-primary/20 via-secondary/30 to-accent/20 backdrop-blur-xl border border-white/10"
+                />
+                
+                {/* Central core with pulsing effect */}
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    boxShadow: [
+                      "0 0 20px hsl(var(--primary)/0.5), 0 0 40px hsl(var(--secondary)/0.3)",
+                      "0 0 40px hsl(var(--secondary)/0.7), 0 0 80px hsl(var(--primary)/0.5)",
+                      "0 0 20px hsl(var(--primary)/0.5), 0 0 40px hsl(var(--secondary)/0.3)"
+                    ]
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                  className="absolute inset-16 rounded-full bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm border border-white/20"
+                />
+                
+                {/* Dynamic inner glow */}
+                <motion.div
+                  animate={{ rotate: [0, -360] }}
+                  transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-20 rounded-full bg-gradient-to-r from-primary via-transparent to-secondary opacity-60"
+                />
+              </motion.div>
+
+              {/* Floating accent elements */}
+              {[...Array(8)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  animate={{
+                    y: [0, -30, 0],
+                    x: [0, Math.sin(i) * 20, 0],
+                    opacity: [0.4, 1, 0.4],
+                    scale: [1, 1.2, 1]
+                  }}
+                  transition={{
+                    duration: 4 + i * 0.3,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute w-3 h-3 rounded-full bg-gradient-to-r from-primary to-secondary"
+                  style={{
+                    top: `${20 + Math.sin(i * 0.8) * 30}%`,
+                    left: `${30 + Math.cos(i * 0.8) * 40}%`,
+                    filter: "blur(0.5px)"
+                  }}
+                />
+              ))}
+            </div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
