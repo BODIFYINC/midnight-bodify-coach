@@ -22,23 +22,23 @@ export function LibyanBook() {
     <group>
       <Box
         ref={meshRef}
-        args={[2, 2.8, 0.3]}
+        args={[2.2, 3, 0.35]}
         position={[0, 0, 0]}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
       >
         <meshStandardMaterial 
-          color={hovered ? "#33B4E6" : "#1A8FCC"} 
-          roughness={0.2}
-          metalness={0.3}
-          emissive={hovered ? "#0D4F6B" : "#0A3A52"}
-          emissiveIntensity={0.2}
+          color={hovered ? "#A855F7" : "#7C3AED"} 
+          roughness={0.15}
+          metalness={0.4}
+          emissive={hovered ? "#4C1D95" : "#3730A3"}
+          emissiveIntensity={0.3}
         />
       </Box>
       
       <Text
-        position={[0, 0.3, 0.16]}
-        fontSize={0.2}
+        position={[0, 0.4, 0.18]}
+        fontSize={0.22}
         color="#F59E0B"
         anchorX="center"
         anchorY="middle"
@@ -48,38 +48,44 @@ export function LibyanBook() {
       </Text>
       
       <Text
-        position={[0, -0.1, 0.16]}
-        fontSize={0.12}
-        color="#FBBF24"
+        position={[0, 0, 0.18]}
+        fontSize={0.14}
+        color="#FCD34D"
         anchorX="center"
         anchorY="middle"
+        fontWeight="600"
       >
         English Learning
       </Text>
       
       <Text
-        position={[0, -0.3, 0.16]}
-        fontSize={0.1}
-        color="#FCD34D"
+        position={[0, -0.35, 0.18]}
+        fontSize={0.11}
+        color="#FEF3C7"
         anchorX="center"
         anchorY="middle"
+        fontWeight="500"
       >
         تعلم الإنجليزية
       </Text>
       
-      {/* Ocean sunset accent stripes */}
-      <Box args={[2, 0.1, 0.31]} position={[0, 1, 0]}>
+      {/* Premium accent design */}
+      <Box args={[2.2, 0.12, 0.36]} position={[0, 1.2, 0]}>
         <meshStandardMaterial 
           color="#F59E0B" 
           emissive="#F59E0B"
-          emissiveIntensity={0.1}
+          emissiveIntensity={0.15}
+          roughness={0.1}
+          metalness={0.6}
         />
       </Box>
-      <Box args={[2, 0.1, 0.31]} position={[0, -1, 0]}>
+      <Box args={[2.2, 0.12, 0.36]} position={[0, -1.2, 0]}>
         <meshStandardMaterial 
-          color="#1E40AF" 
-          emissive="#1E40AF"
-          emissiveIntensity={0.1}
+          color="#A855F7" 
+          emissive="#A855F7"
+          emissiveIntensity={0.15}
+          roughness={0.1}
+          metalness={0.6}
         />
       </Box>
     </group>

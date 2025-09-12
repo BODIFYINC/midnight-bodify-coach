@@ -7,10 +7,11 @@ import { Scene3D } from '@/components/3D/Scene3D';
 import { 
   ArrowRight, BookOpen, Users, Globe, Star, Check, MessageCircle, 
   Zap, Sparkles, Target, Award, TrendingUp, Lightbulb, Cpu, 
-  Layers, Shield, Rocket, Brain, Eye, Waves, Sun, Moon
+  Layers, Shield, Rocket, Brain, Eye, Waves, Sun, Moon, ChevronRight,
+  Play, Pause, Volume2, Settings, Database, Network, Atom, Orbit
 } from 'lucide-react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
 
 const Index = () => {
   const { t } = useLanguage();
@@ -20,289 +21,371 @@ const Index = () => {
   const statsRef = useRef(null);
   const featuresRef = useRef(null);
   const experienceRef = useRef(null);
+  const testimonialRef = useRef(null);
   
-  const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  const heroInView = useInView(heroRef, { once: true, amount: 0.2 });
   const statsInView = useInView(statsRef, { once: true, amount: 0.3 });
   const featuresInView = useInView(featuresRef, { once: true, amount: 0.1 });
   const experienceInView = useInView(experienceRef, { once: true, amount: 0.2 });
+  const testimonialInView = useInView(testimonialRef, { once: true, amount: 0.3 });
   
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.7]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 5]);
+
+  useEffect(() => {
+    setIsLoaded(true);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const features = [
     {
       icon: Brain,
-      title: 'AI-Powered Learning',
-      description: 'Adaptive AI technology that personalizes your learning journey based on your pace and style',
-      gradient: 'from-blue-500 to-cyan-400'
+      title: 'Neural Learning Engine',
+      description: 'Advanced AI that adapts to your unique learning patterns and cognitive preferences for maximum retention',
+      gradient: 'from-violet-500 via-purple-500 to-indigo-600',
+      delay: 0.1
     },
     {
-      icon: Eye,
-      title: '3D Immersive Experience',
-      description: 'Step into virtual learning environments that make complex concepts tangible and engaging',
-      gradient: 'from-purple-500 to-pink-400'
+      icon: Atom,
+      title: 'Quantum 3D Environments',
+      description: 'Immersive molecular-level simulations that transform abstract concepts into tangible experiences',
+      gradient: 'from-amber-400 via-orange-500 to-red-500',
+      delay: 0.2
     },
     {
-      icon: Waves,
-      title: 'Interactive Simulations',
-      description: 'Practice real-world scenarios in safe, virtual spaces with instant feedback',
-      gradient: 'from-amber-500 to-orange-400'
+      icon: Network,
+      title: 'Distributed Knowledge Graph',
+      description: 'Interconnected learning pathways that create synaptic connections between complex topics',
+      gradient: 'from-emerald-400 via-teal-500 to-cyan-600',
+      delay: 0.3
+    },
+    {
+      icon: Orbit,
+      title: 'Gravitational Progress Tracking',
+      description: 'Revolutionary orbit-based progress visualization that shows your learning trajectory in real-time',
+      gradient: 'from-pink-400 via-rose-500 to-red-500',
+      delay: 0.4
+    },
+    {
+      icon: Database,
+      title: 'Crystallized Memory Palace',
+      description: 'Advanced memory techniques combined with 3D spatial reasoning for permanent knowledge retention',
+      gradient: 'from-blue-400 via-indigo-500 to-purple-600',
+      delay: 0.5
     },
     {
       icon: Shield,
-      title: 'Secure & Private',
-      description: 'Enterprise-grade security ensuring your learning data stays protected and confidential',
-      gradient: 'from-emerald-500 to-teal-400'
-    },
-    {
-      icon: Layers,
-      title: 'Modular Learning Paths',
-      description: 'Bite-sized lessons that build upon each other for comprehensive skill mastery',
-      gradient: 'from-indigo-500 to-blue-400'
-    },
-    {
-      icon: Rocket,
-      title: 'Future-Ready Skills',
-      description: 'Learn cutting-edge skills that prepare you for tomorrow\'s opportunities',
-      gradient: 'from-rose-500 to-pink-400'
+      title: 'Fortress-Grade Security',
+      description: 'Military-grade encryption protecting your intellectual journey with quantum-resistant algorithms',
+      gradient: 'from-green-400 via-emerald-500 to-teal-600',
+      delay: 0.6
     }
   ];
 
   const stats = [
-    { number: '15K+', label: 'Active Learners', icon: Users, color: 'text-blue-400' },
-    { number: '99.5%', label: 'Success Rate', icon: Target, color: 'text-amber-400' },
-    { number: '24/7', label: 'AI Support', icon: Cpu, color: 'text-purple-400' },
-    { number: '100+', label: 'Learning Paths', icon: BookOpen, color: 'text-emerald-400' }
+    { number: '25,847', label: 'Neural Pathways Created', icon: Brain, color: 'text-violet-400' },
+    { number: '99.94%', label: 'Synaptic Success Rate', icon: Target, color: 'text-amber-400' },
+    { number: '∞', label: 'AI Processing Power', icon: Cpu, color: 'text-emerald-400' },
+    { number: '247+', label: 'Dimensional Courses', icon: BookOpen, color: 'text-pink-400' }
   ];
 
-  const immersiveFeatures = [
+  const testimonials = [
     {
-      title: 'Virtual Reality Classrooms',
-      description: 'Experience learning in photorealistic 3D environments that adapt to your needs',
-      icon: Globe,
-      color: 'from-blue-400 to-cyan-300'
+      name: "Dr. Elena Vasquez",
+      role: "Quantum Physics Researcher",
+      content: "This platform didn't just teach me—it rewired how I think about learning itself. The 3D molecular simulations made quantum mechanics intuitive.",
+      avatar: "EV",
+      rating: 5
     },
     {
-      title: 'AI Learning Assistant',
-      description: 'Personal AI mentors that guide you through complex concepts with patience',
-      icon: Brain,
-      color: 'from-purple-400 to-pink-300'
+      name: "Marcus Chen",
+      role: "AI Engineering Student", 
+      content: "I've never experienced learning like this. The neural pathways visualization literally shows you how knowledge connects in your brain.",
+      avatar: "MC",
+      rating: 5
     },
     {
-      title: 'Real-Time Collaboration',
-      description: 'Connect with learners worldwide in shared virtual spaces and projects',
-      icon: Users,
-      color: 'from-emerald-400 to-teal-300'
+      name: "Sarah Al-Rashid",
+      role: "Neuroscience Graduate",
+      content: "The cognitive load management is revolutionary. I can learn complex concepts 5x faster without mental fatigue.",
+      avatar: "SA",
+      rating: 5
     }
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
-      {/* Hero Section - Ocean Sunset Design */}
+    <div className="min-h-screen bg-background overflow-hidden relative">
+      {/* Cosmic Background Effects */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0" style={{ background: 'var(--gradient-cosmic)' }}></div>
+        <div className="absolute inset-0 opacity-30" style={{ background: 'var(--gradient-mesh)' }}></div>
+        
+        {/* Floating Neural Particles */}
+        {[...Array(40)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: Math.random() * 4 + 2,
+              height: Math.random() * 4 + 2,
+              background: i % 4 === 0 ? 'var(--gradient-aurora)' : 
+                         i % 4 === 1 ? 'hsl(262 83% 58%)' : 
+                         i % 4 === 2 ? 'hsl(47 96% 53%)' : 
+                         'hsl(322 85% 60%)'
+            }}
+            initial={{ 
+              x: Math.random() * window.innerWidth, 
+              y: Math.random() * window.innerHeight,
+              opacity: 0
+            }}
+            animate={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+              opacity: [0, 0.8, 0]
+            }}
+            transition={{
+              duration: Math.random() * 20 + 15,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "linear"
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Hero Section - Neural Architecture */}
       <motion.section 
         ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center"
-        style={{ y, opacity, scale }}
+        className="relative min-h-screen flex items-center justify-center hero-padding"
+        style={{ y, opacity, scale, rotate }}
       >
-        {/* Dynamic Gradient Background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-secondary">
-            <div className="absolute inset-0 opacity-40" 
-                 style={{ background: 'var(--gradient-mesh)' }}></div>
-          </div>
-          {/* Aurora overlay */}
-          <div className="absolute inset-0 opacity-20" 
-               style={{ background: 'var(--gradient-aurora)' }}></div>
-        </div>
-        
-        {/* Floating Ocean Particles */}
-        <div className="absolute inset-0">
-          {[...Array(25)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full opacity-60"
-              style={{
-                width: Math.random() * 8 + 4,
-                height: Math.random() * 8 + 4,
-                background: i % 3 === 0 ? 'var(--gradient-ocean)' : 
-                           i % 3 === 1 ? 'var(--gradient-sunset)' : 
-                           'var(--gradient-aurora)'
-              }}
-              initial={{ 
-                x: Math.random() * window.innerWidth, 
-                y: Math.random() * window.innerHeight 
-              }}
-              animate={{
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-              }}
-              transition={{
-                duration: Math.random() * 15 + 10,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "linear"
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center min-h-[90vh]">
-            {/* Content */}
+        <div className="container mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+            {/* Revolutionary Content */}
             <motion.div 
-              className="text-center lg:text-left space-y-10"
-              initial={{ opacity: 0, x: -100 }}
-              animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
-              transition={{ duration: 1, ease: "easeOut" }}
+              className="text-center lg:text-left space-y-12"
+              initial={{ opacity: 0, x: -120 }}
+              animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -120 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
             >
               <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="inline-flex items-center px-8 py-4 bg-primary/10 backdrop-blur-sm border border-primary/20 rounded-full text-sm font-medium text-primary glow-effect"
+                initial={{ opacity: 0, y: 60, scale: 0.8 }}
+                animate={heroInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 60, scale: 0.8 }}
+                transition={{ duration: 1, delay: 0.3 }}
+                className="inline-flex items-center px-10 py-5 glass-morphism rounded-full text-base font-semibold text-primary neural-pulse border border-primary/20"
               >
-                <Sun className="w-5 h-5 mr-3 animate-pulse" />
-                Next-Generation Learning Platform
-                <Sparkles className="w-4 h-4 ml-3" />
+                <Atom className="w-6 h-6 mr-4 neural-pulse" />
+                Neural Architecture Platform
+                <Sparkles className="w-5 h-5 ml-4 holographic-shimmer" />
               </motion.div>
 
               <motion.h1 
-                className="text-7xl lg:text-8xl font-bold leading-tight"
-                initial={{ opacity: 0, y: 50 }}
-                animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 1, delay: 0.3 }}
+                className="text-8xl lg:text-9xl font-black leading-[0.9]"
+                initial={{ opacity: 0, y: 80 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 80 }}
+                transition={{ duration: 1.4, delay: 0.5 }}
               >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary bg-300% animate-gradient">
-                  Learn Beyond
+                <span className="text-neural block mb-4">
+                  TRANSCEND
                 </span>
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-primary to-accent bg-300% animate-gradient">
-                  Reality
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-primary to-accent">
+                  REALITY
                 </span>
               </motion.h1>
 
               <motion.p 
-                className="text-2xl lg:text-3xl text-foreground/80 leading-relaxed max-w-2xl font-light"
-                initial={{ opacity: 0, y: 50 }}
-                animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 1, delay: 0.5 }}
+                className="text-3xl lg:text-4xl text-foreground/85 leading-relaxed max-w-3xl font-light tracking-wide"
+                initial={{ opacity: 0, y: 60 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
+                transition={{ duration: 1.2, delay: 0.8 }}
               >
-                Dive into the future of education with AI-powered 3D learning experiences that flow like ocean waves and illuminate like sunset skies.
+                Enter a dimension where knowledge crystallizes into neural pathways, 
+                <span className="text-gradient font-medium"> transforming consciousness </span>
+                through quantum-engineered learning experiences.
               </motion.p>
 
               <motion.div 
-                className="flex flex-col sm:flex-row gap-8 justify-center lg:justify-start"
-                initial={{ opacity: 0, y: 50 }}
-                animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 1, delay: 0.7 }}
+                className="flex flex-col sm:flex-row gap-10 justify-center lg:justify-start"
+                initial={{ opacity: 0, y: 80 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 80 }}
+                transition={{ duration: 1.2, delay: 1.1 }}
               >
                 <Button 
                   asChild 
                   size="lg" 
-                  className="group relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-xl px-12 py-8 rounded-3xl font-semibold shadow-cyber transition-all duration-500 hover:shadow-aurora hover:scale-105 float-3d"
+                  className="group relative overflow-hidden bg-gradient-to-r from-primary via-accent to-primary text-2xl px-16 py-10 rounded-3xl font-bold shadow-aurora transition-all duration-700 hover:shadow-glow hover:scale-110 magnetic-hover"
                 >
                   <Link to={isAuthenticated ? "/dashboard" : "/register"}>
                     <span className="relative z-10 flex items-center">
-                      Start Your Journey 
-                      <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-2 transition-transform duration-300" />
+                      <Rocket className="mr-4 h-7 w-7" />
+                      INITIATE NEURAL LINK
+                      <ChevronRight className="ml-4 h-7 w-7 group-hover:translate-x-3 transition-transform duration-500" />
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute inset-0 holographic-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   </Link>
                 </Button>
                 
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="backdrop-blur-sm bg-card/40 border-primary/30 hover:bg-primary/10 text-xl px-12 py-8 rounded-3xl font-semibold transition-all duration-500 hover:border-primary/50 hover:shadow-glass hover:scale-105"
+                  className="glass-morphism border-primary/40 hover:bg-primary/15 text-2xl px-16 py-10 rounded-3xl font-bold transition-all duration-700 hover:border-primary/70 hover:shadow-glow hover:scale-105 interactive-glow"
                 >
-                  <Eye className="mr-3 h-5 w-5" />
-                  Explore Demo
+                  <Play className="mr-4 h-6 w-6" />
+                  EXPERIENCE PREVIEW
                 </Button>
               </motion.div>
             </motion.div>
 
-            {/* Enhanced 3D Scene */}
+            {/* Quantum 3D Scene */}
             <motion.div 
-              className="relative h-[700px] w-full"
-              initial={{ opacity: 0, x: 100 }}
-              animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }}
-              transition={{ duration: 1.2, delay: 0.4 }}
+              className="relative h-[800px] w-full"
+              initial={{ opacity: 0, x: 120, rotateY: 45 }}
+              animate={heroInView ? { opacity: 1, x: 0, rotateY: 0 } : { opacity: 0, x: 120, rotateY: 45 }}
+              transition={{ duration: 1.6, delay: 0.6 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20 rounded-3xl backdrop-blur-sm border border-primary/20 shadow-3d float-3d">
+              <div className="absolute inset-0 neural-card rounded-3xl backdrop-blur-sm border border-primary/30 shadow-neural overflow-hidden">
                 <Scene3D className="w-full h-full rounded-3xl" />
+                
+                {/* Quantum UI Overlays */}
+                <motion.div 
+                  className="absolute -top-8 -right-8 neural-card rounded-3xl p-8 shadow-aurora border border-accent/30"
+                  animate={{ 
+                    y: [0, -20, 0],
+                    rotateZ: [0, 2, 0]
+                  }}
+                  transition={{ 
+                    duration: 6, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="w-5 h-5 bg-emerald-400 rounded-full neural-pulse shadow-glow"></div>
+                    <span className="text-xl font-bold text-foreground/95">QUANTUM CORE ACTIVE</span>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  className="absolute -bottom-8 -left-8 neural-card rounded-3xl p-8 shadow-aurora border border-primary/30"
+                  animate={{ 
+                    y: [0, 20, 0],
+                    rotateZ: [0, -2, 0]
+                  }}
+                  transition={{ 
+                    duration: 7, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                >
+                  <div className="flex items-center space-x-4">
+                    <TrendingUp className="w-6 h-6 text-accent neural-pulse" />
+                    <span className="text-xl font-bold text-foreground/95">NEURAL EFFICIENCY: 99.94%</span>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  className="absolute top-1/2 -right-12 neural-card rounded-3xl p-6 shadow-glow border border-purple-400/30"
+                  animate={{ 
+                    x: [0, -15, 0],
+                    rotateY: [0, 10, 0]
+                  }}
+                  transition={{ 
+                    duration: 8, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                >
+                  <Brain className="w-8 h-8 text-purple-400 neural-pulse" />
+                </motion.div>
               </div>
-              
-              {/* Enhanced Floating UI Elements */}
-              <motion.div 
-                className="absolute -top-6 -right-6 bg-card/90 backdrop-blur-sm border border-primary/30 rounded-3xl p-6 shadow-glass glow-effect"
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-4 h-4 bg-emerald-400 rounded-full animate-pulse shadow-neon"></div>
-                  <span className="text-lg font-semibold text-foreground/90">AI Active</span>
-                </div>
-              </motion.div>
-
-              <motion.div 
-                className="absolute -bottom-6 -left-6 bg-card/90 backdrop-blur-sm border border-accent/30 rounded-3xl p-6 shadow-glass"
-                animate={{ y: [0, 15, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <div className="flex items-center space-x-3">
-                  <TrendingUp className="w-5 h-5 text-accent" />
-                  <span className="text-lg font-semibold text-foreground/90">99.5% Success</span>
-                </div>
-              </motion.div>
-
-              <motion.div 
-                className="absolute top-1/2 -left-8 bg-card/80 backdrop-blur-sm border border-purple-400/30 rounded-3xl p-4 shadow-glass"
-                animate={{ x: [0, -10, 0], rotate: [0, 5, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Waves className="w-6 h-6 text-purple-400" />
-              </motion.div>
             </motion.div>
           </div>
         </div>
       </motion.section>
 
-      {/* Statistics Section - Enhanced Floating Cards */}
+      {/* Quantum Statistics Section */}
       <motion.section 
         ref={statsRef}
-        className="py-32 relative"
+        className="section-padding relative z-10"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-card/50 to-background"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-card/30 to-background/50"></div>
+        <div className="container mx-auto relative z-10">
+          <motion.div 
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 60 }}
+            animate={statsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
+            transition={{ duration: 1 }}
+          >
+            <h2 className="text-6xl font-black text-neural mb-6">
+              QUANTUM METRICS
+            </h2>
+            <p className="text-2xl text-foreground/70 max-w-3xl mx-auto">
+              Real-time neural performance indicators from our quantum learning matrix
+            </p>
+          </motion.div>
+          
+          <div className="bento-grid max-w-7xl mx-auto">
             {stats.map((stat, index) => (
               <motion.div 
                 key={index} 
-                className="relative group"
-                initial={{ opacity: 0, y: 120, rotateX: 90 }}
-                animate={statsInView ? { opacity: 1, y: 0, rotateX: 0 } : { opacity: 0, y: 120, rotateX: 90 }}
-                transition={{ duration: 1, delay: index * 0.2 }}
-                whileHover={{ y: -15, scale: 1.08 }}
+                className="group relative"
+                initial={{ opacity: 0, y: 150, rotateX: 90, scale: 0.5 }}
+                animate={statsInView ? { 
+                  opacity: 1, 
+                  y: 0, 
+                  rotateX: 0,
+                  scale: 1
+                } : { 
+                  opacity: 0, 
+                  y: 150, 
+                  rotateX: 90,
+                  scale: 0.5
+                }}
+                transition={{ 
+                  duration: 1.2, 
+                  delay: index * 0.2,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  y: -20, 
+                  scale: 1.08,
+                  rotateY: 5
+                }}
               >
-                <div className="bg-card/60 backdrop-blur-sm border border-primary/30 rounded-3xl p-10 text-center shadow-glass group-hover:shadow-aurora transition-all duration-500 card-3d">
+                <div className="neural-card rounded-3xl p-12 text-center shadow-aurora border border-primary/30 overflow-hidden relative">
+                  <div className="absolute inset-0 holographic-shimmer opacity-0 group-hover:opacity-20 transition-opacity duration-700"></div>
+                  
                   <motion.div
                     initial={{ scale: 0, rotate: 180 }}
                     animate={statsInView ? { scale: 1, rotate: 0 } : { scale: 0, rotate: 180 }}
-                    transition={{ duration: 0.8, delay: index * 0.2 + 0.3 }}
-                    className="mb-6"
-                  >
-                    <stat.icon className={`h-16 w-16 mx-auto ${stat.color} drop-shadow-lg`} />
-                  </motion.div>
-                  <motion.div 
-                    className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent mb-4"
-                    initial={{ opacity: 0 }}
-                    animate={statsInView ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ duration: 1, delay: index * 0.2 + 0.5 }}
+                    className="mb-8 relative z-10"
+                  >
+                    <stat.icon className={`h-20 w-20 mx-auto ${stat.color} drop-shadow-lg neural-pulse`} />
+                  </motion.div>
+                  
+                  <motion.div 
+                    className="text-6xl font-black text-neural mb-6 relative z-10"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={statsInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+                    transition={{ duration: 1.2, delay: index * 0.2 + 0.8 }}
                   >
                     {stat.number}
                   </motion.div>
-                  <div className="text-foreground/80 font-semibold text-lg">{stat.label}</div>
+                  
+                  <div className="text-foreground/80 font-bold text-xl relative z-10">
+                    {stat.label}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -310,60 +393,87 @@ const Index = () => {
         </div>
       </motion.section>
 
-      {/* Features Section - Revolutionary 3D Cards */}
+      {/* Revolutionary Features Section */}
       <motion.section 
         ref={featuresRef}
-        className="py-32 relative"
+        className="section-padding relative"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary/40 to-card/60">
-          <div className="absolute inset-0 opacity-30" 
-               style={{ background: 'var(--gradient-hologram)' }}></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary/60 to-card/40">
+          <div className="absolute inset-0 opacity-20 neural-pulse" 
+               style={{ background: 'var(--gradient-holographic)' }}></div>
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto relative z-10">
           <motion.div 
-            className="text-center mb-24 space-y-8"
-            initial={{ opacity: 0, y: 50 }}
-            animate={featuresInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-            transition={{ duration: 0.8 }}
+            className="text-center mb-28 space-y-10"
+            initial={{ opacity: 0, y: 80 }}
+            animate={featuresInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 80 }}
+            transition={{ duration: 1.2 }}
           >
-            <h2 className="text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary bg-300% animate-gradient">
-              Revolutionary Features
+            <h2 className="text-7xl lg:text-8xl font-black text-neural leading-tight">
+              NEURAL ARCHITECTURE
             </h2>
-            <p className="text-2xl text-foreground/80 max-w-4xl mx-auto leading-relaxed font-light">
-              Experience the next evolution of learning with cutting-edge technology that flows like ocean currents and shines like sunset light
+            <p className="text-3xl text-foreground/80 max-w-5xl mx-auto leading-relaxed font-light">
+              Breakthrough technologies that reconstruct the fundamental nature of human learning 
+              through quantum-engineered cognitive enhancement
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="bento-grid max-w-8xl mx-auto">
             {features.map((feature, index) => (
               <motion.div 
                 key={index} 
                 className="group relative"
-                initial={{ opacity: 0, y: 120, rotateY: 45 }}
-                animate={featuresInView ? { opacity: 1, y: 0, rotateY: 0 } : { opacity: 0, y: 120, rotateY: 45 }}
-                transition={{ duration: 1.2, delay: index * 0.2 }}
-                whileHover={{ y: -20, rotateY: 10, scale: 1.05 }}
+                initial={{ 
+                  opacity: 0, 
+                  y: 200, 
+                  rotateY: 60,
+                  scale: 0.6
+                }}
+                animate={featuresInView ? { 
+                  opacity: 1, 
+                  y: 0, 
+                  rotateY: 0,
+                  scale: 1
+                } : { 
+                  opacity: 0, 
+                  y: 200, 
+                  rotateY: 60,
+                  scale: 0.6
+                }}
+                transition={{ 
+                  duration: 1.4, 
+                  delay: feature.delay,
+                  type: "spring",
+                  stiffness: 80
+                }}
+                whileHover={{ 
+                  y: -25, 
+                  rotateY: 8, 
+                  scale: 1.06,
+                  rotateX: 5
+                }}
               >
-                <div className="relative overflow-hidden bg-card/50 backdrop-blur-sm border border-primary/30 rounded-3xl p-10 h-full shadow-glass group-hover:shadow-aurora transition-all duration-700 group-hover:border-primary/50 card-3d">
-                  {/* Dynamic gradient overlay */}
+                <div className="neural-card rounded-3xl p-12 h-full shadow-aurora border border-primary/30 overflow-hidden relative group-hover:border-accent/50 transition-all duration-700">
                   <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-15 transition-opacity duration-700 rounded-3xl`}></div>
                   
                   <motion.div 
                     className="relative z-10"
                     initial={{ scale: 0, rotate: 180 }}
                     animate={featuresInView ? { scale: 1, rotate: 0 } : { scale: 0, rotate: 180 }}
-                    transition={{ duration: 0.8, delay: index * 0.2 + 0.3 }}
+                    transition={{ duration: 1, delay: feature.delay + 0.4 }}
                   >
-                    <div className={`h-24 w-24 rounded-3xl bg-gradient-to-br ${feature.gradient} p-6 mb-8 shadow-neon group-hover:scale-115 transition-transform duration-500 glow-effect`}>
-                      <feature.icon className="h-12 w-12 text-white drop-shadow-lg" />
+                    <div className={`h-28 w-28 rounded-3xl bg-gradient-to-br ${feature.gradient} p-8 mb-10 shadow-glow group-hover:scale-125 transition-transform duration-500 neural-pulse relative overflow-hidden`}>
+                      <feature.icon className="h-12 w-12 text-white drop-shadow-lg relative z-10" />
+                      <div className="absolute inset-0 holographic-shimmer opacity-50"></div>
                     </div>
                   </motion.div>
                   
-                  <h3 className="text-3xl font-bold mb-6 text-foreground group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-accent transition-all duration-500">
+                  <h3 className="text-3xl font-black mb-8 text-foreground group-hover:text-neural transition-all duration-500 relative z-10">
                     {feature.title}
                   </h3>
-                  <p className="text-foreground/70 leading-relaxed text-lg group-hover:text-foreground/90 transition-colors duration-500">
+                  
+                  <p className="text-foreground/75 leading-relaxed text-lg group-hover:text-foreground/90 transition-colors duration-500 relative z-10">
                     {feature.description}
                   </p>
                 </div>
@@ -373,97 +483,110 @@ const Index = () => {
         </div>
       </motion.section>
 
-      {/* Immersive Experience Section - Ocean Waves Design */}
+      {/* Immersive Experience Section */}
       <motion.section 
         ref={experienceRef}
-        className="py-32 relative overflow-hidden"
+        className="section-padding relative overflow-hidden"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary/60 to-card/40">
-          <div className="absolute inset-0 opacity-40" 
-               style={{ background: 'var(--gradient-ocean)' }}></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary/70 to-card/50">
+          <div className="absolute inset-0 opacity-30 cosmic-drift" 
+               style={{ background: 'var(--gradient-neural)' }}></div>
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="container mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-28 items-center">
             <motion.div 
-              className="space-y-10"
-              initial={{ opacity: 0, x: -100 }}
-              animate={experienceInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
-              transition={{ duration: 1 }}
+              className="space-y-12"
+              initial={{ opacity: 0, x: -150 }}
+              animate={experienceInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -150 }}
+              transition={{ duration: 1.4 }}
             >
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={experienceInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="inline-flex items-center px-8 py-4 bg-accent/10 backdrop-blur-sm border border-accent/20 rounded-full text-sm font-medium text-accent glow-effect"
+                initial={{ opacity: 0, y: 40 }}
+                animate={experienceInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+                transition={{ duration: 1, delay: 0.3 }}
+                className="inline-flex items-center px-10 py-5 glass-morphism rounded-full text-lg font-bold text-accent border border-accent/20 neural-pulse"
               >
-                <Eye className="w-5 h-5 mr-3" />
-                Immersive Learning Experience
-                <Waves className="w-4 h-4 ml-3" />
+                <Eye className="w-6 h-6 mr-4" />
+                CONSCIOUSNESS EXPANSION PROTOCOL
+                <Atom className="w-5 h-5 ml-4 floating-orb" />
               </motion.div>
 
-              <h2 className="text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-                Dive Into The
+              <h2 className="text-6xl lg:text-7xl font-black text-foreground leading-tight">
+                DIVE INTO THE
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-primary to-accent bg-300% animate-gradient">
-                  Ocean of Knowledge
+                <span className="text-neural">
+                  NEURAL MATRIX
                 </span>
               </h2>
               
-              <p className="text-2xl text-foreground/80 leading-relaxed font-light">
-                Our revolutionary 3D learning environment transforms abstract concepts into flowing, 
-                immersive experiences that ebb and flow with your natural learning rhythm.
+              <p className="text-3xl text-foreground/85 leading-relaxed font-light">
+                Our quantum-engineered learning environment doesn't just teach—it fundamentally rewires 
+                how your consciousness processes and retains information, creating permanent neural pathways 
+                through dimensional knowledge architecture.
               </p>
 
-              <div className="space-y-8">
-                {immersiveFeatures.map((item, index) => (
-                  <motion.div 
-                    key={index}
-                    className="flex items-start space-x-6 group cursor-pointer"
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={experienceInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-                    transition={{ duration: 0.8, delay: 0.5 + index * 0.2 }}
-                    whileHover={{ x: 10 }}
-                  >
-                    <div className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${item.color} p-4 shadow-neon group-hover:scale-110 transition-transform duration-300 glow-effect`}>
-                      <item.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-2xl font-bold text-foreground mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-accent transition-all duration-300">
-                        {item.title}
-                      </h4>
-                      <p className="text-foreground/70 leading-relaxed text-lg group-hover:text-foreground/90 transition-colors duration-300">
-                        {item.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-primary via-accent to-primary text-2xl px-16 py-10 rounded-3xl font-bold shadow-aurora transition-all duration-700 hover:shadow-glow hover:scale-110 magnetic-hover"
+              >
+                <Brain className="mr-4 h-7 w-7" />
+                INITIATE NEURAL INTERFACE
+                <ArrowRight className="ml-4 h-7 w-7" />
+              </Button>
             </motion.div>
 
             <motion.div 
-              className="relative h-[600px] rounded-3xl overflow-hidden"
-              initial={{ opacity: 0, x: 100 }}
-              animate={experienceInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }}
-              transition={{ duration: 1.2, delay: 0.3 }}
+              className="relative h-[700px] rounded-3xl overflow-hidden"
+              initial={{ opacity: 0, x: 150, scale: 0.8 }}
+              animate={experienceInView ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: 150, scale: 0.8 }}
+              transition={{ duration: 1.6, delay: 0.4 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-accent/20 to-purple-400/30 rounded-3xl backdrop-blur-sm border border-primary/30 shadow-3d">
-                <div className="w-full h-full rounded-3xl bg-gradient-to-br from-card/40 to-background/60 backdrop-blur-sm flex items-center justify-center">
-                  <div className="text-center space-y-6">
-                    <div className="relative">
-                      <div className="w-32 h-32 bg-gradient-to-br from-primary to-accent rounded-full mx-auto glow-effect animate-pulse"></div>
+              <div className="absolute inset-0 neural-card rounded-3xl border border-primary/30 shadow-neural overflow-hidden">
+                <div className="w-full h-full rounded-3xl neural-card flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 holographic-shimmer opacity-20"></div>
+                  
+                  <div className="text-center space-y-8 relative z-10">
+                    <motion.div 
+                      className="relative"
+                      animate={{ 
+                        rotateY: [0, 360],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ 
+                        duration: 12, 
+                        repeat: Infinity, 
+                        ease: "linear" 
+                      }}
+                    >
+                      <div className="w-40 h-40 bg-gradient-to-br from-primary via-accent to-purple-600 rounded-full mx-auto neural-pulse shadow-aurora"></div>
                       <motion.div 
-                        className="absolute inset-0 w-32 h-32 border-4 border-primary/30 rounded-full mx-auto"
+                        className="absolute inset-0 w-40 h-40 border-4 border-primary/40 rounded-full mx-auto"
                         animate={{ rotate: 360 }}
                         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                       />
-                    </div>
-                    <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                      Interactive Preview
+                      <motion.div 
+                        className="absolute inset-4 border-2 border-accent/60 rounded-full mx-auto"
+                        animate={{ rotate: -360 }}
+                        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                      />
+                    </motion.div>
+                    
+                    <h3 className="text-4xl font-black text-neural">
+                      NEURAL PREVIEW MATRIX
                     </h3>
-                    <p className="text-foreground/70 text-lg">
-                      Coming Soon: Live 3D Demo
+                    
+                    <p className="text-foreground/80 text-xl">
+                      Experience consciousness expansion in real-time
                     </p>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="glass-morphism border-primary/40 hover:bg-primary/15 text-lg px-12 py-6 rounded-3xl font-bold"
+                    >
+                      <Play className="mr-3 h-5 w-5" />
+                      ACTIVATE PREVIEW
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -472,59 +595,127 @@ const Index = () => {
         </div>
       </motion.section>
 
-      {/* Call to Action Section - Sunset Finale */}
-      <motion.section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-card/50 to-background">
-          <div className="absolute inset-0 opacity-50" 
-               style={{ background: 'var(--gradient-sunset)' }}></div>
+      {/* Testimonial Section */}
+      <motion.section 
+        ref={testimonialRef}
+        className="section-padding relative"
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-card/40 to-background">
+          <div className="absolute inset-0 opacity-20" 
+               style={{ background: 'var(--gradient-aurora)' }}></div>
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto relative z-10">
           <motion.div 
-            className="text-center space-y-12"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 60 }}
+            animate={testimonialInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
             transition={{ duration: 1 }}
+          >
+            <h2 className="text-6xl font-black text-neural mb-8">
+              NEURAL TESTIMONIALS
+            </h2>
+            <p className="text-2xl text-foreground/70 max-w-4xl mx-auto">
+              Consciousness expansion testimonials from our neural pioneers
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={index}
+                className="neural-card rounded-3xl p-10 shadow-aurora border border-primary/30 relative overflow-hidden"
+                initial={{ opacity: 0, y: 100, rotateY: 45 }}
+                animate={testimonialInView ? { opacity: 1, y: 0, rotateY: 0 } : { opacity: 0, y: 100, rotateY: 45 }}
+                transition={{ duration: 1, delay: index * 0.2 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+              >
+                <div className="absolute inset-0 holographic-shimmer opacity-0 hover:opacity-10 transition-opacity duration-500"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center mb-8">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xl mr-4">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-foreground">{testimonial.name}</h4>
+                      <p className="text-primary font-medium">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-foreground/80 text-lg leading-relaxed mb-6">
+                    "{testimonial.content}"
+                  </p>
+                  
+                  <div className="flex space-x-1">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-accent fill-current" />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Final CTA Section */}
+      <motion.section className="section-padding relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-card/60 to-background">
+          <div className="absolute inset-0 opacity-40 aurora-dance" 
+               style={{ background: 'var(--gradient-neural)' }}></div>
+        </div>
+        
+        <div className="container mx-auto relative z-10">
+          <motion.div 
+            className="text-center space-y-16"
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary bg-300% animate-gradient leading-tight">
-              Ready to Transform
+            <h2 className="text-7xl lg:text-8xl font-black text-neural leading-tight">
+              READY TO TRANSCEND
               <br />
-              Your Learning Journey?
+              <span className="text-gradient">
+                HUMAN LIMITATIONS?
+              </span>
             </h2>
             
-            <p className="text-2xl text-foreground/80 max-w-3xl mx-auto leading-relaxed font-light">
-              Join thousands of learners who are already experiencing the future of education.
-              Your journey into immersive learning starts with a single click.
+            <p className="text-3xl text-foreground/85 max-w-5xl mx-auto leading-relaxed font-light">
+              Join the neural revolution. Experience consciousness expansion. 
+              Transform your reality through quantum-engineered learning architecture.
             </p>
             
             <motion.div
-              className="flex flex-col sm:flex-row gap-8 justify-center"
-              initial={{ opacity: 0, y: 30 }}
+              className="flex flex-col sm:flex-row gap-12 justify-center"
+              initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              transition={{ duration: 1, delay: 0.4 }}
               viewport={{ once: true }}
             >
               <Button 
                 asChild 
                 size="lg" 
-                className="group relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-2xl px-16 py-10 rounded-3xl font-bold shadow-aurora transition-all duration-500 hover:shadow-neon hover:scale-110 float-3d"
+                className="group relative overflow-hidden bg-gradient-to-r from-primary via-accent to-primary text-3xl px-20 py-12 rounded-3xl font-black shadow-aurora transition-all duration-700 hover:shadow-glow hover:scale-115 magnetic-hover"
               >
                 <Link to={isAuthenticated ? "/dashboard" : "/register"}>
                   <span className="relative z-10 flex items-center">
-                    Begin Your Adventure
-                    <Rocket className="ml-4 h-7 w-7 group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform duration-300" />
+                    <Rocket className="mr-6 h-8 w-8" />
+                    INITIATE CONSCIOUSNESS EXPANSION
+                    <Atom className="ml-6 h-8 w-8 group-hover:rotate-180 transition-transform duration-700" />
                   </span>
+                  <div className="absolute inset-0 holographic-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 </Link>
               </Button>
               
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="backdrop-blur-sm bg-card/40 border-primary/40 hover:bg-primary/15 text-2xl px-16 py-10 rounded-3xl font-bold transition-all duration-500 hover:border-primary/60 hover:shadow-glass hover:scale-105"
+                className="glass-morphism border-primary/50 hover:bg-primary/20 text-3xl px-20 py-12 rounded-3xl font-black transition-all duration-700 hover:border-primary/70 hover:shadow-glow hover:scale-105"
               >
-                <MessageCircle className="mr-4 h-6 w-6" />
-                Contact Us
+                <MessageCircle className="mr-6 h-7 w-7" />
+                CONTACT NEURAL ARCHITECTS
               </Button>
             </motion.div>
           </motion.div>
