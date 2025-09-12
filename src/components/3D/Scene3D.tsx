@@ -15,10 +15,11 @@ export function Scene3D({ className }: Scene3DProps) {
         style={{ width: '100%', height: '100%' }}
       >
         <Suspense fallback={null}>
-          <Environment preset="apartment" />
-          <ambientLight intensity={0.4} />
-          <directionalLight position={[5, 5, 5]} intensity={0.8} />
-          <pointLight position={[-5, -5, -5]} intensity={0.3} color="#FFD700" />
+          <Environment preset="sunset" />
+          <ambientLight intensity={0.3} color="#FEF3C7" />
+          <directionalLight position={[5, 5, 5]} intensity={1.2} color="#FBBF24" />
+          <pointLight position={[-5, -5, -5]} intensity={0.5} color="#3B82F6" />
+          <pointLight position={[3, -3, 3]} intensity={0.4} color="#A855F7" />
           
           <LibyanBook />
           

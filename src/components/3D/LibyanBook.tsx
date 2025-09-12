@@ -28,16 +28,18 @@ export function LibyanBook() {
         onPointerLeave={() => setHovered(false)}
       >
         <meshStandardMaterial 
-          color={hovered ? "#2F7D32" : "#1B5E20"} 
-          roughness={0.3}
-          metalness={0.1}
+          color={hovered ? "#33B4E6" : "#1A8FCC"} 
+          roughness={0.2}
+          metalness={0.3}
+          emissive={hovered ? "#0D4F6B" : "#0A3A52"}
+          emissiveIntensity={0.2}
         />
       </Box>
       
       <Text
         position={[0, 0.3, 0.16]}
         fontSize={0.2}
-        color="#FFD700"
+        color="#F59E0B"
         anchorX="center"
         anchorY="middle"
         fontWeight="bold"
@@ -48,7 +50,7 @@ export function LibyanBook() {
       <Text
         position={[0, -0.1, 0.16]}
         fontSize={0.12}
-        color="#FFFFFF"
+        color="#FBBF24"
         anchorX="center"
         anchorY="middle"
       >
@@ -58,19 +60,27 @@ export function LibyanBook() {
       <Text
         position={[0, -0.3, 0.16]}
         fontSize={0.1}
-        color="#FFFFFF"
+        color="#FCD34D"
         anchorX="center"
         anchorY="middle"
       >
         تعلم الإنجليزية
       </Text>
       
-      {/* Libya flag colors accent */}
+      {/* Ocean sunset accent stripes */}
       <Box args={[2, 0.1, 0.31]} position={[0, 1, 0]}>
-        <meshStandardMaterial color="#FF0000" />
+        <meshStandardMaterial 
+          color="#F59E0B" 
+          emissive="#F59E0B"
+          emissiveIntensity={0.1}
+        />
       </Box>
       <Box args={[2, 0.1, 0.31]} position={[0, -1, 0]}>
-        <meshStandardMaterial color="#000000" />
+        <meshStandardMaterial 
+          color="#1E40AF" 
+          emissive="#1E40AF"
+          emissiveIntensity={0.1}
+        />
       </Box>
     </group>
   );
