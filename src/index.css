@@ -17,77 +17,101 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* ===== Oceanic Aurora Design System (No Purple) ===== */
-    --background: 210 30% 6%;
+    /* ===== Flowing Ocean Design System ===== */
+    --background: 215 25% 3%;
     --foreground: 0 0% 98%;
 
-    --card: 210 24% 8%;
+    --card: 215 20% 5%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 210 24% 8%;
+    --popover: 215 20% 5%;
     --popover-foreground: 0 0% 98%;
 
-    /* Brand */
-    --primary: 190 90% 45%; /* teal-cyan */
+    /* Enhanced Brand Palette */
+    --primary: 185 85% 55%; /* bright cyan */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 18% 18%;
+    --secondary: 215 15% 12%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 215 16% 22%;
-    --muted-foreground: 210 10% 70%;
+    --muted: 215 12% 18%;
+    --muted-foreground: 210 8% 75%;
 
-    --accent: 16 90% 58%; /* coral */
+    --accent: 14 95% 65%; /* warm coral */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 80% 55%;
+    --destructive: 0 85% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 15% 24%;
-    --input: 215 15% 24%;
-    --ring: 190 90% 45%;
+    --border: 0 0% 100% / 0.08;
+    --input: 215 12% 18%;
+    --ring: 185 85% 55%;
 
-    --radius: 1.25rem;
+    --radius: 2rem;
 
-    /* Premium Gradient System */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(200 90% 50%) 45%, hsl(var(--accent)) 100%);
-    --gradient-aurora: linear-gradient(135deg, hsl(190 90% 45% / 0.9) 0%, hsl(200 92% 52% / 0.8) 35%, hsl(16 90% 58% / 0.9) 100%);
-    --gradient-cosmic: radial-gradient(ellipse at center, hsl(190 90% 45% / 0.14) 0%, hsl(210 30% 6%) 70%);
-    --gradient-holographic: linear-gradient(45deg, hsl(190 90% 45% / 0.8), hsl(200 92% 52% / 0.8), hsl(180 80% 45% / 0.8), hsl(16 90% 58% / 0.8));
-    --gradient-neural: conic-gradient(from 180deg at 50% 50%, hsl(190 90% 45% / 0.6) 0deg, hsl(200 92% 52% / 0.45) 140deg, hsl(16 90% 58% / 0.6) 300deg, hsl(190 90% 45% / 0.6) 360deg);
-    --gradient-depth: linear-gradient(180deg, hsl(210 30% 6%) 0%, hsl(210 24% 8%) 50%, hsl(215 18% 18%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(210 24% 8% / 0.9) 0%, hsl(215 18% 18% / 0.8) 100%);
-    --gradient-mesh: radial-gradient(at 0% 0%, hsl(190 90% 45% / 0.28) 0%, transparent 45%), 
-                     radial-gradient(at 50% 0%, hsl(200 92% 52% / 0.22) 0%, transparent 50%), 
-                     radial-gradient(at 100% 0%, hsl(16 90% 58% / 0.18) 0%, transparent 50%);
-    --gradient-orb: radial-gradient(circle at center, hsl(190 90% 45% / 0.8) 0%, hsl(200 92% 52% / 0.6) 30%, hsl(16 90% 58% / 0.45) 60%, transparent 100%);
+    /* Seamless Flow Gradients */
+    --gradient-ocean-flow: linear-gradient(180deg, 
+      hsl(215 25% 3%) 0%, 
+      hsl(210 30% 4%) 20%, 
+      hsl(200 35% 5%) 40%, 
+      hsl(190 40% 6%) 60%, 
+      hsl(185 45% 7%) 80%, 
+      hsl(180 50% 8%) 100%);
+    
+    --gradient-coral-wave: linear-gradient(180deg,
+      hsl(180 50% 8%) 0%,
+      hsl(175 55% 9%) 25%,
+      hsl(170 60% 10%) 50%,
+      hsl(25 70% 12%) 75%,
+      hsl(14 80% 14%) 100%);
+    
+    --gradient-deep-current: linear-gradient(180deg,
+      hsl(14 80% 14%) 0%,
+      hsl(20 75% 12%) 30%,
+      hsl(200 70% 10%) 70%,
+      hsl(215 25% 3%) 100%);
 
-    /* Shadows */
-    --shadow-subtle: 0 1px 3px hsl(210 30% 6% / 0.12), 0 1px 2px hsl(210 30% 6% / 0.24);
-    --shadow-medium: 0 4px 6px hsl(210 30% 6% / 0.08), 0 10px 15px hsl(210 30% 6% / 0.12);
-    --shadow-large: 0 10px 25px hsl(210 30% 6% / 0.16), 0 20px 40px hsl(210 30% 6% / 0.22);
-    --shadow-glow: 0 0 20px hsl(190 90% 45% / 0.28), 0 0 40px hsl(200 92% 52% / 0.2), 0 0 60px hsl(16 90% 58% / 0.18);
-    --shadow-aurora: 0 0 30px hsl(190 90% 45% / 0.35), 0 0 60px hsl(200 92% 52% / 0.25), 0 0 90px hsl(16 90% 58% / 0.2);
-    --shadow-neural: 0 25px 50px hsl(190 90% 45% / 0.15), 0 12px 25px hsl(210 30% 6% / 0.42);
-    --shadow-depth: inset 0 1px 0 hsl(0 0% 98% / 0.04), 0 1px 3px hsl(210 30% 6% / 0.38);
-    --shadow-glass: 0 8px 32px hsl(210 30% 6% / 0.32), inset 0 1px 0 hsl(0 0% 98% / 0.06);
+    --gradient-surface-shimmer: linear-gradient(135deg, 
+      hsl(185 85% 55% / 0.15) 0%, 
+      hsl(195 90% 60% / 0.12) 25%, 
+      hsl(205 95% 65% / 0.08) 50%, 
+      hsl(14 95% 65% / 0.10) 75%, 
+      hsl(185 85% 55% / 0.15) 100%);
 
-    /* Motion */
-    --transition-micro: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-elegant: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --transition-natural: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --gradient-underwater: radial-gradient(ellipse at top, 
+      hsl(185 85% 55% / 0.08) 0%, 
+      transparent 50%),
+      radial-gradient(ellipse at bottom, 
+      hsl(14 95% 65% / 0.06) 0%, 
+      transparent 50%);
+
+    --gradient-tide: conic-gradient(from 45deg at 30% 70%, 
+      hsl(185 85% 55% / 0.20) 0deg, 
+      hsl(195 90% 60% / 0.15) 90deg, 
+      hsl(14 95% 65% / 0.18) 180deg, 
+      hsl(175 80% 50% / 0.12) 270deg, 
+      hsl(185 85% 55% / 0.20) 360deg);
+
+    /* Enhanced Shadows */
+    --shadow-depth: 0 2px 8px hsl(215 25% 3% / 0.15), 0 8px 32px hsl(215 25% 3% / 0.25);
+    --shadow-float: 0 4px 16px hsl(185 85% 55% / 0.12), 0 16px 64px hsl(185 85% 55% / 0.08);
+    --shadow-coral: 0 4px 16px hsl(14 95% 65% / 0.15), 0 16px 64px hsl(14 95% 65% / 0.10);
+    --shadow-immersive: 0 8px 40px hsl(215 25% 3% / 0.40), 0 32px 128px hsl(215 25% 3% / 0.30);
+
+    /* Fluid Motion */
+    --transition-tide: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-wave: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-flow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Sidebar */
-    --sidebar-background: 204 30% 8%;
-    --sidebar-foreground: 200 30% 90%;
-    --sidebar-primary: 190 90% 45%;
-    --sidebar-primary-foreground: 210 30% 6%;
-    --sidebar-accent: 200 25% 14%;
-    --sidebar-accent-foreground: 200 30% 90%;
-    --sidebar-border: 200 22% 22%;
-    --sidebar-ring: 190 90% 45%;
+    --sidebar-background: 210 25% 6%;
+    --sidebar-foreground: 195 20% 88%;
+    --sidebar-primary: 185 85% 55%;
+    --sidebar-primary-foreground: 215 25% 3%;
+    --sidebar-accent: 210 20% 12%;
+    --sidebar-accent-foreground: 195 20% 88%;
+    --sidebar-border: 200 15% 20%;
+    --sidebar-ring: 185 85% 55%;
   }
 
   .dark {
