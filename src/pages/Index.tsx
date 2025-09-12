@@ -4,10 +4,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { ArrowRight, BookOpen, Users, Globe, Star, Check, MessageCircle, GamepadIcon, BookMarked, Languages, PenTool, NotebookPen, Zap, Sparkles, Target, Award, TrendingUp, Lightbulb } from 'lucide-react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { useRef, useEffect } from 'react';
 
 const Index = () => {
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
+  const { scrollYProgress } = useScroll();
+  const heroRef = useRef(null);
+  const statsRef = useRef(null);
+  const featuresRef = useRef(null);
+  
+  const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
+  const statsInView = useInView(statsRef, { once: true, amount: 0.3 });
+  const featuresInView = useInView(featuresRef, { once: true, amount: 0.1 });
+  
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const features = [
     {
@@ -90,176 +103,253 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero Section with 3D Animated Design */}
-      <section className="relative min-h-screen flex items-center gradient-animated overflow-hidden">
+      <motion.section 
+        ref={heroRef}
+        className="relative min-h-screen flex items-center gradient-animated overflow-hidden"
+        style={{ y, opacity }}
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-transparent via-background/20 to-background/40"></div>
-        <div className="container mx-auto px-4 relative z-10">
+        <motion.div 
+          className="container mx-auto px-4 relative z-10"
+          initial={{ opacity: 0, y: 100 }}
+          animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[90vh]">
-            <div className="text-center lg:text-left space-y-10">
+            <motion.div 
+              className="text-center lg:text-left space-y-10"
+              initial={{ opacity: 0, x: -50 }}
+              animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+              transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
+            >
               <div className="space-y-6">
-                <h1 className="text-6xl md:text-8xl font-bold text-foreground tracking-tight kinetic-text">
-                  {t('home.title')}
-                </h1>
-                <div className="clay-card p-6 inline-block">
-                  <p className="text-2xl text-primary font-bold">
+                <motion.h1 
+                  className="text-6xl lg:text-8xl font-bold"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={heroInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                >
+                  <span className="block text-transparent bg-clip-text gradient-animated-button glow-effect">
+                    {t('home.title')}
+                  </span>
+                  <motion.span 
+                    className="block text-4xl lg:text-6xl mt-4 text-primary/80 float-3d"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    transition={{ duration: 1, delay: 0.8 }}
+                  >
                     {t('brand.tagline')}
-                  </p>
-                </div>
+                  </motion.span>
+                </motion.h1>
+                <motion.p 
+                  className="text-xl lg:text-2xl text-foreground/80 leading-relaxed card-3d"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                  transition={{ duration: 1, delay: 1 }}
+                >
+                  {t('home.heroDesc')}
+                </motion.p>
               </div>
-              <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                {t('home.heroDesc')}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-                {!isAuthenticated ? (
-                  <>
-                    <Link to="/register">
-                      <Button size="lg" className="gradient-animated-button text-lg px-8 py-6 hover-lift shadow-none border-0 card-3d glow-effect">
-                        {t('home.getStarted')}
-                        <ArrowRight className="ml-2 h-6 w-6" />
-                      </Button>
-                    </Link>
-                    <Link to="/login">
-                      <Button variant="outline" size="lg" className="glass-3d text-lg px-8 py-6 hover-glow card-3d">
-                        {t('home.learnMore')}
-                      </Button>
-                    </Link>
-                  </>
-                ) : (
-                  <Link to="/dashboard">
-                    <Button size="lg" className="gradient-animated-button text-lg px-8 py-6 hover-lift card-3d glow-effect">
-                      Go to Dashboard
-                      <ArrowRight className="ml-2 h-6 w-6" />
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            </div>
-            
-            {/* Enhanced 3D Book Animation */}
-            <div className="h-96 lg:h-[600px] flex items-center justify-center relative">
-              <div className="relative">
-                {/* Animated gradient background */}
-                <div className="absolute inset-0 gradient-animated-card rounded-3xl blur-3xl opacity-30 animate-pulse"></div>
-                
-                {/* 3D Book Container */}
-                <div className="clay-card card-3d p-8 relative glass-3d">
-                  <div className="float-3d relative z-10">
-                    <BookOpen className="w-32 h-32 text-primary glow-effect" />
-                    
-                    {/* Floating particles */}
-                    <div className="absolute -top-4 -right-4 w-8 h-8 gradient-animated-button rounded-full animate-bounce-subtle clay-card"></div>
-                    <div className="absolute -bottom-2 -left-2 w-6 h-6 gradient-animated-card rounded-full animate-bounce-subtle delay-150 clay-card"></div>
-                    <div className="absolute -left-6 top-1/2 w-4 h-4 gradient-animated rounded-full animate-bounce-subtle delay-300 clay-card"></div>
-                    
-                    {/* Orbiting elements */}
-                    <div className="absolute top-0 left-1/2 w-2 h-2 bg-primary rounded-full animate-spin" style={{animationDuration: '3s'}}></div>
-                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-accent rounded-full animate-spin" style={{animationDuration: '4s', animationDirection: 'reverse'}}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Stats Section with Micro-interactions */}
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30 relative">
-        <div className="container mx-auto px-4">
-          <div className="bento-container">
-            {stats.map((stat, index) => (
-              <div key={index} className="bento-card card-3d text-center hover-tilt group glass-3d gradient-animated-card">
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="p-4 gradient-animated-button rounded-full group-hover:scale-110 transition-transform duration-300 glow-effect">
-                    <stat.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="text-4xl font-bold text-primary kinetic-text">{stat.number}</div>
-                  <p className="text-lg text-muted-foreground">{stat.label}</p>
-                </div>
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start"
+                initial={{ opacity: 0, y: 50 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+                transition={{ duration: 1, delay: 1.2 }}
+              >
+                <Button 
+                  asChild 
+                  size="lg" 
+                  className="gradient-animated-button text-lg px-8 py-6 hover-lift glow-effect"
+                >
+                  <Link to={isAuthenticated ? "/dashboard" : "/register"}>
+                    {t('home.getStarted')} <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="glass-3d text-lg px-8 py-6 hover-tilt border-primary/30 bg-primary/10"
+                >
+                  {t('home.learnMore')}
+                </Button>
+              </motion.div>
+            </motion.div>
+
+            <motion.div 
+              className="relative"
+              initial={{ opacity: 0, x: 50 }}
+              animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+              transition={{ duration: 1.2, delay: 0.6 }}
+            >
+              <div className="card-3d clay-card p-8 h-[500px] flex items-center justify-center">
+                <motion.div 
+                  className="w-80 h-80 bg-gradient-to-br from-primary/30 to-accent/30 rounded-full animate-morph glow-effect"
+                  animate={{ 
+                    rotate: [0, 360],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{
+                    rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                ></motion.div>
               </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.section>
+
+      {/* Statistics Section */}
+      <motion.section 
+        ref={statsRef}
+        className="py-24 gradient-clay"
+      >
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <motion.div 
+                key={index} 
+                className="text-center card-3d hover-lift"
+                initial={{ opacity: 0, y: 50 }}
+                animate={statsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
+              >
+                <div className="glass-3d p-8 rounded-3xl">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={statsInView ? { scale: 1 } : { scale: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
+                  >
+                    <stat.icon className="h-12 w-12 text-primary mx-auto mb-4 glow-effect" />
+                  </motion.div>
+                  <motion.div 
+                    className="text-4xl font-bold text-primary gradient-animated mb-2"
+                    initial={{ opacity: 0 }}
+                    animate={statsInView ? { opacity: 1 } : { opacity: 0 }}
+                    transition={{ duration: 0.8, delay: index * 0.2 + 0.5 }}
+                  >
+                    {stat.number}
+                  </motion.div>
+                  <div className="text-foreground/70">{stat.label}</div>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Features Section with Bento Grid */}
-      <section className="py-32 ambient-bg relative">
+      {/* Features Section */}
+      <motion.section 
+        ref={featuresRef}
+        className="py-24 bg-background"
+      >
         <div className="container mx-auto px-4">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+          <motion.div 
+            className="text-center mb-16 space-y-6"
+            initial={{ opacity: 0, y: 50 }}
+            animate={featuresInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-5xl font-bold text-transparent bg-clip-text gradient-primary">
               Why Choose Our Platform?
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
               Experience cutting-edge educational technology designed for the future of learning
             </p>
-          </div>
+          </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div 
+              <motion.div 
                 key={index} 
-                className={`bento-card card-3d group hover-lift relative overflow-hidden glass-3d gradient-animated-card ${index === 0 ? 'lg:col-span-2' : ''} ${index === 3 ? 'lg:row-span-2' : ''}`}
-                style={{animationDelay: `${index * 0.2}s`}}
+                className="bento-card hover-tilt group"
+                initial={{ opacity: 0, y: 50 }}
+                animate={featuresInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                whileHover={{ y: -10 }}
               >
-                <div className="absolute inset-0 gradient-animated opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <CardHeader className="relative z-10 pb-4">
-                  <div className={`mx-auto mb-6 w-16 h-16 gradient-animated-button rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500 clay-card glow-effect float-3d`}>
-                    <feature.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-xl kinetic-text">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="relative z-10">
-                  <CardDescription className="text-base leading-relaxed">{feature.description}</CardDescription>
-                </CardContent>
-              </div>
+                <div className="relative overflow-hidden">
+                  <motion.div 
+                    className={`h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-accent p-4 mb-6 card-3d group-hover:scale-110 transition-transform duration-300`}
+                    whileHover={{ rotate: 10 }}
+                  >
+                    <feature.icon className="h-8 w-8 text-primary-foreground" />
+                  </motion.div>
+                  <h3 className="text-2xl font-bold mb-4 text-foreground">{feature.title}</h3>
+                  <p className="text-foreground/70 leading-relaxed">{feature.description}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Immersive Learning Section */}
-      <section className="py-32 bg-gradient-to-br from-muted/20 to-background relative overflow-hidden">
+      {/* Immersive Learning Experience */}
+      <section className="py-20 bg-gradient-to-b from-muted/50 to-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
-              <h2 className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Immersive Learning Experience
+              <div className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                <Sparkles className="w-4 h-4 mr-2" />
+                {t('immersive.badge')}
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                {t('immersive.title')}
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Step into the future of education with our AI-powered platform that adapts to your learning style and provides personalized feedback in real-time.
+                {t('immersive.description')}
               </p>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="clay-card p-6 hover-glow">
-                  <Zap className="w-8 h-8 text-primary mb-4" />
-                  <h3 className="font-semibold mb-2">AI-Powered</h3>
-                  <p className="text-sm text-muted-foreground">Smart algorithms that understand your learning patterns</p>
-                </div>
-                <div className="clay-card p-6 hover-glow">
-                  <Sparkles className="w-8 h-8 text-secondary mb-4" />
-                  <h3 className="font-semibold mb-2">Interactive</h3>
-                  <p className="text-sm text-muted-foreground">Engaging exercises that make learning fun</p>
-                </div>
-              </div>
+              <ul className="space-y-4">
+                {[
+                  t('immersive.feature1'),
+                  t('immersive.feature2'),
+                  t('immersive.feature3')
+                ].map((feature, index) => (
+                  <li key={index} className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
+                      <Check className="w-4 h-4 text-primary" />
+                    </div>
+                    <span className="text-muted-foreground">{feature}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
+
             <div className="relative">
-              <div className="clay-card p-8 animate-float">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="clay-card p-4 hover-tilt">
-                    <Award className="w-8 h-8 text-primary mb-2" />
-                    <p className="text-sm font-medium">Achievement System</p>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-6">
+                  <div className="bento-card bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-200/20">
+                    <div className="h-32 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-lg mb-4 flex items-center justify-center">
+                      <Languages className="w-12 h-12 text-white" />
+                    </div>
+                    <h4 className="font-semibold text-foreground mb-2">{t('immersive.card1Title')}</h4>
+                    <p className="text-sm text-muted-foreground">{t('immersive.card1Desc')}</p>
                   </div>
-                  <div className="clay-card p-4 hover-tilt delay-75">
-                    <TrendingUp className="w-8 h-8 text-secondary mb-2" />
-                    <p className="text-sm font-medium">Progress Tracking</p>
+                  <div className="bento-card bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-200/20 bento-tall">
+                    <div className="h-32 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg mb-4 flex items-center justify-center">
+                      <GamepadIcon className="w-12 h-12 text-white" />
+                    </div>
+                    <h4 className="font-semibold text-foreground mb-2">{t('immersive.card2Title')}</h4>
+                    <p className="text-sm text-muted-foreground">{t('immersive.card2Desc')}</p>
                   </div>
-                  <div className="clay-card p-4 hover-tilt delay-150">
-                    <Lightbulb className="w-8 h-8 text-accent mb-2" />
-                    <p className="text-sm font-medium">Smart Hints</p>
+                </div>
+                <div className="space-y-6 pt-12">
+                  <div className="bento-card bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-200/20 bento-tall">
+                    <div className="h-32 bg-gradient-to-br from-green-400 to-emerald-400 rounded-lg mb-4 flex items-center justify-center">
+                      <BookOpen className="w-12 h-12 text-white" />
+                    </div>
+                    <h4 className="font-semibold text-foreground mb-2">{t('immersive.card3Title')}</h4>
+                    <p className="text-sm text-muted-foreground">{t('immersive.card3Desc')}</p>
                   </div>
-                  <div className="clay-card p-4 hover-tilt delay-200">
-                    <Target className="w-8 h-8 text-primary mb-2" />
-                    <p className="text-sm font-medium">Goal Setting</p>
+                  <div className="bento-card bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-200/20">
+                    <div className="h-32 bg-gradient-to-br from-orange-400 to-red-400 rounded-lg mb-4 flex items-center justify-center">
+                      <Target className="w-12 h-12 text-white" />
+                    </div>
+                    <h4 className="font-semibold text-foreground mb-2">{t('immersive.card4Title')}</h4>
+                    <p className="text-sm text-muted-foreground">{t('immersive.card4Desc')}</p>
                   </div>
                 </div>
               </div>
@@ -268,121 +358,187 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pricing Section with Enhanced Clay Design */}
-      <section className="py-32 ambient-bg relative overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+      {/* Pricing Section */}
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16 space-y-6">
+            <div className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+              <Award className="w-4 h-4 mr-2" />
+              {t('pricing.badge')}
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground">
               {t('pricing.title')}
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Choose the perfect plan for your learning journey
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              {t('pricing.subtitle')}
             </p>
           </div>
+
           <div className="max-w-lg mx-auto">
-            <div className="bento-card relative overflow-hidden hover-lift">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
-              <CardHeader className="text-center relative z-10 pt-10 pb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-2xl mb-4 mx-auto animate-pulse-soft">
-                  <Star className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="text-3xl font-bold">{plan.name}</CardTitle>
-                <div className="text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  {plan.price}
-                  <span className="text-lg text-muted-foreground font-normal">{t('pricing.perMonth')}</span>
+            <Card className="bento-card hover-lift relative overflow-hidden border-2 border-primary/20">
+              <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-2 text-sm font-medium">
+                {t('pricing.popular')}
+              </div>
+              <CardHeader className="text-center space-y-4">
+                <CardTitle className="text-3xl font-bold text-foreground">{plan.name}</CardTitle>
+                <div className="space-y-2">
+                  <div className="text-5xl font-bold text-primary">{plan.price}</div>
+                  <CardDescription className="text-muted-foreground">
+                    {t('pricing.perMonth')}
+                  </CardDescription>
                 </div>
               </CardHeader>
-              <CardContent className="relative z-10 px-8 pb-10">
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
-                        <Check className="h-3 w-3 text-white" />
+              <CardContent className="space-y-6">
+                <ul className="space-y-4">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
+                        <Check className="w-4 h-4 text-primary" />
                       </div>
-                      <span className="text-base">{feature}</span>
+                      <span className="text-muted-foreground">{feature}</span>
                     </li>
                   ))}
                 </ul>
-                <Link to="/register">
-                  <Button className="w-full clay-button text-lg py-6 hover-lift shadow-none border-0">
-                    {t('pricing.selectPlan')}
-                  </Button>
-                </Link>
+                <Button 
+                  asChild 
+                  size="lg" 
+                  className="w-full text-lg py-6 bg-primary hover:bg-primary/90"
+                >
+                  <Link to="/register">
+                    {t('pricing.cta')}
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
               </CardContent>
-            </div>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Testimonials with Enhanced Design */}
-      <section className="py-32 bg-gradient-to-b from-muted/30 to-background">
+      {/* Testimonials Section */}
+      <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+          <div className="text-center mb-16 space-y-6">
+            <div className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+              <Star className="w-4 h-4 mr-2" />
+              {t('testimonials.badge')}
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground">
               {t('testimonials.title')}
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Real feedback from real students transforming their English skills
+              {t('testimonials.subtitle')}
             </p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bento-card hover-lift group">
-                <CardContent className="pt-8 pb-6">
-                  <div className="flex items-center mb-6">
-                    <div className="text-4xl mr-4">{testimonial.avatar}</div>
-                    <div className="flex">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 fill-primary text-primary" />
-                      ))}
-                    </div>
+              <Card key={index} className="bento-card hover-lift">
+                <CardContent className="p-8 space-y-6">
+                  <div className="flex items-center space-x-1">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    ))}
                   </div>
-                  <blockquote className="text-lg italic mb-6 leading-relaxed text-muted-foreground">
+                  <blockquote className="text-lg text-muted-foreground leading-relaxed">
                     "{testimonial.text}"
                   </blockquote>
-                  <cite className="font-semibold text-primary">— {testimonial.name}</cite>
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-2xl">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-foreground">{testimonial.name}</div>
+                      <div className="text-sm text-muted-foreground">{t('testimonials.studentLabel')}</div>
+                    </div>
+                  </div>
                 </CardContent>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Enhanced CTA Section */}
-      <section className="py-32 gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-5xl font-bold mb-6 text-white kinetic-text">
-            {t('contact.ready') || 'Ready to Transform Your Learning?'}
-          </h2>
-          <p className="text-2xl mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed">
-            {t('contact.joinMessage') || 'Join thousands of learners already advancing their education with our platform'}
-          </p>
-          {!isAuthenticated && (
-            <Link to="/register">
-              <Button size="lg" className="clay-button text-xl px-10 py-6 hover-lift shadow-none border-0 bg-white text-primary hover:bg-white/90">
-                {t('contact.startToday') || 'Start Your Journey Today'}
-                <ArrowRight className="ml-3 h-6 w-6" />
+      {/* Call to Action */}
+      <section className="py-20 bg-gradient-to-br from-primary/10 via-background to-accent/10">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-4xl mx-auto space-y-8">
+            <div className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
+              <Lightbulb className="w-4 h-4 mr-2" />
+              {t('cta.badge')}
+            </div>
+            <h2 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
+              {t('cta.title')}
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              {t('cta.description')}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button asChild size="lg" className="text-lg px-8 py-6">
+                <Link to="/register">
+                  {t('cta.primary')}
+                  <ArrowRight className="ml-2 h-6 w-6" />
+                </Link>
               </Button>
-            </Link>
-          )}
+              <Button variant="outline" size="lg" className="text-lg px-8 py-6">
+                {t('cta.secondary')}
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Contact Information */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 text-center">
-          <div className="bento-card max-w-2xl mx-auto">
-            <h3 className="text-3xl font-bold mb-6 text-primary">{t('contact.title')}</h3>
-            <div className="space-y-4">
-              <p className="text-lg">
-                <strong>Phone:</strong> {t('contact.phone')}
-              </p>
-              <p className="text-lg">
-                <strong>Email:</strong> {t('contact.email')}
-              </p>
-              <p className="text-muted-foreground">{t('contact.support')}</p>
-            </div>
+      {/* Contact Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16 space-y-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground">
+              {t('contact.title')}
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              {t('contact.subtitle')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="bento-card text-center hover-lift">
+              <CardContent className="p-8 space-y-4">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                  <MessageCircle className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">{t('contact.support')}</h3>
+                <p className="text-muted-foreground">{t('contact.supportDesc')}</p>
+                <Button variant="outline" size="sm">
+                  {t('contact.contactSupport')}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bento-card text-center hover-lift">
+              <CardContent className="p-8 space-y-4">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                  <Users className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">{t('contact.community')}</h3>
+                <p className="text-muted-foreground">{t('contact.communityDesc')}</p>
+                <Button variant="outline" size="sm">
+                  {t('contact.joinCommunity')}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bento-card text-center hover-lift">
+              <CardContent className="p-8 space-y-4">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                  <Globe className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">{t('contact.social')}</h3>
+                <p className="text-muted-foreground">{t('contact.socialDesc')}</p>
+                <Button variant="outline" size="sm">
+                  {t('contact.followUs')}
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

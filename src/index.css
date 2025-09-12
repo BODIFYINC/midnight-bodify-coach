@@ -17,67 +17,67 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* 2025 Modern Color Palette - Warm clay and organic tones */
-    --background: 45 23% 97%;
-    --foreground: 25 25% 15%;
+    /* 2025 Modern Color Palette - Golden Yellow Theme */
+    --background: 45 100% 5%;
+    --foreground: 45 90% 85%;
 
-    --card: 42 33% 95%;
-    --card-foreground: 25 25% 15%;
+    --card: 45 80% 8%;
+    --card-foreground: 45 90% 85%;
 
-    --popover: 42 33% 95%;
-    --popover-foreground: 25 25% 15%;
+    --popover: 45 80% 8%;
+    --popover-foreground: 45 90% 85%;
 
-    /* Modern 2025 colors: Warm terracotta with sage accents */
-    --primary: 15 75% 65%;
-    --primary-foreground: 0 0% 98%;
+    /* Modern 2025 colors: Golden Yellow Primary */
+    --primary: 45 100% 65%;
+    --primary-foreground: 45 100% 5%;
     
-    --secondary: 75 35% 70%;
-    --secondary-foreground: 25 25% 15%;
+    --secondary: 45 80% 50%;
+    --secondary-foreground: 45 100% 5%;
 
-    --muted: 45 15% 90%;
-    --muted-foreground: 25 15% 45%;
+    --muted: 45 60% 15%;
+    --muted-foreground: 45 70% 60%;
 
-    --accent: 195 65% 75%;
-    --accent-foreground: 25 25% 15%;
+    --accent: 45 100% 75%;
+    --accent-foreground: 45 100% 5%;
 
     --destructive: 0 75% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 45 25% 85%;
-    --input: 45 25% 90%;
-    --ring: 15 75% 65%;
+    --border: 45 80% 25%;
+    --input: 45 80% 12%;
+    --ring: 45 100% 65%;
 
     --radius: 1rem;
     
-    /* 2025 Claymorphism and organic gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(15 75% 65%) 0%, hsl(35 65% 60%) 50%, hsl(195 65% 75%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(15 75% 65%) 0%, hsl(25 70% 50%) 25%, hsl(195 65% 75%) 75%, hsl(75 35% 70%) 100%);
-    --gradient-clay: linear-gradient(145deg, hsl(25 35% 85%) 0%, hsl(35 45% 75%) 50%, hsl(45 35% 80%) 100%);
-    --gradient-organic: radial-gradient(ellipse at top, hsl(15 45% 90%) 0%, hsl(25 35% 85%) 50%, hsl(35 25% 80%) 100%);
+    /* 2025 Golden Yellow Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(45 100% 65%) 0%, hsl(45 90% 55%) 50%, hsl(45 80% 45%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(45 100% 65%) 0%, hsl(45 90% 50%) 25%, hsl(45 100% 75%) 75%, hsl(45 80% 55%) 100%);
+    --gradient-clay: linear-gradient(145deg, hsl(45 80% 15%) 0%, hsl(45 90% 20%) 50%, hsl(45 70% 18%) 100%);
+    --gradient-organic: radial-gradient(ellipse at top, hsl(45 80% 25%) 0%, hsl(45 70% 15%) 50%, hsl(45 60% 10%) 100%);
     
-    /* Animated 3D Gradients */
-    --gradient-animated-hero: linear-gradient(-45deg, hsl(15 75% 65%), hsl(25 70% 50%), hsl(195 65% 75%), hsl(75 35% 70%), hsl(35 65% 60%));
-    --gradient-animated-card: linear-gradient(-45deg, hsl(15 55% 85%), hsl(35 45% 75%), hsl(195 45% 85%), hsl(75 25% 80%));
-    --gradient-animated-button: linear-gradient(-45deg, hsl(15 75% 65%), hsl(25 80% 60%), hsl(195 70% 70%), hsl(75 40% 65%));
-    --gradient-mesh: radial-gradient(circle at 20% 80%, hsl(15 75% 65% / 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, hsl(195 65% 75% / 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, hsl(75 35% 70% / 0.2) 0%, transparent 50%);
+    /* Animated 3D Golden Gradients */
+    --gradient-animated-hero: linear-gradient(-45deg, hsl(45 100% 65%), hsl(45 90% 50%), hsl(45 100% 75%), hsl(45 80% 55%), hsl(45 95% 60%));
+    --gradient-animated-card: linear-gradient(-45deg, hsl(45 80% 25%), hsl(45 90% 30%), hsl(45 70% 20%), hsl(45 85% 35%));
+    --gradient-animated-button: linear-gradient(-45deg, hsl(45 100% 65%), hsl(45 95% 70%), hsl(45 90% 60%), hsl(45 100% 75%));
+    --gradient-mesh: radial-gradient(circle at 20% 80%, hsl(45 100% 65% / 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, hsl(45 90% 75% / 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, hsl(45 80% 55% / 0.2) 0%, transparent 50%);
     
-    --shadow-clay: 0 8px 32px hsl(15 75% 65% / 0.15), inset 0 2px 0 hsl(0 0% 100% / 0.2);
-    --shadow-soft: 0 4px 20px hsl(25 25% 15% / 0.08);
-    --shadow-ambient: 0 16px 64px hsl(15 75% 65% / 0.1);
-    --shadow-3d: 0 20px 40px hsl(25 25% 15% / 0.1), 0 0 40px hsl(15 75% 65% / 0.3);
+    --shadow-clay: 0 8px 32px hsl(45 100% 65% / 0.25), inset 0 2px 0 hsl(45 90% 80% / 0.2);
+    --shadow-soft: 0 4px 20px hsl(45 100% 5% / 0.3);
+    --shadow-ambient: 0 16px 64px hsl(45 100% 65% / 0.2);
+    --shadow-3d: 0 20px 40px hsl(45 100% 5% / 0.3), 0 0 40px hsl(45 100% 65% / 0.4);
     --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     --transition-spring: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-    --sidebar-background: 42 33% 95%;
-    --sidebar-foreground: 25 25% 15%;
-    --sidebar-primary: 15 75% 65%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 45 25% 90%;
-    --sidebar-accent-foreground: 25 25% 15%;
-    --sidebar-border: 45 25% 85%;
-    --sidebar-ring: 15 75% 65%;
+    --sidebar-background: 45 80% 8%;
+    --sidebar-foreground: 45 90% 85%;
+    --sidebar-primary: 45 100% 65%;
+    --sidebar-primary-foreground: 45 100% 5%;
+    --sidebar-accent: 45 60% 15%;
+    --sidebar-accent-foreground: 45 90% 85%;
+    --sidebar-border: 45 80% 25%;
+    --sidebar-ring: 45 100% 65%;
   }
 
   .dark {
@@ -141,8 +141,57 @@ All colors MUST be HSL.
   }
 }
 
-/* 2025 Modern Utilities - Claymorphism, Bento, Micro-interactions */
+/* 2025 Modern Utilities - Golden Theme, 3D, Scroll Animations */
 @layer utilities {
+  /* Smooth Scroll Behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Scroll Animations */
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-fade-in.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scroll-scale-in {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-scale-in.in-view {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .scroll-slide-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-slide-in-left.in-view {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .scroll-slide-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-slide-in-right.in-view {
+    opacity: 1;
+    transform: translateX(0);
+  }
   /* Ambient Animations */
   .animate-float {
     animation: float 8s ease-in-out infinite;
@@ -260,7 +309,7 @@ All colors MUST be HSL.
   }
 
   .hover-glow:hover {
-    box-shadow: 0 0 40px hsl(var(--primary) / 0.4), 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.6), 0 10px 30px hsl(45 100% 5% / 0.2);
   }
 
   .hover-scale {
@@ -472,10 +521,10 @@ All colors MUST be HSL.
 
 @keyframes glow-pulse {
   0%, 100% {
-    box-shadow: 0 0 5px hsl(15 75% 65% / 0.5), 0 0 10px hsl(15 75% 65% / 0.3), 0 0 15px hsl(15 75% 65% / 0.2);
+    box-shadow: 0 0 5px hsl(45 100% 65% / 0.5), 0 0 10px hsl(45 100% 65% / 0.3), 0 0 15px hsl(45 100% 65% / 0.2);
   }
   50% {
-    box-shadow: 0 0 10px hsl(15 75% 65% / 0.8), 0 0 20px hsl(15 75% 65% / 0.5), 0 0 30px hsl(15 75% 65% / 0.3);
+    box-shadow: 0 0 10px hsl(45 100% 65% / 0.8), 0 0 20px hsl(45 100% 65% / 0.5), 0 0 30px hsl(45 100% 65% / 0.3);
   }
 }
 
