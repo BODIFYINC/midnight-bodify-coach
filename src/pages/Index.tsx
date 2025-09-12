@@ -91,8 +91,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Claymorphism */}
-      <section className="relative min-h-screen flex items-center ambient-bg overflow-hidden">
+      {/* Hero Section with 3D Animated Design */}
+      <section className="relative min-h-screen flex items-center gradient-animated overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-background/20 to-background/40"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[90vh]">
             <div className="text-center lg:text-left space-y-10">
@@ -113,20 +114,20 @@ const Index = () => {
                 {!isAuthenticated ? (
                   <>
                     <Link to="/register">
-                      <Button size="lg" className="clay-button text-lg px-8 py-6 hover-lift shadow-none border-0">
+                      <Button size="lg" className="gradient-animated-button text-lg px-8 py-6 hover-lift shadow-none border-0 card-3d glow-effect">
                         {t('home.getStarted')}
                         <ArrowRight className="ml-2 h-6 w-6" />
                       </Button>
                     </Link>
                     <Link to="/login">
-                      <Button variant="outline" size="lg" className="glass-effect text-lg px-8 py-6 hover-glow">
+                      <Button variant="outline" size="lg" className="glass-3d text-lg px-8 py-6 hover-glow card-3d">
                         {t('home.learnMore')}
                       </Button>
                     </Link>
                   </>
                 ) : (
                   <Link to="/dashboard">
-                    <Button size="lg" className="clay-button text-lg px-8 py-6 hover-lift">
+                    <Button size="lg" className="gradient-animated-button text-lg px-8 py-6 hover-lift card-3d glow-effect">
                       Go to Dashboard
                       <ArrowRight className="ml-2 h-6 w-6" />
                     </Button>
@@ -135,14 +136,26 @@ const Index = () => {
               </div>
             </div>
             
-            {/* 3D Clay Book Animation */}
+            {/* Enhanced 3D Book Animation */}
             <div className="h-96 lg:h-[600px] flex items-center justify-center relative">
-              <div className="clay-card p-8 animate-morph relative">
-                <div className="animate-float relative z-10">
-                  <BookOpen className="w-32 h-32 text-primary animate-pulse-soft" />
-                  <div className="absolute -top-4 -right-4 w-8 h-8 bg-secondary rounded-full animate-bounce-subtle clay-card"></div>
-                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-accent rounded-full animate-bounce-subtle delay-150 clay-card"></div>
-                  <div className="absolute -left-6 top-1/2 w-4 h-4 bg-primary rounded-full animate-bounce-subtle delay-300 clay-card"></div>
+              <div className="relative">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 gradient-animated-card rounded-3xl blur-3xl opacity-30 animate-pulse"></div>
+                
+                {/* 3D Book Container */}
+                <div className="clay-card card-3d p-8 relative glass-3d">
+                  <div className="float-3d relative z-10">
+                    <BookOpen className="w-32 h-32 text-primary glow-effect" />
+                    
+                    {/* Floating particles */}
+                    <div className="absolute -top-4 -right-4 w-8 h-8 gradient-animated-button rounded-full animate-bounce-subtle clay-card"></div>
+                    <div className="absolute -bottom-2 -left-2 w-6 h-6 gradient-animated-card rounded-full animate-bounce-subtle delay-150 clay-card"></div>
+                    <div className="absolute -left-6 top-1/2 w-4 h-4 gradient-animated rounded-full animate-bounce-subtle delay-300 clay-card"></div>
+                    
+                    {/* Orbiting elements */}
+                    <div className="absolute top-0 left-1/2 w-2 h-2 bg-primary rounded-full animate-spin" style={{animationDuration: '3s'}}></div>
+                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-accent rounded-full animate-spin" style={{animationDuration: '4s', animationDirection: 'reverse'}}></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -155,12 +168,12 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="bento-container">
             {stats.map((stat, index) => (
-              <div key={index} className="bento-card text-center hover-tilt group">
+              <div key={index} className="bento-card card-3d text-center hover-tilt group glass-3d gradient-animated-card">
                 <div className="flex flex-col items-center space-y-4">
-                  <div className="p-4 bg-gradient-to-br from-primary to-secondary rounded-full group-hover:scale-110 transition-transform duration-300">
+                  <div className="p-4 gradient-animated-button rounded-full group-hover:scale-110 transition-transform duration-300 glow-effect">
                     <stat.icon className="w-8 h-8 text-white" />
                   </div>
-                  <div className="text-4xl font-bold text-primary">{stat.number}</div>
+                  <div className="text-4xl font-bold text-primary kinetic-text">{stat.number}</div>
                   <p className="text-lg text-muted-foreground">{stat.label}</p>
                 </div>
               </div>
@@ -185,14 +198,16 @@ const Index = () => {
             {features.map((feature, index) => (
               <div 
                 key={index} 
-                className={`bento-card group hover-lift relative overflow-hidden ${index === 0 ? 'lg:col-span-2' : ''} ${index === 3 ? 'lg:row-span-2' : ''}`}
+                className={`bento-card card-3d group hover-lift relative overflow-hidden glass-3d gradient-animated-card ${index === 0 ? 'lg:col-span-2' : ''} ${index === 3 ? 'lg:row-span-2' : ''}`}
+                style={{animationDelay: `${index * 0.2}s`}}
               >
+                <div className="absolute inset-0 gradient-animated opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <CardHeader className="relative z-10 pb-4">
-                  <div className={`mx-auto mb-6 w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500 clay-card`}>
+                  <div className={`mx-auto mb-6 w-16 h-16 gradient-animated-button rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500 clay-card glow-effect float-3d`}>
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  <CardTitle className="text-xl kinetic-text">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="relative z-10">
                   <CardDescription className="text-base leading-relaxed">{feature.description}</CardDescription>
