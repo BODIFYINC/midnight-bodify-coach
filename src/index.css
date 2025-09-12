@@ -17,58 +17,58 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* 2025 Modern Color Palette - Golden Yellow Theme */
-    --background: 45 100% 5%;
-    --foreground: 45 90% 85%;
-
-    --card: 45 80% 8%;
-    --card-foreground: 45 90% 85%;
-
-    --popover: 45 80% 8%;
-    --popover-foreground: 45 90% 85%;
-
-    /* Modern 2025 colors: Golden Yellow Primary */
-    --primary: 45 100% 65%;
-    --primary-foreground: 45 100% 5%;
+    /* ===== 2025 Cyber Purple Theme ===== */
+    --background: 240 15% 6%;
+    --foreground: 240 10% 95%;
     
-    --secondary: 45 80% 50%;
-    --secondary-foreground: 45 100% 5%;
-
-    --muted: 45 60% 15%;
-    --muted-foreground: 45 70% 60%;
-
-    --accent: 45 100% 75%;
-    --accent-foreground: 45 100% 5%;
-
-    --destructive: 0 75% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 45 80% 25%;
-    --input: 45 80% 12%;
-    --ring: 45 100% 65%;
-
-    --radius: 1rem;
+    --card: 240 12% 8%;
+    --card-foreground: 240 8% 92%;
     
-    /* 2025 Golden Yellow Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(45 100% 65%) 0%, hsl(45 90% 55%) 50%, hsl(45 80% 45%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(45 100% 65%) 0%, hsl(45 90% 50%) 25%, hsl(45 100% 75%) 75%, hsl(45 80% 55%) 100%);
-    --gradient-clay: linear-gradient(145deg, hsl(45 80% 15%) 0%, hsl(45 90% 20%) 50%, hsl(45 70% 18%) 100%);
-    --gradient-organic: radial-gradient(ellipse at top, hsl(45 80% 25%) 0%, hsl(45 70% 15%) 50%, hsl(45 60% 10%) 100%);
+    --popover: 240 12% 8%;
+    --popover-foreground: 240 8% 92%;
     
-    /* Animated 3D Golden Gradients */
-    --gradient-animated-hero: linear-gradient(-45deg, hsl(45 100% 65%), hsl(45 90% 50%), hsl(45 100% 75%), hsl(45 80% 55%), hsl(45 95% 60%));
-    --gradient-animated-card: linear-gradient(-45deg, hsl(45 80% 25%), hsl(45 90% 30%), hsl(45 70% 20%), hsl(45 85% 35%));
-    --gradient-animated-button: linear-gradient(-45deg, hsl(45 100% 65%), hsl(45 95% 70%), hsl(45 90% 60%), hsl(45 100% 75%));
-    --gradient-mesh: radial-gradient(circle at 20% 80%, hsl(45 100% 65% / 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, hsl(45 90% 75% / 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, hsl(45 80% 55% / 0.2) 0%, transparent 50%);
+    --primary: 270 100% 70%;
+    --primary-foreground: 240 15% 6%;
     
-    --shadow-clay: 0 8px 32px hsl(45 100% 65% / 0.25), inset 0 2px 0 hsl(45 90% 80% / 0.2);
-    --shadow-soft: 0 4px 20px hsl(45 100% 5% / 0.3);
-    --shadow-ambient: 0 16px 64px hsl(45 100% 65% / 0.2);
-    --shadow-3d: 0 20px 40px hsl(45 100% 5% / 0.3), 0 0 40px hsl(45 100% 65% / 0.4);
-    --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    --transition-spring: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --secondary: 240 8% 12%;
+    --secondary-foreground: 240 8% 92%;
+    
+    --muted: 240 8% 14%;
+    --muted-foreground: 240 5% 65%;
+    
+    --accent: 310 100% 75%;
+    --accent-foreground: 240 15% 6%;
+    
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 240 8% 92%;
+    
+    --border: 240 8% 18%;
+    --input: 240 8% 18%;
+    --ring: 270 100% 70%;
+    
+    --radius: 1.2rem;
+    
+    /* Modern Cyber Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(270 100% 70%) 0%, hsl(310 100% 75%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(240 15% 6%) 0%, hsl(240 20% 8%) 50%, hsl(270 30% 10%) 100%);
+    --gradient-cyber: linear-gradient(45deg, hsl(270 100% 70% / 0.1) 0%, hsl(310 100% 75% / 0.1) 50%, hsl(200 100% 80% / 0.1) 100%);
+    --gradient-neon: linear-gradient(135deg, hsl(270 100% 70% / 0.8), hsl(310 100% 75% / 0.8), hsl(200 100% 80% / 0.8));
+    --gradient-glass: linear-gradient(135deg, hsl(240 12% 8% / 0.8) 0%, hsl(240 8% 12% / 0.6) 100%);
+    --gradient-hologram: linear-gradient(-45deg, hsl(270 100% 70% / 0.3), hsl(310 100% 75% / 0.3), hsl(200 100% 80% / 0.3), hsl(270 100% 70% / 0.3));
+    --gradient-mesh: radial-gradient(at 40% 20%, hsl(270 100% 70% / 0.4) 0%, transparent 50%),
+                     radial-gradient(at 80% 0%, hsl(310 100% 75% / 0.3) 0%, transparent 50%),
+                     radial-gradient(at 0% 50%, hsl(200 100% 80% / 0.2) 0%, transparent 50%);
+    
+    /* Neon Shadows */
+    --shadow-neon: 0 0 20px hsl(270 100% 70% / 0.5), 0 0 40px hsl(270 100% 70% / 0.3), 0 0 60px hsl(270 100% 70% / 0.1);
+    --shadow-cyber: 0 8px 32px hsl(270 100% 70% / 0.25), 0 4px 16px hsl(310 100% 75% / 0.15);
+    --shadow-glass: 0 8px 32px hsl(0 0% 0% / 0.3), inset 0 1px 0 hsl(240 8% 92% / 0.1);
+    --shadow-3d: 0 20px 60px hsl(270 100% 70% / 0.3), 0 8px 20px hsl(0 0% 0% / 0.2);
+    
+    /* Smooth Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-glow: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     --sidebar-background: 45 80% 8%;
     --sidebar-foreground: 45 90% 85%;
@@ -81,44 +81,45 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode - Deep charcoal with warm accents */
-    --background: 25 15% 8%;
-    --foreground: 45 23% 95%;
-
-    --card: 25 15% 12%;
-    --card-foreground: 45 23% 95%;
-
-    --popover: 25 15% 12%;
-    --popover-foreground: 45 23% 95%;
-
-    /* Dark mode warm colors */
-    --primary: 15 75% 65%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 75 35% 70%;
-    --secondary-foreground: 25 15% 8%;
-
-    --muted: 25 10% 18%;
-    --muted-foreground: 45 15% 65%;
-
-    --accent: 195 65% 75%;
-    --accent-foreground: 25 15% 8%;
-
-    --destructive: 0 75% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 25 15% 22%;
-    --input: 25 15% 18%;
-    --ring: 15 75% 65%;
+    --background: 240 18% 4%;
+    --foreground: 240 10% 96%;
     
-    /* Dark mode organic gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(15 75% 65%) 0%, hsl(35 65% 60%) 50%, hsl(195 65% 75%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(15 75% 65%) 0%, hsl(25 70% 50%) 25%, hsl(195 65% 75%) 75%, hsl(75 35% 70%) 100%);
-    --gradient-clay: linear-gradient(145deg, hsl(25 15% 15%) 0%, hsl(35 20% 20%) 50%, hsl(45 15% 18%) 100%);
-    --gradient-organic: radial-gradient(ellipse at top, hsl(15 25% 15%) 0%, hsl(25 15% 12%) 50%, hsl(35 10% 10%) 100%);
-    --shadow-clay: 0 8px 32px hsl(0 0% 0% / 0.3), inset 0 2px 0 hsl(0 0% 100% / 0.05);
-    --shadow-soft: 0 4px 20px hsl(0 0% 0% / 0.2);
-    --shadow-ambient: 0 16px 64px hsl(15 75% 65% / 0.15);
+    --card: 240 15% 6%;
+    --card-foreground: 240 10% 96%;
+    
+    --popover: 240 15% 6%;
+    --popover-foreground: 240 10% 96%;
+    
+    --primary: 270 100% 75%;
+    --primary-foreground: 240 18% 4%;
+    
+    --secondary: 240 10% 8%;
+    --secondary-foreground: 240 10% 96%;
+    
+    --muted: 240 10% 10%;
+    --muted-foreground: 240 8% 70%;
+    
+    --accent: 310 100% 80%;
+    --accent-foreground: 240 18% 4%;
+    
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 240 10% 96%;
+    
+    --border: 240 10% 12%;
+    --input: 240 10% 12%;
+    --ring: 270 100% 75%;
+    
+    /* Enhanced Cyber Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(270 100% 75%) 0%, hsl(310 100% 80%) 100%);
+    --gradient-cyber: linear-gradient(45deg, hsl(270 100% 75% / 0.15) 0%, hsl(310 100% 80% / 0.15) 50%, hsl(200 100% 85% / 0.15) 100%);
+    --gradient-neon: linear-gradient(135deg, hsl(270 100% 75% / 0.9), hsl(310 100% 80% / 0.9), hsl(200 100% 85% / 0.9));
+    --gradient-glass: linear-gradient(135deg, hsl(240 15% 6% / 0.9) 0%, hsl(240 10% 8% / 0.7) 100%);
+    --gradient-hologram: linear-gradient(-45deg, hsl(270 100% 75% / 0.4), hsl(310 100% 80% / 0.4), hsl(200 100% 85% / 0.4), hsl(270 100% 75% / 0.4));
+    
+    --shadow-neon: 0 0 25px hsl(270 100% 75% / 0.6), 0 0 50px hsl(270 100% 75% / 0.4), 0 0 75px hsl(270 100% 75% / 0.2);
+    --shadow-cyber: 0 10px 40px hsl(270 100% 75% / 0.3), 0 5px 20px hsl(310 100% 80% / 0.2);
+    --shadow-glass: 0 10px 40px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(240 10% 96% / 0.1);
+    --shadow-3d: 0 25px 75px hsl(270 100% 75% / 0.4), 0 10px 25px hsl(0 0% 0% / 0.3);
     
     --sidebar-background: 25 15% 12%;
     --sidebar-foreground: 45 23% 95%;
@@ -372,11 +373,14 @@ All colors MUST be HSL.
   }
 
   .glass-3d {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: var(--shadow-3d);
+    backdrop-filter: blur(20px) saturate(180%);
+    background: linear-gradient(135deg, 
+      hsl(var(--card) / 0.3) 0%, 
+      hsl(var(--secondary) / 0.2) 100%);
+    border: 1px solid hsl(var(--border) / 0.3);
+    box-shadow: var(--shadow-glass);
     transform-style: preserve-3d;
+    border-radius: var(--radius);
   }
 
   .card-3d {
@@ -521,10 +525,10 @@ All colors MUST be HSL.
 
 @keyframes glow-pulse {
   0%, 100% {
-    box-shadow: 0 0 5px hsl(45 100% 65% / 0.5), 0 0 10px hsl(45 100% 65% / 0.3), 0 0 15px hsl(45 100% 65% / 0.2);
+    box-shadow: 0 0 5px hsl(270 100% 70% / 0.5), 0 0 10px hsl(270 100% 70% / 0.3), 0 0 15px hsl(270 100% 70% / 0.2);
   }
   50% {
-    box-shadow: 0 0 10px hsl(45 100% 65% / 0.8), 0 0 20px hsl(45 100% 65% / 0.5), 0 0 30px hsl(45 100% 65% / 0.3);
+    box-shadow: 0 0 10px hsl(270 100% 70% / 0.8), 0 0 20px hsl(270 100% 70% / 0.5), 0 0 30px hsl(270 100% 70% / 0.3);
   }
 }
 
@@ -535,4 +539,60 @@ All colors MUST be HSL.
   50% {
     transform: translateY(-20px) rotateX(10deg) rotateY(5deg);
   }
+}
+
+/* Enhanced Cyber Animations */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes neon-flicker {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes cyber-glitch {
+  0%, 100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+}
+
+/* New Utility Classes */
+.animate-gradient {
+  background-size: 300% 300%;
+  animation: gradient 4s ease infinite;
+}
+
+.animate-neon-flicker {
+  animation: neon-flicker 2s ease-in-out infinite;
+}
+
+.animate-cyber-glitch {
+  animation: cyber-glitch 0.3s infinite;
 }
