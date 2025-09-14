@@ -648,8 +648,9 @@ table {
   .space-y-section > * + * {
     margin-top: var(--space-16);
   }
-}
-  /* Smooth Scroll Behavior */
+
+  /* ===== SCROLL BEHAVIOR & ANIMATIONS ===== */
+  
   html {
     scroll-behavior: smooth;
   }
@@ -698,7 +699,9 @@ table {
     opacity: 1;
     transform: translateX(0);
   }
-  /* Ambient Animations */
+
+  /* ===== AMBIENT ANIMATIONS ===== */
+  
   .animate-float {
     animation: float 8s ease-in-out infinite;
   }
