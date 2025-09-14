@@ -353,7 +353,6 @@ table {
     --sidebar-accent: 220 8% 8%;
     --sidebar-border: 220 8% 15%;
   }
-}
 
 @layer base {
   * {
