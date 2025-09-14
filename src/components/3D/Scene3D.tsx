@@ -4,13 +4,28 @@ import { OrbitControls, Environment, Lightformer } from '@react-three/drei';
 import { LibyanBook } from './LibyanBook';
 import * as THREE from 'three';
 
-// Patch: prevent react-three-fiber from crashing when dev tagger injects data-lov-* props.
-// It may attempt to assign dashed nested props like "data-lov-id" to Three.js instances.
-// Ensure the path exists so applyProps doesn't traverse undefined.
+// Patch: prevent react-three-fiber from crashing when the dev tagger injects
+// dashed data-* props (e.g., data-lov-id, data-path). R3F treats dash-cased
+// props as deep paths and will traverse instance.data.lov.path, etc. Ensure
+// those objects exist on common Three.js prototypes used by R3F instances.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-(THREE.Object3D.prototype as any).data ??= {};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(THREE.Object3D.prototype as any).data.lov ??= {};
+const ensureLovData = (proto: any) => {
+  try {
+    proto.data ??= {};
+    proto.data.lov ??= {};
+  } catch {
+    // Some prototypes may not allow direct assignment; fall back gracefully.
+    try {
+      Object.defineProperty(proto, 'data', { value: { lov: {} }, writable: true, configurable: true });
+    } catch {/* ignore */}
+  }
+};
+// Apply to common instance types created by R3F
+ensureLovData((THREE.Object3D as any).prototype);
+ensureLovData((THREE.Material as any).prototype);
+ensureLovData((THREE.BufferGeometry as any).prototype);
+// Optional extras for safety
+if ((THREE.Texture as any)?.prototype) ensureLovData((THREE.Texture as any).prototype);
 
 interface Scene3DProps {
   className?: string;
