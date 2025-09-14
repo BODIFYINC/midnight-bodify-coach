@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageToggle } from './LanguageToggle';
 import { LogOut, User, Shield } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function Navbar() {
   const { isAuthenticated, isAdmin, logout } = useAuth();
@@ -16,11 +17,16 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <motion.nav 
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="sticky top-0 z-sticky glass border-b border-border/50 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
+    >
+      <div className="container-modern h-16 flex items-center justify-between">
         <Link 
           to="/" 
-          className="text-xl font-bold text-primary hover-scale transition-all duration-300 hover:text-secondary"
+          className="text-xl font-bold text-gradient-primary hover-lift transition-all duration-300"
         >
           EduPlatform
         </Link>
@@ -32,16 +38,16 @@ export function Navbar() {
             <div className="flex items-center gap-2">
               {isAdmin ? (
                 <Link to="/admin">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 hover-lift rounded-xl">
+                  <Button variant="ghost" size="sm" className="btn-ghost-modern flex items-center gap-2">
                     <Shield className="h-4 w-4" />
-                    {t('nav.dashboard')}
+                    <span className="hidden sm:inline">{t('nav.dashboard')}</span>
                   </Button>
                 </Link>
               ) : (
                 <Link to="/profile">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 hover-lift rounded-xl">
+                  <Button variant="ghost" size="sm" className="btn-ghost-modern flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    Profile
+                    <span className="hidden sm:inline">Profile</span>
                   </Button>
                 </Link>
               )}
@@ -50,21 +56,21 @@ export function Navbar() {
                 variant="ghost" 
                 size="sm" 
                 onClick={handleLogout} 
-                className="flex items-center gap-2 hover-lift rounded-xl hover:bg-destructive hover:text-destructive-foreground"
+                className="btn-ghost-modern flex items-center gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20"
               >
                 <LogOut className="h-4 w-4" />
-                {t('nav.logout')}
+                <span className="hidden sm:inline">{t('nav.logout')}</span>
               </Button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <Link to="/login">
-                <Button variant="ghost" size="sm" className="hover-lift rounded-xl">
+                <Button variant="ghost" size="sm" className="btn-ghost-modern">
                   {t('nav.login')}
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="sm" className="clay-button rounded-xl">
+                <Button size="sm" className="btn-primary">
                   {t('nav.register')}
                 </Button>
               </Link>
@@ -72,6 +78,6 @@ export function Navbar() {
           )}
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
