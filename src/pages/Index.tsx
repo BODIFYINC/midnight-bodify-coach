@@ -1,20 +1,21 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Scene3D } from '@/components/3D/Scene3D';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { 
   BookOpen, Users, Globe, Star, Check, MessageCircle, 
   Zap, Sparkles, Target, Award, TrendingUp, Lightbulb,
-  Brain, Eye, Heart, Shield, Rocket, ChevronDown
+  Brain, Eye, Heart, Shield, Rocket, ChevronDown, Play,
+  ArrowRight, Code, Cpu, Database, Layers
 } from 'lucide-react';
 
 export default function Index() {
   // SEO
   useEffect(() => {
-    document.title = 'Libya-Can — Immersive English Learning Experience';
+    document.title = 'Libya-Can — Cinematic English Learning Experience';
     const meta = document.querySelector('meta[name="description"]');
-    const content = 'Transform your English learning journey with an immersive, seamless experience. Beautiful design meets powerful education.';
+    const content = 'Immerse yourself in a futuristic English learning experience. Award-winning 3D design meets powerful education technology.';
     if (meta) meta.setAttribute('content', content);
     else {
       const m = document.createElement('meta');
@@ -24,17 +25,37 @@ export default function Index() {
     }
   }, []);
 
-  // Smooth scroll parallax
+  // Advanced scroll mechanics
   const { scrollYProgress } = useScroll();
   const heroRef = useRef<HTMLDivElement | null>(null);
   const [mount3D, setMount3D] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // Parallax transforms for seamless flow
-  const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const y2 = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-  const y3 = useTransform(scrollYProgress, [0, 1], ['0%', '70%']);
-  const opacity1 = useTransform(scrollYProgress, [0, 0.3], [1, 0.3]);
-  const opacity2 = useTransform(scrollYProgress, [0.2, 0.6], [1, 0.5]);
+  // Cinematic parallax transforms
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.2]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  
+  const backgroundY1 = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const backgroundY2 = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const backgroundY3 = useTransform(scrollYProgress, [0, 1], ['0%', '70%']);
+
+  // Smooth spring animations
+  const springConfig = { stiffness: 50, damping: 20 };
+  const x = useSpring(mousePosition.x, springConfig);
+  const y = useSpring(mousePosition.y, springConfig);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX - window.innerWidth / 2) / 50,
+        y: (e.clientY - window.innerHeight / 2) / 50,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useEffect(() => {
     const el = heroRef.current;
@@ -48,213 +69,309 @@ export default function Index() {
     return () => io.disconnect();
   }, []);
 
-  // Flowing background without borders
-  const FlowingBackground = () => (
-    <div className="fixed inset-0 -z-20">
-      {/* Base ocean gradient */}
-      <div className="absolute inset-0" style={{ background: 'var(--gradient-ocean-flow)' }} />
+  // Cinematic background with depth
+  const CinematicBackground = () => (
+    <div className="fixed inset-0 -z-20 overflow-hidden">
+      {/* Base futuristic gradient */}
+      <div className="absolute inset-0" style={{ background: 'var(--gradient-hero)' }} />
       
-      {/* Flowing currents */}
+      {/* Moving depth layers */}
       <motion.div 
         className="absolute inset-0 opacity-40"
         style={{ 
-          background: 'var(--gradient-surface-shimmer)',
-          y: y1
+          background: 'var(--gradient-neon)',
+          y: backgroundY1
         }}
       />
       
-      {/* Deep currents */}
       <motion.div 
         className="absolute inset-0 opacity-30"
         style={{ 
-          background: 'var(--gradient-tide)',
-          y: y2
+          background: 'var(--gradient-flow)',
+          y: backgroundY2
         }}
       />
       
-      {/* Underwater ambience */}
       <motion.div 
         className="absolute inset-0 opacity-20"
         style={{ 
-          background: 'var(--gradient-underwater)',
-          y: y3
+          background: 'var(--gradient-immersive)',
+          y: backgroundY3
         }}
       />
+
+      {/* Floating particles */}
+      <div className="absolute inset-0">
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-primary/30 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 4 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 4,
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 
   const features = [
     {
       icon: Brain,
-      title: 'Adaptive Intelligence',
-      description: 'AI that learns your style and adapts lessons to your unique learning patterns for maximum retention.',
-      color: 'from-cyan-400 to-blue-500'
+      title: 'Neural AI Learning',
+      description: 'Advanced artificial intelligence that adapts to your learning patterns and optimizes lessons in real-time.',
+      color: 'from-primary to-neon-cyan',
+      gradient: '--gradient-neon'
     },
     {
       icon: Globe,
-      title: 'Real-World Context',
-      description: 'Learn through authentic scenarios and cultural contexts that make English natural and meaningful.',
-      color: 'from-teal-400 to-cyan-500'
+      title: 'Immersive Worlds',
+      description: 'Step into 3D environments that bring English to life through contextual scenarios.',
+      color: 'from-neon-cyan to-accent',
+      gradient: '--gradient-flow'
     },
     {
       icon: Zap,
-      title: 'Instant Feedback',
-      description: 'Get immediate corrections and suggestions that accelerate your learning progress.',
-      color: 'from-orange-400 to-red-500'
+      title: 'Quantum Feedback',
+      description: 'Instant corrections and suggestions powered by next-generation language processing.',
+      color: 'from-accent to-neon-purple',
+      gradient: '--gradient-future'
     },
     {
       icon: Users,
-      title: 'Community Learning',
-      description: 'Connect with learners worldwide and practice together in supportive peer groups.',
-      color: 'from-purple-400 to-pink-500'
+      title: 'Global Network',
+      description: 'Connect with learners across dimensions in our collaborative virtual spaces.',
+      color: 'from-neon-purple to-primary',
+      gradient: '--gradient-immersive'
     },
     {
       icon: Target,
-      title: 'Goal-Oriented Paths',
-      description: 'Structured learning paths tailored to your specific goals and timeline.',
-      color: 'from-green-400 to-emerald-500'
+      title: 'Precision Paths',
+      description: 'Algorithmic learning tracks that evolve with your progress and goals.',
+      color: 'from-primary to-accent',
+      gradient: '--gradient-neon'
     },
     {
       icon: Award,
-      title: 'Achievement System',
-      description: 'Celebrate milestones with meaningful achievements that mark your progress.',
-      color: 'from-yellow-400 to-orange-500'
+      title: 'Achievement Matrix',
+      description: 'Unlock achievements in our gamified progression system with 3D rewards.',
+      color: 'from-accent to-neon-cyan',
+      gradient: '--gradient-flow'
+    }
+  ];
+
+  const portfolioItems = [
+    {
+      title: 'Interactive 3D Lessons',
+      description: 'Manipulate 3D objects while learning vocabulary',
+      tech: ['WebGL', 'Three.js', 'AI'],
+      image: '🎯'
+    },
+    {
+      title: 'Voice Recognition Labs',
+      description: 'Real-time pronunciation analysis with 3D mouth models',
+      tech: ['WebAudio', 'ML', 'AR'],
+      image: '🗣️'
+    },
+    {
+      title: 'Virtual Classroom',
+      description: 'Holographic teachers in immersive environments',
+      tech: ['WebXR', 'Cloud', 'AI'],
+      image: '🌌'
+    },
+    {
+      title: 'Neural Progress Tracking',
+      description: 'AI-powered analytics with beautiful data visualization',
+      tech: ['D3.js', 'TensorFlow', 'WebGL'],
+      image: '📊'
     }
   ];
 
   const stats = [
-    { number: '50,000+', label: 'Active Learners', icon: Users },
-    { number: '98.7%', label: 'Success Rate', icon: TrendingUp },
-    { number: '24/7', label: 'Available Support', icon: Heart },
-    { number: '120+', label: 'Countries Reached', icon: Globe }
-  ];
-
-  const testimonials = [
-    {
-      name: 'Sarah Al-Mansouri',
-      role: 'Medical Student',
-      content: 'The seamless experience made learning feel natural. Within 6 months, my English improved dramatically for my medical studies.',
-      avatar: 'SA',
-      rating: 5
-    },
-    {
-      name: 'Ahmed Hassan',
-      role: 'Software Engineer',
-      content: 'Perfect for busy professionals. The adaptive system learned my schedule and delivered lessons exactly when I needed them.',
-      avatar: 'AH',
-      rating: 5
-    },
-    {
-      name: 'Fatima Al-Zahra',
-      role: 'Business Owner',
-      content: 'Transformed my confidence in English business communication. The real-world scenarios were incredibly practical.',
-      avatar: 'FZ',
-      rating: 5
-    }
+    { number: '100K+', label: 'Neural Connections', icon: Brain, color: 'primary' },
+    { number: '99.9%', label: 'Precision Rate', icon: Target, color: 'accent' },
+    { number: '24/7', label: 'AI Availability', icon: Cpu, color: 'neon-cyan' },
+    { number: '∞', label: 'Possibilities', icon: Sparkles, color: 'neon-purple' }
   ];
 
   return (
     <>
-      <FlowingBackground />
+      <CinematicBackground />
       
       <main className="relative">
-        {/* Hero Section - Flowing into the page */}
+        {/* Hero Section - Cinematic Entry */}
         <section ref={heroRef} className="min-h-screen flex items-center relative overflow-hidden">
           <motion.div 
-            className="absolute inset-0 opacity-20"
+            className="absolute inset-0"
             style={{ 
-              background: 'var(--gradient-coral-wave)',
-              opacity: opacity1
+              background: 'var(--gradient-future)',
+              opacity: heroOpacity,
+              scale: heroScale
             }}
           />
           
-          <div className="container relative z-10 grid lg:grid-cols-2 gap-16 items-center py-32">
+          <div className="container relative z-10 grid lg:grid-cols-2 gap-20 items-center py-20">
             <motion.div 
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-              className="space-y-10"
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="space-y-12"
+              style={{ x, y }}
             >
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="inline-flex items-center px-6 py-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-sm font-medium"
+                transition={{ duration: 1, delay: 0.3 }}
+                className="inline-flex items-center px-8 py-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 text-sm font-medium"
+                style={{ boxShadow: 'var(--shadow-neon)' }}
               >
-                <Sparkles className="w-4 h-4 mr-2 text-accent" />
-                Immersive English Learning Experience
+                <Sparkles className="w-5 h-5 mr-3 text-primary animate-pulse" />
+                Next-Generation Learning Experience
+                <motion.div 
+                  className="ml-3 w-2 h-2 bg-primary rounded-full"
+                  animate={{ scale: [1, 1.5, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
               </motion.div>
 
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight">
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-cyan-300 to-accent">
-                  Master
-                </span>
-                <span className="block text-foreground">
+              <h1 className="text-7xl md:text-8xl lg:text-9xl font-black leading-[0.85] tracking-tight">
+                <motion.span 
+                  className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-neon-cyan to-accent"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                >
+                  Future
+                </motion.span>
+                <motion.span 
+                  className="block text-foreground"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.7 }}
+                >
                   English
-                </span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-accent via-orange-300 to-primary">
-                  Naturally
-                </span>
+                </motion.span>
+                <motion.span 
+                  className="block text-transparent bg-clip-text bg-gradient-to-r from-accent via-neon-purple to-primary"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.9 }}
+                >
+                  Awaits
+                </motion.span>
               </h1>
 
-              <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed max-w-2xl">
-                Dive into a beautifully crafted learning experience that flows like a conversation. 
-                No borders, no interruptions—just seamless progress toward fluency.
-              </p>
+              <motion.p 
+                className="text-2xl md:text-3xl text-foreground/80 leading-relaxed max-w-2xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.1 }}
+              >
+                Step into a cinematic learning experience where AI, 3D technology, and beautiful design 
+                converge to revolutionize language education.
+              </motion.p>
 
-              <div className="flex flex-col sm:flex-row gap-6">
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.3 }}
+              >
                 <Button 
                   asChild 
                   size="lg" 
-                  className="group px-12 py-6 text-xl rounded-2xl bg-gradient-to-r from-primary to-accent hover:shadow-coral transition-all duration-700 transform hover:scale-105"
+                  className="group px-16 py-8 text-2xl rounded-3xl bg-gradient-to-r from-primary to-accent hover:shadow-neon transition-all duration-700 transform hover:scale-105 relative overflow-hidden"
                 >
                   <Link to="/register">
-                    <Rocket className="mr-3 h-6 w-6" />
-                    Begin Your Journey
-                    <ChevronDown className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
+                      initial={{ x: '-100%' }}
+                      whileHover={{ x: '100%' }}
+                      transition={{ duration: 0.6 }}
+                    />
+                    <Rocket className="mr-4 h-8 w-8" />
+                    Enter the Future
+                    <ArrowRight className="ml-4 h-6 w-6 group-hover:translate-x-2 transition-transform" />
                   </Link>
                 </Button>
                 
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="px-12 py-6 text-xl rounded-2xl bg-white/5 backdrop-blur-md border-white/20 hover:bg-white/10 transition-all duration-500"
+                  className="px-16 py-8 text-2xl rounded-3xl bg-white/5 backdrop-blur-xl border-white/30 hover:bg-white/10 transition-all duration-500 group"
                 >
-                  <Link to="/login">Explore Preview</Link>
+                  <Play className="mr-4 h-6 w-6 group-hover:scale-110 transition-transform" />
+                  <Link to="/login">Watch Demo</Link>
                 </Button>
-              </div>
+              </motion.div>
             </motion.div>
 
             <motion.div 
-              initial={{ opacity: 0, x: 60, rotateY: -15 }}
+              initial={{ opacity: 0, x: 100, rotateY: -20 }}
               animate={{ opacity: 1, x: 0, rotateY: 0 }}
-              transition={{ duration: 1.5, delay: 0.3 }}
-              className="relative h-[600px] lg:h-[700px] w-full"
+              transition={{ duration: 2, delay: 0.5 }}
+              className="relative h-[700px] lg:h-[800px] w-full"
             >
-              <div className="absolute inset-0 rounded-3xl overflow-hidden" style={{ boxShadow: 'var(--shadow-immersive)' }}>
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-sm rounded-3xl border border-white/10" />
-                {mount3D && <Scene3D className="w-full h-full rounded-3xl" />}
+              <div className="absolute inset-0 rounded-[3rem] overflow-hidden" style={{ boxShadow: 'var(--shadow-immersive)' }}>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent backdrop-blur-xl rounded-[3rem] border border-white/20" />
+                {mount3D && <Scene3D className="w-full h-full rounded-[3rem]" />}
                 
-                {/* Floating UI Elements */}
+                {/* Floating UI Elements with advanced animations */}
                 <motion.div 
-                  className="absolute top-8 right-8 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20"
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute top-8 right-8 px-6 py-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/30"
+                  animate={{ 
+                    y: [0, -15, 0],
+                    rotateY: [0, 5, 0]
+                  }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ boxShadow: 'var(--shadow-neon)' }}
                 >
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    <span className="text-sm font-medium">Live Learning</span>
+                  <div className="flex items-center space-x-3">
+                    <motion.div 
+                      className="w-3 h-3 bg-primary rounded-full"
+                      animate={{ scale: [1, 1.3, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    <span className="text-lg font-bold">Neural Active</span>
                   </div>
                 </motion.div>
 
                 <motion.div 
-                  className="absolute bottom-8 left-8 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20"
-                  animate={{ y: [0, 10, 0] }}
+                  className="absolute bottom-8 left-8 px-6 py-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/30"
+                  animate={{ 
+                    y: [0, 15, 0],
+                    rotateY: [0, -5, 0]
+                  }}
+                  transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ boxShadow: 'var(--shadow-neon)' }}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Brain className="w-5 h-5 text-accent" />
+                    <span className="text-lg font-bold">AI Learning: 96%</span>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  className="absolute top-1/2 left-8 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-xl border border-white/30"
+                  animate={{ 
+                    x: [0, 10, 0],
+                    rotateX: [0, 10, 0]
+                  }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <div className="flex items-center space-x-2">
-                    <TrendingUp className="w-4 h-4 text-accent" />
-                    <span className="text-sm font-medium">Progress: 94%</span>
+                    <Layers className="w-4 h-4 text-neon-cyan" />
+                    <span className="text-sm font-medium">3D Mode</span>
                   </div>
                 </motion.div>
               </div>
@@ -262,130 +379,130 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Features Section - Flowing seamlessly */}
-        <section className="relative py-32 md:py-40">
+        {/* Features Section - Floating Cards */}
+        <section className="relative py-40">
           <motion.div 
-            className="absolute inset-0"
-            style={{ 
-              background: 'var(--gradient-coral-wave)',
-              opacity: opacity2
-            }}
+            className="absolute inset-0 opacity-30"
+            style={{ background: 'var(--gradient-future)' }}
           />
           
           <div className="container relative z-10">
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 1 }}
-              className="text-center mb-20"
+              transition={{ duration: 1.2 }}
+              className="text-center mb-32"
             >
-              <h2 className="text-5xl md:text-6xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                Features That Flow
+              <h2 className="text-6xl md:text-7xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                Revolutionary Features
               </h2>
-              <p className="text-xl text-foreground/70 max-w-4xl mx-auto leading-relaxed">
-                Every element designed to create a seamless learning experience that adapts to you
+              <p className="text-2xl text-foreground/70 max-w-4xl mx-auto leading-relaxed">
+                Experience learning technology that feels like magic
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
               {features.map((feature, index) => (
                 <motion.div 
                   key={index}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 60, rotateX: -10 }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-all duration-700 transform hover:scale-105"
-                  style={{ boxShadow: 'var(--shadow-float)' }}
+                  transition={{ duration: 0.8, delay: index * 0.15 }}
+                  whileHover={{ 
+                    y: -10, 
+                    rotateX: 5, 
+                    rotateY: 5,
+                    scale: 1.02
+                  }}
+                  className="group p-10 rounded-[2rem] bg-white/5 backdrop-blur-xl border border-white/20 relative overflow-hidden"
+                  style={{ 
+                    boxShadow: 'var(--shadow-neon)',
+                    transformStyle: 'preserve-3d'
+                  }}
                 >
-                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.color} mb-6`}>
-                    <feature.icon className="w-8 h-8 text-white" />
+                  <motion.div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-700"
+                    style={{ background: `var(${feature.gradient})` }}
+                  />
+                  
+                  <div className={`inline-flex p-6 rounded-2xl bg-gradient-to-r ${feature.color} mb-8 relative z-10`}>
+                    <feature.icon className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                  <p className="text-foreground/70 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-3xl font-bold mb-6 relative z-10">{feature.title}</h3>
+                  <p className="text-foreground/70 leading-relaxed text-lg relative z-10">{feature.description}</p>
+                  
+                  <motion.div
+                    className="absolute bottom-4 right-4 w-20 h-20 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  />
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Stats Section - Continuing the flow */}
-        <section className="relative py-32">
+        {/* Portfolio Showcase - 3D Cards */}
+        <section className="relative py-40">
           <motion.div 
-            className="absolute inset-0"
-            style={{ 
-              background: 'var(--gradient-deep-current)',
-              opacity: 0.6
-            }}
+            className="absolute inset-0 opacity-20"
+            style={{ background: 'var(--gradient-depth)' }}
           />
           
           <div className="container relative z-10">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="text-center p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10"
-                  style={{ boxShadow: 'var(--shadow-depth)' }}
-                >
-                  <stat.icon className="w-12 h-12 mx-auto mb-4 text-primary" />
-                  <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-foreground/70 font-medium">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials Section - Flowing design */}
-        <section className="relative py-32 md:py-40">
-          <div className="container relative z-10">
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 1 }}
-              className="text-center mb-20"
+              transition={{ duration: 1.2 }}
+              className="text-center mb-32"
             >
-              <h2 className="text-5xl md:text-6xl font-black mb-6">
-                Success Stories
+              <h2 className="text-6xl md:text-7xl font-black mb-8">
+                Interactive Showcase
               </h2>
-              <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
-                Real experiences from learners who transformed their English journey
+              <p className="text-2xl text-foreground/70 max-w-3xl mx-auto">
+                Explore our award-winning learning modules
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
+            <div className="grid md:grid-cols-2 gap-16">
+              {portfolioItems.map((item, index) => (
                 <motion.div 
                   key={index}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, z: -100 }}
+                  whileInView={{ opacity: 1, z: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="p-8 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10"
-                  style={{ boxShadow: 'var(--shadow-float)' }}
+                  transition={{ duration: 0.8, delay: index * 0.2 }}
+                  whileHover={{ 
+                    rotateY: 15, 
+                    rotateX: 10,
+                    z: 50,
+                    scale: 1.05
+                  }}
+                  className="group relative"
+                  style={{ transformStyle: 'preserve-3d' }}
                 >
-                  <div className="flex items-center mb-6">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center text-white font-bold mr-4">
-                      {testimonial.avatar}
+                  <div className="p-12 rounded-[2rem] bg-white/5 backdrop-blur-xl border border-white/20 relative overflow-hidden" style={{ boxShadow: 'var(--shadow-immersive)' }}>
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                    />
+                    
+                    <div className="text-8xl mb-8 relative z-10">{item.image}</div>
+                    <h3 className="text-3xl font-bold mb-6 relative z-10">{item.title}</h3>
+                    <p className="text-foreground/70 leading-relaxed text-lg mb-8 relative z-10">{item.description}</p>
+                    
+                    <div className="flex flex-wrap gap-3 relative z-10">
+                      {item.tech.map((tech, i) => (
+                        <span 
+                          key={i}
+                          className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-medium"
+                        >
+                          {tech}
+                        </span>
+                      ))}
                     </div>
-                    <div>
-                      <div className="font-bold">{testimonial.name}</div>
-                      <div className="text-foreground/60 text-sm">{testimonial.role}</div>
-                    </div>
-                  </div>
-                  <p className="text-foreground/80 leading-relaxed mb-4">"{testimonial.content}"</p>
-                  <div className="flex">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-accent fill-current" />
-                    ))}
                   </div>
                 </motion.div>
               ))}
@@ -393,127 +510,128 @@ export default function Index() {
           </div>
         </section>
 
-        {/* About Section - No borders, flowing content */}
-        <section className="relative py-32 md:py-40">
-          <motion.div 
-            className="absolute inset-0 opacity-30"
-            style={{ background: 'var(--gradient-coral-wave)' }}
-          />
-          
+        {/* Stats Section - Floating Numbers */}
+        <section className="relative py-32">
           <div className="container relative z-10">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <motion.div 
-                initial={{ opacity: 0, x: -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.8 }}
-              >
-                <h2 className="text-5xl md:text-6xl font-black mb-8">
-                  Designed for
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                    Immersion
-                  </span>
-                </h2>
-                <p className="text-xl text-foreground/70 leading-relaxed mb-8">
-                  Every pixel, every interaction, every moment is crafted to create a seamless learning experience. 
-                  No jarring transitions, no overwhelming interfaces—just pure focus on your English journey.
-                </p>
-                <div className="space-y-4">
-                  {[
-                    'Seamless single-page flow',
-                    'Immersive 3D interactions',
-                    'Accessibility-first design',
-                    'Mobile-optimized experience'
-                  ].map((item, index) => (
-                    <motion.div 
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="flex items-center"
-                    >
-                      <Check className="w-6 h-6 text-accent mr-3" />
-                      <span className="text-lg">{item}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.8 }}
-                className="grid grid-cols-2 gap-6"
-              >
-                {[
-                  { icon: Eye, title: 'Visual Learning', desc: 'Rich visual content that enhances understanding' },
-                  { icon: Brain, title: 'Cognitive Flow', desc: 'Designed to match natural learning patterns' },
-                  { icon: Heart, title: 'Emotional Connect', desc: 'Building confidence through positive experiences' },
-                  { icon: Shield, title: 'Safe Space', desc: 'Judgment-free environment for practice' }
-                ].map((item, index) => (
-                  <motion.div 
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10"
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+              {stats.map((stat, index) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.5, rotateY: -90 }}
+                  whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  whileHover={{ 
+                    scale: 1.1, 
+                    rotateY: 10,
+                    rotateX: 10
+                  }}
+                  className="text-center p-12 rounded-[2rem] bg-white/5 backdrop-blur-xl border border-white/20 group"
+                  style={{ 
+                    boxShadow: 'var(--shadow-neon)',
+                    transformStyle: 'preserve-3d'
+                  }}
+                >
+                  <motion.div
+                    animate={{ rotateZ: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   >
-                    <item.icon className="w-8 h-8 text-primary mb-3" />
-                    <h4 className="font-bold mb-2">{item.title}</h4>
-                    <p className="text-sm text-foreground/60">{item.desc}</p>
+                    <stat.icon className={`w-16 h-16 mx-auto mb-6 text-${stat.color}`} />
                   </motion.div>
-                ))}
-              </motion.div>
+                  <div className={`text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-${stat.color} to-accent mb-4`}>
+                    {stat.number}
+                  </div>
+                  <div className="text-foreground/70 font-bold text-lg">{stat.label}</div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Final CTA - Flowing conclusion */}
-        <section className="relative py-32 md:py-40">
+        {/* Contact Section - Futuristic Form */}
+        <section className="relative py-40">
           <motion.div 
-            className="absolute inset-0"
-            style={{ 
-              background: 'var(--gradient-deep-current)',
-              opacity: 0.8
-            }}
+            className="absolute inset-0 opacity-40"
+            style={{ background: 'var(--gradient-flow)' }}
           />
           
-          <div className="container relative z-10 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
+          <div className="container relative z-10">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 1.2 }}
+              className="text-center mb-32"
             >
-              <h2 className="text-5xl md:text-6xl font-black mb-8">
-                Ready to Dive In?
+              <h2 className="text-6xl md:text-7xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                Ready to Transform?
               </h2>
-              <p className="text-xl text-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Join thousands of learners who have transformed their English journey. 
-                Start your immersive experience today.
+              <p className="text-2xl text-foreground/70 max-w-3xl mx-auto">
+                Join the future of English learning today
               </p>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <Button 
-                  asChild 
-                  size="lg" 
-                  className="px-16 py-6 text-xl rounded-2xl bg-gradient-to-r from-primary to-accent hover:shadow-coral transition-all duration-700 transform hover:scale-105"
-                >
-                  <Link to="/register">Start Learning Now</Link>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="px-16 py-6 text-xl rounded-2xl bg-white/5 backdrop-blur-md border-white/20 hover:bg-white/10"
-                >
-                  <Link to="/login">Sign In</Link>
-                </Button>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 1 }}
+              className="max-w-2xl mx-auto"
+            >
+              <div className="p-12 rounded-[3rem] bg-white/5 backdrop-blur-xl border border-white/20" style={{ boxShadow: 'var(--shadow-immersive)' }}>
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <input 
+                      type="email" 
+                      placeholder="Enter your email" 
+                      className="w-full p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/20 text-lg placeholder:text-foreground/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                    />
+                    <textarea 
+                      placeholder="Tell us about your learning goals..." 
+                      rows={4}
+                      className="w-full p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/20 text-lg placeholder:text-foreground/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300 resize-none"
+                    />
+                  </div>
+                  
+                  <Button 
+                    className="w-full py-8 text-2xl rounded-2xl bg-gradient-to-r from-primary to-accent hover:shadow-neon transition-all duration-700 group"
+                  >
+                    <MessageCircle className="mr-4 h-8 w-8" />
+                    Start Your Journey
+                    <motion.div
+                      className="ml-4"
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <ArrowRight className="h-6 w-6" />
+                    </motion.div>
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </div>
         </section>
+
+        {/* Footer - Seamless End */}
+        <footer className="relative py-20 border-t border-white/10">
+          <div className="container">
+            <div className="text-center">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                className="inline-block mb-8"
+              >
+                <BookOpen className="w-16 h-16 text-primary" />
+              </motion.div>
+              <h3 className="text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                Libya-Can
+              </h3>
+              <p className="text-foreground/60 text-lg">
+                The future of English learning, today.
+              </p>
+            </div>
+          </div>
+        </footer>
       </main>
     </>
   );

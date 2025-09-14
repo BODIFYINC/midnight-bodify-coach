@@ -17,86 +17,87 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* ===== Flowing Ocean Design System ===== */
-    --background: 215 25% 3%;
-    --foreground: 0 0% 98%;
+    /* ===== Cinematic 3D Design System ===== */
+    --background: 220 30% 2%;
+    --foreground: 0 0% 100%;
 
-    --card: 215 20% 5%;
-    --card-foreground: 0 0% 98%;
+    --card: 220 25% 4%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 215 20% 5%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 220 25% 4%;
+    --popover-foreground: 0 0% 100%;
 
-    /* Enhanced Brand Palette */
-    --primary: 185 85% 55%; /* bright cyan */
-    --primary-foreground: 0 0% 100%;
+    /* Futuristic Brand Palette */
+    --primary: 200 100% 60%; /* electric blue */
+    --primary-foreground: 220 30% 2%;
 
-    --secondary: 215 15% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 220 20% 8%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 215 12% 18%;
-    --muted-foreground: 210 8% 75%;
+    --muted: 220 15% 12%;
+    --muted-foreground: 210 15% 80%;
 
-    --accent: 14 95% 65%; /* warm coral */
-    --accent-foreground: 0 0% 100%;
+    --accent: 280 100% 70%; /* neon magenta */
+    --accent-foreground: 220 30% 2%;
 
-    --destructive: 0 85% 60%;
+    --neon-cyan: 180 100% 50%;
+    --neon-purple: 270 100% 65%;
+
+    --destructive: 0 90% 65%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 100% / 0.08;
-    --input: 215 12% 18%;
-    --ring: 185 85% 55%;
+    --border: 0 0% 100% / 0.1;
+    --input: 220 20% 8%;
+    --ring: 200 100% 60%;
 
     --radius: 2rem;
 
-    /* Seamless Flow Gradients */
-    --gradient-ocean-flow: linear-gradient(180deg, 
-      hsl(215 25% 3%) 0%, 
-      hsl(210 30% 4%) 20%, 
-      hsl(200 35% 5%) 40%, 
-      hsl(190 40% 6%) 60%, 
-      hsl(185 45% 7%) 80%, 
-      hsl(180 50% 8%) 100%);
+    /* Cinematic Flow Gradients */
+    --gradient-hero: linear-gradient(180deg, 
+      hsl(220 30% 2%) 0%, 
+      hsl(220 25% 3%) 20%, 
+      hsl(210 30% 4%) 40%, 
+      hsl(200 35% 5%) 60%, 
+      hsl(190 40% 6%) 80%, 
+      hsl(180 45% 7%) 100%);
     
-    --gradient-coral-wave: linear-gradient(180deg,
-      hsl(180 50% 8%) 0%,
-      hsl(175 55% 9%) 25%,
-      hsl(170 60% 10%) 50%,
-      hsl(25 70% 12%) 75%,
-      hsl(14 80% 14%) 100%);
+    --gradient-future: linear-gradient(135deg,
+      hsl(200 100% 60% / 0.1) 0%,
+      hsl(280 100% 70% / 0.1) 25%,
+      hsl(180 100% 50% / 0.1) 50%,
+      hsl(270 100% 65% / 0.1) 75%,
+      hsl(200 100% 60% / 0.1) 100%);
     
-    --gradient-deep-current: linear-gradient(180deg,
-      hsl(14 80% 14%) 0%,
-      hsl(20 75% 12%) 30%,
-      hsl(200 70% 10%) 70%,
-      hsl(215 25% 3%) 100%);
+    --gradient-depth: linear-gradient(180deg,
+      hsl(220 30% 2%) 0%,
+      hsl(220 25% 4%) 30%,
+      hsl(210 30% 6%) 70%,
+      hsl(200 35% 8%) 100%);
 
-    --gradient-surface-shimmer: linear-gradient(135deg, 
-      hsl(185 85% 55% / 0.15) 0%, 
-      hsl(195 90% 60% / 0.12) 25%, 
-      hsl(205 95% 65% / 0.08) 50%, 
-      hsl(14 95% 65% / 0.10) 75%, 
-      hsl(185 85% 55% / 0.15) 100%);
+    --gradient-neon: linear-gradient(135deg, 
+      hsl(200 100% 60% / 0.2) 0%, 
+      hsl(280 100% 70% / 0.15) 25%, 
+      hsl(180 100% 50% / 0.12) 50%, 
+      hsl(270 100% 65% / 0.18) 75%, 
+      hsl(200 100% 60% / 0.2) 100%);
 
-    --gradient-underwater: radial-gradient(ellipse at top, 
-      hsl(185 85% 55% / 0.08) 0%, 
-      transparent 50%),
-      radial-gradient(ellipse at bottom, 
-      hsl(14 95% 65% / 0.06) 0%, 
-      transparent 50%);
+    --gradient-immersive: radial-gradient(ellipse at center, 
+      hsl(200 100% 60% / 0.15) 0%, 
+      hsl(280 100% 70% / 0.08) 40%,
+      transparent 70%);
 
-    --gradient-tide: conic-gradient(from 45deg at 30% 70%, 
-      hsl(185 85% 55% / 0.20) 0deg, 
-      hsl(195 90% 60% / 0.15) 90deg, 
-      hsl(14 95% 65% / 0.18) 180deg, 
-      hsl(175 80% 50% / 0.12) 270deg, 
-      hsl(185 85% 55% / 0.20) 360deg);
+    --gradient-flow: conic-gradient(from 0deg at 50% 50%, 
+      hsl(200 100% 60% / 0.25) 0deg, 
+      hsl(280 100% 70% / 0.20) 90deg, 
+      hsl(180 100% 50% / 0.15) 180deg, 
+      hsl(270 100% 65% / 0.22) 270deg, 
+      hsl(200 100% 60% / 0.25) 360deg);
 
-    /* Enhanced Shadows */
-    --shadow-depth: 0 2px 8px hsl(215 25% 3% / 0.15), 0 8px 32px hsl(215 25% 3% / 0.25);
-    --shadow-float: 0 4px 16px hsl(185 85% 55% / 0.12), 0 16px 64px hsl(185 85% 55% / 0.08);
-    --shadow-coral: 0 4px 16px hsl(14 95% 65% / 0.15), 0 16px 64px hsl(14 95% 65% / 0.10);
-    --shadow-immersive: 0 8px 40px hsl(215 25% 3% / 0.40), 0 32px 128px hsl(215 25% 3% / 0.30);
+    /* Cinematic Shadows */
+    --shadow-depth: 0 4px 20px hsl(220 30% 2% / 0.5), 0 20px 80px hsl(220 30% 2% / 0.3);
+    --shadow-neon: 0 0 30px hsl(200 100% 60% / 0.4), 0 0 60px hsl(280 100% 70% / 0.2);
+    --shadow-float: 0 8px 32px hsl(200 100% 60% / 0.15), 0 32px 128px hsl(280 100% 70% / 0.08);
+    --shadow-immersive: 0 20px 80px hsl(220 30% 2% / 0.6), 0 80px 320px hsl(220 30% 2% / 0.4);
 
     /* Fluid Motion */
     --transition-tide: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);

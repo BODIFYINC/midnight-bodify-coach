@@ -29,8 +29,10 @@ export function LibyanBook() {
   const [hovered, setHovered] = useState(false);
 
   const primary = useMemo(() => colorFromVar('--primary'), []);
-  const primaryDark = useMemo(() => colorFromVar('--primary', -15), []);
+  const primaryDark = useMemo(() => colorFromVar('--primary', -20), []);
   const accent = useMemo(() => colorFromVar('--accent'), []);
+  const neonCyan = useMemo(() => colorFromVar('--neon-cyan'), []);
+  const neonPurple = useMemo(() => colorFromVar('--neon-purple'), []);
   const foreground = useMemo(() => colorFromVar('--foreground'), []);
 
   useFrame((state) => {
@@ -62,125 +64,204 @@ export function LibyanBook() {
         onPointerLeave={() => setHovered(false)}
       >
         <RoundedBox
-          args={[2.4, 3.2, 0.4]}
+          args={[2.6, 3.4, 0.5]}
           position={[0, 0, 0]}
-          radius={0.1}
-          smoothness={8}
+          radius={0.12}
+          smoothness={12}
         >
           <meshPhysicalMaterial 
             color={hovered ? primary : primaryDark}
-            roughness={0.15}
-            metalness={0.6}
+            roughness={0.1}
+            metalness={0.8}
+            clearcoat={1.2}
+            clearcoatRoughness={0.05}
+            emissive={hovered ? neonCyan : primary}
+            emissiveIntensity={hovered ? 0.25 : 0.12}
+            envMapIntensity={2.0}
+            transmission={0.1}
+            thickness={0.2}
+          />
+        </RoundedBox>
+
+        {/* Futuristic Cover Elements */}
+        <RoundedBox
+          args={[2.2, 0.7, 0.52]}
+          position={[0, 0.9, 0]}
+          radius={0.08}
+        >
+          <meshPhysicalMaterial 
+            color={accent}
+            roughness={0.05}
+            metalness={0.9}
+            emissive={accent}
+            emissiveIntensity={hovered ? 0.35 : 0.25}
             clearcoat={1}
-            clearcoatRoughness={0.1}
-            emissive={primary}
-            emissiveIntensity={hovered ? 0.15 : 0.08}
-            envMapIntensity={1.5}
-          />
-        </RoundedBox>
-
-        {/* Cover Design Elements */}
-        <RoundedBox
-          args={[2.0, 0.6, 0.42]}
-          position={[0, 0.8, 0]}
-          radius={0.05}
-        >
-          <meshPhysicalMaterial 
-            color={accent}
-            roughness={0.1}
-            metalness={0.8}
-            emissive={accent}
-            emissiveIntensity={0.2}
+            transmission={0.15}
           />
         </RoundedBox>
 
         <RoundedBox
-          args={[2.0, 0.6, 0.42]}
-          position={[0, -0.8, 0]}
-          radius={0.05}
+          args={[2.2, 0.7, 0.52]}
+          position={[0, -0.9, 0]}
+          radius={0.08}
         >
           <meshPhysicalMaterial 
-            color={accent}
-            roughness={0.1}
-            metalness={0.8}
-            emissive={accent}
-            emissiveIntensity={0.2}
+            color={neonPurple}
+            roughness={0.05}
+            metalness={0.9}
+            emissive={neonPurple}
+            emissiveIntensity={hovered ? 0.3 : 0.2}
+            clearcoat={1}
+            transmission={0.15}
+          />
+        </RoundedBox>
+
+        {/* Central Glow Element */}
+        <RoundedBox
+          args={[1.8, 0.3, 0.53]}
+          position={[0, 0, 0]}
+          radius={0.1}
+        >
+          <meshPhysicalMaterial 
+            color={neonCyan}
+            roughness={0}
+            metalness={0}
+            emissive={neonCyan}
+            emissiveIntensity={hovered ? 0.8 : 0.5}
+            transmission={0.9}
+            thickness={0.1}
+            transparent
+            opacity={0.8}
           />
         </RoundedBox>
 
         {/* Text Elements */}
         <Text
-          position={[0, 0.3, 0.21]}
-          fontSize={0.26}
+          position={[0, 0.4, 0.26]}
+          fontSize={0.32}
           color={toHexString(foreground)}
           anchorX="center"
           anchorY="middle"
           fontWeight="900"
-          outlineWidth={0.02}
-          outlineColor={toHexString(primary)}
+          outlineWidth={0.03}
+          outlineColor={toHexString(neonCyan)}
         >
           Libya-Can
         </Text>
 
         <Text
-          position={[0, -0.1, 0.21]}
-          fontSize={0.16}
+          position={[0, -0.05, 0.26]}
+          fontSize={0.18}
           color={toHexString(accent)}
+          anchorX="center"
+          anchorY="middle"
+          fontWeight="800"
+          outlineWidth={0.01}
+          outlineColor={toHexString(neonPurple)}
+        >
+          Future Learning
+        </Text>
+
+        <Text
+          position={[0, -0.5, 0.26]}
+          fontSize={0.14}
+          color={toHexString(neonCyan)}
           anchorX="center"
           anchorY="middle"
           fontWeight="700"
         >
-          English Learning
-        </Text>
-
-        <Text
-          position={[0, -0.45, 0.21]}
-          fontSize={0.12}
-          color={toHexString(foreground)}
-          anchorX="center"
-          anchorY="middle"
-          fontWeight="600"
-        >
-          تعلم الإنجليزية
+          تعلم المستقبل
         </Text>
       </group>
 
-      {/* Floating Accent Orb */}
+      {/* Floating Neon Orbs */}
       <Sphere
         ref={orbRef}
-        args={[0.15, 32, 32]}
+        args={[0.18, 32, 32]}
       >
         <meshPhysicalMaterial 
-          color={accent}
+          color={neonCyan}
           roughness={0}
           metalness={0}
-          transmission={0.9}
-          thickness={0.5}
-          emissive={accent}
-          emissiveIntensity={0.3}
-          opacity={0.8}
+          transmission={0.95}
+          thickness={0.8}
+          emissive={neonCyan}
+          emissiveIntensity={0.6}
+          opacity={0.9}
           transparent
         />
       </Sphere>
 
-      {/* Ambient Light Points */}
-      {[...Array(5)].map((_, i) => (
+      {/* Secondary Floating Orb */}
+      <Sphere
+        args={[0.12, 32, 32]}
+        position={[
+          Math.sin(Date.now() * 0.001) * 2.5,
+          Math.cos(Date.now() * 0.0008) * 1.2 + 0.8,
+          Math.sin(Date.now() * 0.0006) * 0.8
+        ]}
+      >
+        <meshPhysicalMaterial 
+          color={neonPurple}
+          roughness={0}
+          metalness={0}
+          transmission={0.9}
+          thickness={0.6}
+          emissive={neonPurple}
+          emissiveIntensity={0.5}
+          opacity={0.85}
+          transparent
+        />
+      </Sphere>
+
+      {/* Energy Particles */}
+      {[...Array(8)].map((_, i) => (
         <Sphere
           key={i}
-          args={[0.04, 16, 16]}
+          args={[0.06, 16, 16]}
           position={[
-            Math.sin(i * 1.26) * 3,
-            Math.cos(i * 0.95) * 2,
-            Math.sin(i * 0.73) * 1.5
+            Math.sin(i * 0.785) * 3.5,
+            Math.cos(i * 0.785) * 2.5,
+            Math.sin(i * 0.524) * 2
           ]}
         >
-          <meshBasicMaterial 
-            color={i % 2 === 0 ? primary : accent}
+          <meshPhysicalMaterial 
+            color={i % 3 === 0 ? neonCyan : i % 3 === 1 ? neonPurple : accent}
+            emissive={i % 3 === 0 ? neonCyan : i % 3 === 1 ? neonPurple : accent}
+            emissiveIntensity={0.8}
             transparent
-            opacity={0.6}
+            opacity={0.7}
+            transmission={0.3}
           />
         </Sphere>
       ))}
+
+      {/* Floating UI Elements */}
+      <group position={[2.2, 1.5, 0.5]}>
+        <RoundedBox args={[0.8, 0.3, 0.05]} radius={0.05}>
+          <meshPhysicalMaterial 
+            color={primary}
+            emissive={primary}
+            emissiveIntensity={0.3}
+            transmission={0.8}
+            opacity={0.9}
+            transparent
+          />
+        </RoundedBox>
+      </group>
+
+      <group position={[-2.2, -1.5, 0.5]}>
+        <RoundedBox args={[0.8, 0.3, 0.05]} radius={0.05}>
+          <meshPhysicalMaterial 
+            color={accent}
+            emissive={accent}
+            emissiveIntensity={0.3}
+            transmission={0.8}
+            opacity={0.9}
+            transparent
+          />
+        </RoundedBox>
+      </group>
     </group>
   );
 }

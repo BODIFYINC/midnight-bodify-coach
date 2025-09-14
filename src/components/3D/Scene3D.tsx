@@ -22,10 +22,10 @@ function colorFromVar(varName: string, lOffset = 0) {
 }
 
 export function Scene3D({ className }: Scene3DProps) {
-  const ambientColor = useMemo(() => colorFromVar('--primary', -35), []);
-  const keyColor = useMemo(() => colorFromVar('--accent', 10), []);
-  const fillColor = useMemo(() => colorFromVar('--primary', -20), []);
-  const rimColor = useMemo(() => colorFromVar('--primary', 15), []);
+  const ambientColor = useMemo(() => colorFromVar('--primary', -40), []);
+  const keyColor = useMemo(() => colorFromVar('--neon-cyan', 20), []);
+  const fillColor = useMemo(() => colorFromVar('--accent', -10), []);
+  const rimColor = useMemo(() => colorFromVar('--neon-purple', 25), []);
 
   return (
     <div className={className}>
@@ -36,54 +36,62 @@ export function Scene3D({ className }: Scene3DProps) {
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
-          <Environment resolution={256} background={false}>
-            <Lightformer intensity={0.8} color={keyColor} position={[10, 10, 10]} scale={20} />
-            <Lightformer intensity={0.5} color={fillColor} position={[-10, -10, -10]} scale={20} />
-            <Lightformer intensity={0.3} color={rimColor} position={[0, 0, -15]} scale={30} />
+          <Environment resolution={512} background={false}>
+            <Lightformer intensity={1.2} color={keyColor} position={[12, 12, 12]} scale={25} />
+            <Lightformer intensity={0.8} color={fillColor} position={[-12, -8, -12]} scale={25} />
+            <Lightformer intensity={0.6} color={rimColor} position={[0, 0, -20]} scale={35} />
+            <Lightformer intensity={0.4} color={keyColor} position={[15, 5, 8]} scale={15} />
           </Environment>
           
-          <ambientLight intensity={0.2} color={ambientColor} />
+          <ambientLight intensity={0.3} color={ambientColor} />
           
-          {/* Key Light */}
+          {/* Primary Key Light - Cinematic */}
           <directionalLight 
-            position={[5, 8, 6]} 
-            intensity={1.8} 
+            position={[8, 12, 10]} 
+            intensity={2.5} 
             color={keyColor}
             castShadow
-            shadow-mapSize={[2048, 2048]}
-            shadow-camera-far={50}
-            shadow-camera-left={-10}
-            shadow-camera-right={10}
-            shadow-camera-top={10}
-            shadow-camera-bottom={-10}
+            shadow-mapSize={[4096, 4096]}
+            shadow-camera-far={100}
+            shadow-camera-left={-15}
+            shadow-camera-right={15}
+            shadow-camera-top={15}
+            shadow-camera-bottom={-15}
           />
           
-          {/* Fill Light */}
+          {/* Accent Fill Light */}
           <pointLight 
-            position={[-8, -4, -3]} 
-            intensity={1.2} 
+            position={[-10, -6, -5]} 
+            intensity={1.8} 
             color={fillColor}
-            distance={20}
-            decay={2}
+            distance={30}
+            decay={1.5}
           />
           
-          {/* Rim Light */}
+          {/* Dramatic Rim Light */}
           <spotLight 
-            position={[0, 12, -8]} 
-            intensity={0.8} 
+            position={[0, 15, -12]} 
+            intensity={1.2} 
             color={rimColor}
-            angle={0.4} 
-            penumbra={0.8}
-            distance={25}
-            decay={2}
+            angle={0.5} 
+            penumbra={0.9}
+            distance={40}
+            decay={1.8}
           />
           
-          {/* Accent Lights */}
+          {/* Additional Accent Lights for Depth */}
           <pointLight 
-            position={[6, -2, 4]} 
-            intensity={0.6} 
+            position={[10, -3, 6]} 
+            intensity={0.8} 
             color={keyColor}
-            distance={15}
+            distance={20}
+          />
+          
+          <pointLight 
+            position={[-6, 8, -4]} 
+            intensity={0.6} 
+            color={rimColor}
+            distance={18}
           />
 
           <LibyanBook />
