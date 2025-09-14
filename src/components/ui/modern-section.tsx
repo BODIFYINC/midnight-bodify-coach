@@ -34,15 +34,15 @@ const sectionVariants = cva(
   }
 )
 
-export interface ModernSectionProps
-  extends React.HTMLAttributes<HTMLElement>,
-    VariantProps<typeof sectionVariants> {
+export interface ModernSectionProps extends VariantProps<typeof sectionVariants> {
   children: React.ReactNode
   asMotion?: boolean
+  className?: string
+  id?: string
 }
 
 const ModernSection = React.forwardRef<HTMLElement, ModernSectionProps>(
-  ({ className, spacing, background, container, asMotion = true, children, ...props }, ref) => {
+  ({ className, spacing, background, container, asMotion = true, children, id }, ref) => {
     const sectionClass = cn(sectionVariants({ spacing, background }), className)
     const contentClass = container !== "none" ? cn(sectionVariants({ container })) : ""
     
@@ -55,11 +55,11 @@ const ModernSection = React.forwardRef<HTMLElement, ModernSectionProps>(
         <motion.section
           ref={ref}
           className={sectionClass}
+          id={id}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.8 }}
-          {...props}
         >
           {content}
         </motion.section>
@@ -67,7 +67,7 @@ const ModernSection = React.forwardRef<HTMLElement, ModernSectionProps>(
     }
 
     return (
-      <section ref={ref} className={sectionClass} {...props}>
+      <section ref={ref} className={sectionClass} id={id}>
         {content}
       </section>
     )
@@ -77,13 +77,14 @@ const ModernSection = React.forwardRef<HTMLElement, ModernSectionProps>(
 ModernSection.displayName = "ModernSection"
 
 // Section Header Component
-interface SectionHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SectionHeaderProps {
   children: React.ReactNode
   centered?: boolean
+  className?: string
 }
 
 const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
-  ({ className, children, centered = true, ...props }, ref) => (
+  ({ className, children, centered = true }, ref) => (
     <motion.div
       ref={ref}
       className={cn(
@@ -95,7 +96,6 @@ const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.6 }}
-      {...props}
     >
       {children}
     </motion.div>
@@ -104,14 +104,15 @@ const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
 SectionHeader.displayName = "SectionHeader"
 
 // Section Title Component
-interface SectionTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+interface SectionTitleProps {
   children: React.ReactNode
   gradient?: boolean
   size?: "sm" | "md" | "lg" | "xl"
+  className?: string
 }
 
 const SectionTitle = React.forwardRef<HTMLHeadingElement, SectionTitleProps>(
-  ({ className, children, gradient = true, size = "lg", ...props }, ref) => {
+  ({ className, children, gradient = true, size = "lg" }, ref) => {
     const sizeClasses = {
       sm: "text-3xl sm:text-4xl",
       md: "text-4xl sm:text-5xl",
@@ -128,7 +129,6 @@ const SectionTitle = React.forwardRef<HTMLHeadingElement, SectionTitleProps>(
           gradient && "text-gradient-primary",
           className
         )}
-        {...props}
       >
         {children}
       </h2>
@@ -138,13 +138,14 @@ const SectionTitle = React.forwardRef<HTMLHeadingElement, SectionTitleProps>(
 SectionTitle.displayName = "SectionTitle"
 
 // Section Subtitle Component  
-interface SectionSubtitleProps extends React.HTMLAttributes<HTMLParagraphElement> {
+interface SectionSubtitleProps {
   children: React.ReactNode
   size?: "sm" | "md" | "lg"
+  className?: string
 }
 
 const SectionSubtitle = React.forwardRef<HTMLParagraphElement, SectionSubtitleProps>(
-  ({ className, children, size = "md", ...props }, ref) => {
+  ({ className, children, size = "md" }, ref) => {
     const sizeClasses = {
       sm: "text-base sm:text-lg",
       md: "text-lg sm:text-xl",
@@ -159,7 +160,6 @@ const SectionSubtitle = React.forwardRef<HTMLParagraphElement, SectionSubtitlePr
           sizeClasses[size],
           className
         )}
-        {...props}
       >
         {children}
       </p>

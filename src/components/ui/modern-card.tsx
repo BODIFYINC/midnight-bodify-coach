@@ -1,5 +1,5 @@
 import * as React from "react"
-import { motion, type HTMLMotionProps } from "framer-motion"
+import { motion } from "framer-motion"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
@@ -37,15 +37,16 @@ const cardVariants = cva(
   }
 )
 
-export interface ModernCardProps 
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {
+export interface ModernCardProps extends VariantProps<typeof cardVariants> {
   children: React.ReactNode
   asMotion?: boolean
+  className?: string
+  onClick?: () => void
+  id?: string
 }
 
 const ModernCard = React.forwardRef<HTMLDivElement, ModernCardProps>(
-  ({ className, variant, size, animation, asMotion = true, children, ...props }, ref) => {
+  ({ className, variant, size, animation, asMotion = true, children, onClick, id }, ref) => {
     const cardClass = cn(cardVariants({ variant, size, animation, className }))
     
     if (asMotion) {
@@ -53,6 +54,8 @@ const ModernCard = React.forwardRef<HTMLDivElement, ModernCardProps>(
         <motion.div
           ref={ref}
           className={cardClass}
+          onClick={onClick}
+          id={id}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -61,7 +64,6 @@ const ModernCard = React.forwardRef<HTMLDivElement, ModernCardProps>(
             y: variant === "interactive" ? -4 : 0,
             transition: { duration: 0.3 } 
           }}
-          {...props}
         >
           {children}
         </motion.div>
@@ -72,7 +74,8 @@ const ModernCard = React.forwardRef<HTMLDivElement, ModernCardProps>(
       <div
         ref={ref}
         className={cardClass}
-        {...(props as React.HTMLAttributes<HTMLDivElement>)}
+        onClick={onClick}
+        id={id}
       >
         {children}
       </div>
@@ -83,16 +86,16 @@ const ModernCard = React.forwardRef<HTMLDivElement, ModernCardProps>(
 ModernCard.displayName = "ModernCard"
 
 // Card Header Component
-interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CardHeaderProps {
   children: React.ReactNode
+  className?: string
 }
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ className, children, ...props }, ref) => (
+  ({ className, children }, ref) => (
     <div
       ref={ref}
       className={cn("flex flex-col space-y-2 pb-4", className)}
-      {...props}
     >
       {children}
     </div>
@@ -101,13 +104,14 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 CardHeader.displayName = "CardHeader"
 
 // Card Title Component  
-interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+interface CardTitleProps {
   children: React.ReactNode
+  className?: string
   gradient?: boolean
 }
 
 const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
-  ({ className, children, gradient = false, ...props }, ref) => (
+  ({ className, children, gradient = false }, ref) => (
     <h3
       ref={ref}
       className={cn(
@@ -115,7 +119,6 @@ const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
         gradient && "text-gradient-primary",
         className
       )}
-      {...props}
     >
       {children}
     </h3>
@@ -124,16 +127,16 @@ const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
 CardTitle.displayName = "CardTitle"
 
 // Card Description Component
-interface CardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {
+interface CardDescriptionProps {
   children: React.ReactNode
+  className?: string
 }
 
 const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionProps>(
-  ({ className, children, ...props }, ref) => (
+  ({ className, children }, ref) => (
     <p
       ref={ref}
       className={cn("text-foreground-muted leading-relaxed", className)}
-      {...props}
     >
       {children}
     </p>
@@ -142,13 +145,14 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionPr
 CardDescription.displayName = "CardDescription"
 
 // Card Content Component
-interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CardContentProps {
   children: React.ReactNode
+  className?: string
 }
 
 const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
-  ({ className, children, ...props }, ref) => (
-    <div ref={ref} className={cn("space-y-4", className)} {...props}>
+  ({ className, children }, ref) => (
+    <div ref={ref} className={cn("space-y-4", className)}>
       {children}
     </div>
   )
@@ -156,16 +160,16 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
 CardContent.displayName = "CardContent"
 
 // Card Footer Component
-interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CardFooterProps {
   children: React.ReactNode
+  className?: string
 }
 
 const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
-  ({ className, children, ...props }, ref) => (
+  ({ className, children }, ref) => (
     <div
       ref={ref}
       className={cn("flex items-center pt-4 border-t border-border/30", className)}
-      {...props}
     >
       {children}
     </div>
