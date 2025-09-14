@@ -36,27 +36,15 @@ export function Scene3D({ className }: Scene3DProps) {
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
-          <Environment resolution={512} background={false}>
-            <Lightformer intensity={1.2} color={keyColor} position={[12, 12, 12]} scale={25} />
-            <Lightformer intensity={0.8} color={fillColor} position={[-12, -8, -12]} scale={25} />
-            <Lightformer intensity={0.6} color={rimColor} position={[0, 0, -20]} scale={35} />
-            <Lightformer intensity={0.4} color={keyColor} position={[15, 5, 8]} scale={15} />
-          </Environment>
+          {/* Environment temporarily disabled to resolve runtime error */}
           
           <ambientLight intensity={0.3} color={ambientColor} />
           
-          {/* Primary Key Light - Cinematic */}
           <directionalLight 
             position={[8, 12, 10]} 
-            intensity={2.5} 
+            intensity={2.2} 
             color={keyColor}
             castShadow
-            shadow-mapSize={[4096, 4096]}
-            shadow-camera-far={100}
-            shadow-camera-left={-15}
-            shadow-camera-right={15}
-            shadow-camera-top={15}
-            shadow-camera-bottom={-15}
           />
           
           {/* Accent Fill Light */}
