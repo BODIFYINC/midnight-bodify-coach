@@ -10,22 +10,22 @@ import * as THREE from 'three';
 // those objects exist on common Three.js prototypes used by R3F instances.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ensureLovData = (proto: any) => {
+  if (!proto) return;
   try {
     proto.data ??= {};
     proto.data.lov ??= {};
   } catch {
-    // Some prototypes may not allow direct assignment; fall back gracefully.
     try {
       Object.defineProperty(proto, 'data', { value: { lov: {} }, writable: true, configurable: true });
     } catch {/* ignore */}
   }
 };
 // Apply to common instance types created by R3F
-ensureLovData((THREE.Object3D as any).prototype);
-ensureLovData((THREE.Material as any).prototype);
-ensureLovData((THREE.BufferGeometry as any).prototype);
-// Optional extras for safety
-if ((THREE.Texture as any)?.prototype) ensureLovData((THREE.Texture as any).prototype);
+ensureLovData((THREE.Object3D as any)?.prototype);
+ensureLovData((THREE.Material as any)?.prototype);
+ensureLovData((THREE.BufferGeometry as any)?.prototype);
+ensureLovData((THREE.Texture as any)?.prototype);
+ensureLovData((THREE.EventDispatcher as any)?.prototype);
 
 interface Scene3DProps {
   className?: string;
