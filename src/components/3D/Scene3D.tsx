@@ -4,6 +4,14 @@ import { OrbitControls, Environment, Lightformer } from '@react-three/drei';
 import { LibyanBook } from './LibyanBook';
 import * as THREE from 'three';
 
+// Patch: prevent react-three-fiber from crashing when dev tagger injects data-lov-* props.
+// It may attempt to assign dashed nested props like "data-lov-id" to Three.js instances.
+// Ensure the path exists so applyProps doesn't traverse undefined.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(THREE.Object3D.prototype as any).data ??= {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(THREE.Object3D.prototype as any).data.lov ??= {};
+
 interface Scene3DProps {
   className?: string;
 }
