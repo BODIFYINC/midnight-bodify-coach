@@ -1,488 +1,298 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Scene3D } from '@/components/3D/Scene3D';
-import {
-  BookOpen,
-  ArrowRight,
-  Sparkles,
-  Brain,
-  Globe,
-  Target,
-  Zap,
-  Users,
-  Award,
-  CheckCircle,
-  Play,
-  Star
-} from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
+import { Mesh } from 'three';
+import { ArrowRight, BookOpen, Users, Award, ChevronDown } from 'lucide-react';
 
-// SEO Meta Tags
-const SEOHead = () => {
-  useEffect(() => {
-    document.title = 'Libya-Can: Future of English Learning in Libya';
-    
-    const metaDescription = document.querySelector('meta[name="description"]');
-    const description = 'Transform your English skills with Libya\'s most advanced learning platform. Interactive 3D lessons, AI-powered progress tracking, and culturally relevant content designed for Libyan students.';
-    
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = description;
-      document.head.appendChild(meta);
-    }
-
-    // Add structured data
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
-      "name": "Libya-Can",
-      "description": description,
-      "url": window.location.origin,
-      "sameAs": [],
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "LY"
-      }
-    };
-
-    const scriptTag = document.createElement('script');
-    scriptTag.type = 'application/ld+json';
-    scriptTag.textContent = JSON.stringify(structuredData);
-    document.head.appendChild(scriptTag);
-
-    return () => {
-      document.head.removeChild(scriptTag);
-    };
-  }, []);
-
-  return null;
-};
-
-// Animation variants
-const fadeInUp = {
-  hidden: { opacity: 0, y: 60 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.8 }
-  }
-};
-
-const stagger = {
-  visible: {
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 }
-  }
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { 
-    opacity: 1, 
-    scale: 1,
-    transition: { duration: 0.6 }
-  }
-};
-
-export default function Index() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll();
+// Modern 3D Book Component
+const ModernBook = ({ position, rotation, scale = 1 }: any) => {
+  const meshRef = useRef<Mesh>(null);
   
-  // Parallax transforms
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-  const textY = useTransform(scrollYProgress, [0, 0.3], ['0%', '30%']);
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.3 + position[0]) * 0.1;
+    }
+  });
 
-  // Mouse movement effect
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX - window.innerWidth / 2) / 100,
-        y: (e.clientY - window.innerHeight / 2) / 100
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Floating background elements
-  const FloatingElements = () => (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-2 h-2 bg-gradient-primary rounded-full opacity-20"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -100, 0],
-            opacity: [0, 0.3, 0],
-            scale: [0.5, 1, 0.5]
-          }}
-          transition={{
-            duration: 3 + Math.random() * 4,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-            ease: "easeInOut"
-          }}
+  return (
+    <group position={position} rotation={rotation} scale={scale}>
+      <mesh ref={meshRef}>
+        <boxGeometry args={[1.2, 1.6, 0.15]} />
+        <meshStandardMaterial 
+          color="#3b82f6" 
+          metalness={0.3} 
+          roughness={0.4}
+          envMapIntensity={1}
         />
-      ))}
+      </mesh>
+      {/* Book spine */}
+      <mesh position={[0.6, 0, 0]}>
+        <boxGeometry args={[0.05, 1.6, 0.15]} />
+        <meshStandardMaterial color="#1e40af" metalness={0.5} roughness={0.3} />
+      </mesh>
+      {/* Book pages */}
+      <mesh position={[-0.05, 0, 0]}>
+        <boxGeometry args={[1.1, 1.5, 0.12]} />
+        <meshStandardMaterial color="#f8fafc" metalness={0.1} roughness={0.8} />
+      </mesh>
+    </group>
+  );
+};
+
+// 3D Scene Component
+const ThreeDScene = () => {
+  return (
+    <div className="absolute inset-0 w-full h-full">
+      <Canvas>
+        <PerspectiveCamera makeDefault position={[5, 2, 5]} />
+        <OrbitControls 
+          enablePan={false} 
+          enableZoom={false}
+          enableRotate={true}
+          autoRotate
+          autoRotateSpeed={0.5}
+          maxPolarAngle={Math.PI / 2}
+          minPolarAngle={Math.PI / 3}
+        />
+        
+        {/* Lighting Setup */}
+        <ambientLight intensity={0.4} />
+        <directionalLight position={[10, 10, 5]} intensity={1} castShadow />
+        <pointLight position={[-10, -10, -10]} color="#3b82f6" intensity={0.3} />
+        <pointLight position={[10, 10, 10]} color="#8b5cf6" intensity={0.2} />
+        
+        {/* Environment */}
+        <Environment preset="studio" />
+        
+        {/* 3D Books */}
+        <ModernBook position={[0, 0, 0]} rotation={[0, 0, 0]} scale={1.2} />
+        <ModernBook position={[-2.5, -0.5, -1]} rotation={[0, 0.3, 0]} scale={0.9} />
+        <ModernBook position={[2.2, 0.2, -0.8]} rotation={[0, -0.4, 0]} scale={1.0} />
+        <ModernBook position={[-1, 1.2, 1]} rotation={[0, 0.8, 0]} scale={0.8} />
+        <ModernBook position={[1.5, -1, 1.2]} rotation={[0, -0.6, 0]} scale={0.85} />
+      </Canvas>
     </div>
   );
+};
 
+// Hero Section Component
+const HeroSection = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = document.querySelectorAll('.scroll-reveal');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
+      {/* 3D Background */}
+      <div className="absolute inset-0 opacity-40">
+        <ThreeDScene />
+      </div>
+      
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/40" />
+      
+      {/* Content */}
+      <div className="container relative z-10 text-center">
+        <div className="scroll-reveal opacity-0">
+          <h1 className="text-gradient-animated mb-8 leading-tight tracking-tight">
+            Transform Learning
+            <br />
+            <span className="text-gradient">Through Innovation</span>
+          </h1>
+        </div>
+        
+        <div className="scroll-reveal opacity-0" style={{animationDelay: '0.2s'}}>
+          <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed">
+            Experience the future of education with our cutting-edge platform that combines 
+            interactive learning, advanced analytics, and personalized content delivery.
+          </p>
+        </div>
+        
+        <div className="scroll-reveal opacity-0 flex flex-col sm:flex-row gap-6 justify-center items-center" style={{animationDelay: '0.4s'}}>
+          <button className="btn btn-primary group">
+            Get Started Today
+            <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+          </button>
+          <button className="btn btn-secondary">
+            Watch Demo
+          </button>
+        </div>
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-pulse-glow">
+          <ChevronDown className="w-8 h-8 text-electric-blue animate-bounce" />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Features Section
+const FeaturesSection = () => {
   const features = [
     {
       icon: BookOpen,
-      title: "Interactive 3D Lessons",
-      description: "Immersive learning experiences with cutting-edge 3D visualization and interactive content designed for Libyan culture.",
-      gradient: "from-blue-500 to-cyan-500"
+      title: "Interactive Learning",
+      description: "Engage with dynamic content that adapts to your learning style and pace."
     },
     {
-      icon: Brain,
-      title: "AI-Powered Progress",
-      description: "Advanced artificial intelligence tracks your learning journey and adapts to your personal style and pace.",
-      gradient: "from-purple-500 to-pink-500"
+      icon: Users,
+      title: "Collaborative Environment", 
+      description: "Connect with peers and mentors in our vibrant learning community."
     },
     {
-      icon: Globe,
-      title: "Cultural Integration",
-      description: "Learn English while celebrating Libyan heritage with culturally relevant scenarios and examples.",
-      gradient: "from-green-500 to-emerald-500"
-    },
-    {
-      icon: Target,
-      title: "Precision Learning",
-      description: "Targeted skill development with real-time feedback and personalized learning pathways.",
-      gradient: "from-orange-500 to-red-500"
-    }
-  ];
-
-  const stats = [
-    { number: "10K+", label: "Active Students", icon: Users },
-    { number: "98%", label: "Success Rate", icon: Award },
-    { number: "24/7", label: "Learning Access", icon: Zap },
-    { number: "50+", label: "Interactive Modules", icon: BookOpen }
-  ];
-
-  const testimonials = [
-    {
-      name: "Ahmed Al-Mansouri",
-      role: "Engineering Student, University of Tripoli",
-      content: "Libya-Can transformed my English skills completely. The 3D interactive lessons made complex grammar concepts so easy to understand!",
-      rating: 5
-    },
-    {
-      name: "Fatima Benali",
-      role: "Business Professional, Benghazi",
-      content: "Finally, an English learning platform that understands our culture. The business English modules are perfectly tailored for the Libyan market.",
-      rating: 5
-    },
-    {
-      name: "Omar Khalil",
-      role: "Medical Student, Zawiya",
-      content: "The AI-powered progress tracking helped me identify and improve my weak areas. I passed my IELTS exam with flying colors!",
-      rating: 5
+      icon: Award,
+      title: "Certified Progress",
+      description: "Earn recognized certificates and track your educational achievements."
     }
   ];
 
   return (
-    <>
-      <SEOHead />
-      <FloatingElements />
-      
-      <main className="min-h-screen bg-gradient-hero">
-        {/* Hero Section */}
-        <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
-          <motion.div 
-            className="absolute inset-0 bg-gradient-neon"
-            style={{ y: backgroundY }}
-          />
-          
-          <div className="container relative z-10">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              {/* Hero Content */}
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={stagger}
-                className="space-y-8"
-                style={{ 
-                  transform: `translate3d(${mousePos.x}px, ${mousePos.y}px, 0)` 
-                }}
-              >
-                {/* Badge */}
-                <motion.div variants={scaleIn} className="inline-block">
-                  <div className="glass px-6 py-3 rounded-full flex items-center gap-3 text-sm font-medium">
-                    <div className="w-2 h-2 bg-gradient-primary rounded-full animate-pulse" />
-                    🇱🇾 Made for Libya
-                    <Sparkles className="w-4 h-4 text-primary" />
-                  </div>
-                </motion.div>
-
-                {/* Main Headline */}
-                <motion.h1 variants={fadeInUp} className="space-y-2">
-                  <div className="text-6xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight">
-                    <div className="text-gradient">Future of</div>
-                    <div className="text-foreground">English</div>
-                    <div className="text-gradient-cosmic">Learning</div>
-                  </div>
-                </motion.h1>
-
-                {/* Subtitle */}
-                <motion.p 
-                  variants={fadeInUp}
-                  className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-2xl"
-                >
-                  Transform your English skills with Libya's most advanced learning platform. 
-                  Interactive 3D lessons, AI-powered progress tracking, and culturally relevant content.
-                </motion.p>
-
-                {/* CTA Buttons */}
-                <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4">
-                  <Button asChild size="lg" className="btn-primary px-8 py-6 text-lg rounded-2xl group">
-                    <Link to="/register">
-                      <Play className="w-5 h-5 mr-2" />
-                      Start Learning Now
-                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </Button>
-                  
-                  <Button asChild variant="ghost" size="lg" className="px-8 py-6 text-lg rounded-2xl glass">
-                    <Link to="/demo">
-                      <BookOpen className="w-5 h-5 mr-2" />
-                      Watch Demo
-                    </Link>
-                  </Button>
-                </motion.div>
-
-                {/* Trust Indicators */}
-                <motion.div variants={fadeInUp} className="flex items-center gap-6 pt-8">
-                  <div className="flex items-center gap-2">
-                    <div className="flex -space-x-2">
-                      {[...Array(3)].map((_, i) => (
-                        <div key={i} className="w-8 h-8 rounded-full bg-gradient-primary border-2 border-background" />
-                      ))}
-                    </div>
-                    <span className="text-sm text-muted-foreground ml-2">Join 10,000+ students</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                    <span className="text-sm text-muted-foreground ml-1">4.9/5 rating</span>
-                  </div>
-                </motion.div>
-              </motion.div>
-
-              {/* 3D Scene */}
-              <motion.div
-                initial={{ opacity: 0, x: 100, rotateY: -15 }}
-                animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                transition={{ duration: 1.2, delay: 0.3 }}
-                className="relative h-[600px] lg:h-[700px]"
-              >
-                <div className="glass rounded-3xl h-full overflow-hidden glow-neon">
-                  <Scene3D className="w-full h-full" />
-                </div>
-                
-                {/* Floating UI Cards */}
-                <motion.div
-                  className="absolute top-8 -left-8 glass p-4 rounded-2xl"
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span className="text-sm font-medium">Live Progress</span>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  className="absolute bottom-8 -right-8 glass p-4 rounded-2xl"
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <div className="flex items-center gap-3">
-                    <Brain className="w-5 h-5 text-purple-400" />
-                    <span className="text-sm font-medium">AI Powered</span>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="section-padding-sm">
-          <div className="container">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={stagger}
-              className="grid grid-cols-2 md:grid-cols-4 gap-8"
+    <section className="section-padding-lg relative">
+      <div className="container">
+        <div className="text-center mb-20">
+          <h2 className="text-gradient mb-6 scroll-reveal opacity-0">
+            Why Choose Our Platform?
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto scroll-reveal opacity-0" style={{animationDelay: '0.1s'}}>
+            Discover the features that make learning more engaging, effective, and enjoyable.
+          </p>
+        </div>
+        
+        <div className="grid-responsive">
+          {features.map((feature, index) => (
+            <div 
+              key={index} 
+              className="modern-card hover-lift scroll-reveal opacity-0"
+              style={{animationDelay: `${0.2 + index * 0.1}s`}}
             >
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  className="text-center space-y-4"
-                >
-                  <div className="inline-flex p-4 rounded-2xl bg-gradient-primary/10 glow-primary">
-                    <stat.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <div>
-                    <div className="text-3xl font-black text-gradient">{stat.number}</div>
-                    <div className="text-muted-foreground text-sm">{stat.label}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="section-padding">
-          <div className="container">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeInUp}
-              className="text-center mb-20"
-            >
-              <h2 className="text-4xl md:text-6xl font-black mb-6 text-gradient">
-                Revolutionary Learning Experience
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Discover why thousands of Libyan students choose our platform for mastering English
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={stagger}
-              className="grid md:grid-cols-2 gap-8"
-            >
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  className="modern-card group cursor-pointer"
-                >
-                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.gradient} mb-6`}>
-                    <feature.icon className="w-8 h-8 text-white" />
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-gradient transition-colors">
-                    {feature.title}
-                  </h3>
-                  
-                  <p className="text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Testimonials Section */}
-        <section className="section-padding bg-gradient-flow">
-          <div className="container">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeInUp}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl md:text-5xl font-black mb-6 text-gradient">
-                Success Stories from Libya
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Real students, real results, real transformations
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={stagger}
-              className="grid md:grid-cols-3 gap-8"
-            >
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  className="glass-strong p-8 rounded-3xl space-y-6 hover-lift"
-                >
-                  <div className="flex items-center gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  
-                  <blockquote className="text-foreground/90 leading-relaxed">
-                    "{testimonial.content}"
-                  </blockquote>
-                  
-                  <footer className="border-t border-glass-border pt-4">
-                    <div className="font-semibold text-foreground">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                  </footer>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="section-padding">
-          <div className="container">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={fadeInUp}
-              className="glass-strong rounded-3xl p-16 text-center glow-cosmic"
-            >
-              <h2 className="text-4xl md:text-6xl font-black mb-8 text-gradient-cosmic">
-                Ready to Transform Your English?
-              </h2>
-              
-              <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-                Join thousands of Libyan students who are already mastering English with our revolutionary platform
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <Button asChild size="lg" className="btn-primary px-12 py-6 text-xl rounded-2xl">
-                  <Link to="/register">
-                    Start Your Journey
-                    <ArrowRight className="w-6 h-6 ml-2" />
-                  </Link>
-                </Button>
-                
-                <Button asChild variant="ghost" size="lg" className="px-12 py-6 text-xl rounded-2xl glass">
-                  <Link to="/contact">
-                    Contact Us
-                  </Link>
-                </Button>
+              <div className="flex-center w-16 h-16 rounded-2xl bg-gradient-primary mb-6 glow-primary">
+                <feature.icon className="w-8 h-8 text-white" />
               </div>
-            </motion.div>
-          </div>
-        </section>
-      </main>
-    </>
+              <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
+              <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
-}
+};
+
+// Stats Section
+const StatsSection = () => {
+  const stats = [
+    { number: "50K+", label: "Active Learners" },
+    { number: "1000+", label: "Courses Available" },
+    { number: "98%", label: "Satisfaction Rate" },
+    { number: "24/7", label: "Support Available" }
+  ];
+
+  return (
+    <section className="section-padding bg-gradient-cosmic relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-electric-blue rounded-full blur-3xl animate-pulse-glow" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple rounded-full blur-3xl animate-pulse-glow" style={{animationDelay: '1s'}} />
+      </div>
+      
+      <div className="container relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="text-center scroll-reveal opacity-0" style={{animationDelay: `${index * 0.1}s`}}>
+              <div className="text-4xl md:text-5xl font-black text-gradient mb-2">
+                {stat.number}
+              </div>
+              <div className="text-sm md:text-base text-gray-300 tracking-wide uppercase">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// CTA Section
+const CTASection = () => {
+  return (
+    <section className="section-padding-lg">
+      <div className="container">
+        <div className="modern-card text-center max-w-4xl mx-auto glow-cosmic">
+          <h2 className="text-4xl md:text-5xl font-black mb-6 scroll-reveal opacity-0">
+            Ready to Start Your
+            <br />
+            <span className="text-gradient">Learning Journey?</span>
+          </h2>
+          <p className="text-xl mb-12 text-muted-foreground max-w-2xl mx-auto scroll-reveal opacity-0" style={{animationDelay: '0.1s'}}>
+            Join thousands of learners who are already transforming their careers 
+            and unlocking their potential with our innovative platform.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center scroll-reveal opacity-0" style={{animationDelay: '0.2s'}}>
+            <button className="btn btn-primary">
+              Start Free Trial
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <button className="btn btn-ghost">
+              Contact Sales
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Main Index Component
+const Index = () => {
+  useEffect(() => {
+    // Initialize scroll animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+            entry.target.classList.remove('opacity-0');
+          }
+        });
+      },
+      { 
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+    scrollRevealElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="min-h-screen">
+      <HeroSection />
+      <FeaturesSection />
+      <StatsSection />
+      <CTASection />
+    </div>
+  );
+};
+
+export default Index;
