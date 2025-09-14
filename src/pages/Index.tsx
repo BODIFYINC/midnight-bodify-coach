@@ -4,18 +4,17 @@ import { Scene3D } from '@/components/3D/Scene3D';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { 
-  BookOpen, Users, Globe, Star, Check, MessageCircle, 
-  Zap, Sparkles, Target, Award, TrendingUp, Lightbulb,
-  Brain, Eye, Heart, Shield, Rocket, ChevronDown, Play,
-  ArrowRight, Code, Cpu, Database, Layers
+  BookOpen, Users, Globe, TrendingUp, Brain, 
+  Zap, Target, Award, Phone, Mail, ArrowRight, 
+  MessageCircle, Sparkles, Layers, CheckCircle
 } from 'lucide-react';
 
 export default function Index() {
   // SEO
   useEffect(() => {
-    document.title = 'Libya-Can — Cinematic English Learning Experience';
+    document.title = 'The Future of English Learning in Libya — Libya-Can';
     const meta = document.querySelector('meta[name="description"]');
-    const content = 'Immerse yourself in a futuristic English learning experience. Award-winning 3D design meets powerful education technology.';
+    const content = 'Experience the future of English learning in Libya. Modern lessons, interactive quizzes, real-time progress tracking. Affordable for everyone.';
     if (meta) meta.setAttribute('content', content);
     else {
       const m = document.createElement('meta');
@@ -125,83 +124,96 @@ export default function Index() {
     </div>
   );
 
-  const features = [
+  const whyLearnFeatures = [
+    {
+      icon: Globe,
+      title: 'Global Opportunities',
+      description: 'Open doors to international careers, higher education, and global connections.',
+      gradient: '--gradient-neon'
+    },
     {
       icon: Brain,
-      title: 'Neural AI Learning',
-      description: 'Advanced artificial intelligence that adapts to your learning patterns and optimizes lessons in real-time.',
+      title: 'Cognitive Growth',
+      description: 'Enhance your brain power and critical thinking through bilingual development.',
+      gradient: '--gradient-flow'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Career Advancement',
+      description: 'Increase your earning potential and professional opportunities in Libya and beyond.',
+      gradient: '--gradient-future'
+    }
+  ];
+
+  const features = [
+    {
+      icon: BookOpen,
+      title: 'Modern Lessons',
+      description: 'Interactive, multimedia-rich lessons designed specifically for Libyan learners.',
       color: 'from-primary to-neon-cyan',
       gradient: '--gradient-neon'
     },
     {
-      icon: Globe,
-      title: 'Immersive Worlds',
-      description: 'Step into 3D environments that bring English to life through contextual scenarios.',
+      icon: Target,
+      title: 'Interactive Quizzes',
+      description: 'Engaging assessments that adapt to your learning style and track your progress.',
       color: 'from-neon-cyan to-accent',
       gradient: '--gradient-flow'
     },
     {
-      icon: Zap,
-      title: 'Quantum Feedback',
-      description: 'Instant corrections and suggestions powered by next-generation language processing.',
+      icon: TrendingUp,
+      title: 'Real-Time Progress Tracking',
+      description: 'Monitor your improvement with detailed analytics and personalized insights.',
       color: 'from-accent to-neon-purple',
       gradient: '--gradient-future'
     },
     {
       icon: Users,
-      title: 'Global Network',
-      description: 'Connect with learners across dimensions in our collaborative virtual spaces.',
+      title: 'Affordable for Everyone',
+      description: 'Quality English education accessible to all Libyan students and professionals.',
       color: 'from-neon-purple to-primary',
       gradient: '--gradient-immersive'
-    },
-    {
-      icon: Target,
-      title: 'Precision Paths',
-      description: 'Algorithmic learning tracks that evolve with your progress and goals.',
-      color: 'from-primary to-accent',
-      gradient: '--gradient-neon'
-    },
-    {
-      icon: Award,
-      title: 'Achievement Matrix',
-      description: 'Unlock achievements in our gamified progression system with 3D rewards.',
-      color: 'from-accent to-neon-cyan',
-      gradient: '--gradient-flow'
     }
   ];
 
-  const portfolioItems = [
+  const showcaseItems = [
     {
-      title: 'Interactive 3D Lessons',
-      description: 'Manipulate 3D objects while learning vocabulary',
-      tech: ['WebGL', 'Three.js', 'AI'],
-      image: '🎯'
+      title: 'Conversation Practice',
+      description: 'Real-world scenarios designed for Libyan culture and business needs',
+      visual: '💬',
+      glow: 'from-primary to-neon-cyan'
     },
     {
-      title: 'Voice Recognition Labs',
-      description: 'Real-time pronunciation analysis with 3D mouth models',
-      tech: ['WebAudio', 'ML', 'AR'],
-      image: '🗣️'
+      title: 'Grammar Mastery',
+      description: 'Visual grammar lessons that make complex rules simple and memorable',
+      visual: '📚',
+      glow: 'from-neon-cyan to-accent'
     },
     {
-      title: 'Virtual Classroom',
-      description: 'Holographic teachers in immersive environments',
-      tech: ['WebXR', 'Cloud', 'AI'],
-      image: '🌌'
+      title: 'Pronunciation Coach',
+      description: 'AI-powered feedback to perfect your accent and speaking confidence',
+      visual: '🎤',
+      glow: 'from-accent to-neon-purple'
     },
     {
-      title: 'Neural Progress Tracking',
-      description: 'AI-powered analytics with beautiful data visualization',
-      tech: ['D3.js', 'TensorFlow', 'WebGL'],
-      image: '📊'
+      title: 'Cultural Bridge',
+      description: 'Learn English while celebrating Libyan heritage and traditions',
+      visual: '🌍',
+      glow: 'from-neon-purple to-primary'
+    },
+    {
+      title: 'Business English',
+      description: 'Professional communication skills for the modern Libyan workplace',
+      visual: '💼',
+      glow: 'from-primary to-accent'
     }
   ];
 
   const stats = [
-    { number: '100K+', label: 'Neural Connections', icon: Brain, color: 'primary' },
-    { number: '99.9%', label: 'Precision Rate', icon: Target, color: 'accent' },
-    { number: '24/7', label: 'AI Availability', icon: Cpu, color: 'neon-cyan' },
-    { number: '∞', label: 'Possibilities', icon: Sparkles, color: 'neon-purple' }
+    { number: '5000+', label: 'Libyan Students', icon: Users, color: 'primary' },
+    { number: '95%', label: 'Success Rate', icon: Target, color: 'accent' },
+    { number: '24/7', label: 'Online Access', icon: Globe, color: 'neon-cyan' },
+    { number: '100%', label: 'Satisfaction', icon: Award, color: 'neon-purple' }
   ];
 
   return (
@@ -209,7 +221,7 @@ export default function Index() {
       <CinematicBackground />
       
       <main className="relative">
-        {/* Hero Section - Cinematic Entry */}
+        {/* Hero Section */}
         <section ref={heroRef} className="min-h-screen flex items-center relative overflow-hidden">
           <motion.div 
             className="absolute inset-0"
@@ -236,7 +248,7 @@ export default function Index() {
                 style={{ boxShadow: 'var(--shadow-neon)' }}
               >
                 <Sparkles className="w-5 h-5 mr-3 text-primary animate-pulse" />
-                Next-Generation Learning Experience
+                🇱🇾 Made for Libya
                 <motion.div 
                   className="ml-3 w-2 h-2 bg-primary rounded-full"
                   animate={{ scale: [1, 1.5, 1] }}
@@ -244,14 +256,14 @@ export default function Index() {
                 />
               </motion.div>
 
-              <h1 className="text-7xl md:text-8xl lg:text-9xl font-black leading-[0.85] tracking-tight">
+              <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[0.85] tracking-tight">
                 <motion.span 
                   className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-neon-cyan to-accent"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
                 >
-                  Future
+                  The Future
                 </motion.span>
                 <motion.span 
                   className="block text-foreground"
@@ -259,7 +271,7 @@ export default function Index() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.7 }}
                 >
-                  English
+                  of English
                 </motion.span>
                 <motion.span 
                   className="block text-transparent bg-clip-text bg-gradient-to-r from-accent via-neon-purple to-primary"
@@ -267,30 +279,38 @@ export default function Index() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.9 }}
                 >
-                  Awaits
+                  Learning
+                </motion.span>
+                <motion.span 
+                  className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-neon-cyan"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.1 }}
+                >
+                  in Libya
                 </motion.span>
               </h1>
 
               <motion.p 
-                className="text-2xl md:text-3xl text-foreground/80 leading-relaxed max-w-2xl"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.1 }}
-              >
-                Step into a cinematic learning experience where AI, 3D technology, and beautiful design 
-                converge to revolutionize language education.
-              </motion.p>
-
-              <motion.div 
-                className="flex flex-col sm:flex-row gap-8"
+                className="text-xl md:text-2xl text-foreground/80 leading-relaxed max-w-2xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.3 }}
               >
+                Transform your future with immersive English education designed specifically for Libyan learners. 
+                Professional, interactive, and affordable.
+              </motion.p>
+
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.5 }}
+              >
                 <Button 
                   asChild 
                   size="lg" 
-                  className="group px-16 py-8 text-2xl rounded-3xl bg-gradient-to-r from-primary to-accent hover:shadow-neon transition-all duration-700 transform hover:scale-105 relative overflow-hidden"
+                  className="group px-12 py-6 text-xl rounded-3xl bg-gradient-to-r from-primary to-accent hover:shadow-neon transition-all duration-700 transform hover:scale-105 relative overflow-hidden"
                 >
                   <Link to="/register">
                     <motion.div
@@ -299,19 +319,9 @@ export default function Index() {
                       whileHover={{ x: '100%' }}
                       transition={{ duration: 0.6 }}
                     />
-                    <Rocket className="mr-4 h-8 w-8" />
-                    Enter the Future
-                    <ArrowRight className="ml-4 h-6 w-6 group-hover:translate-x-2 transition-transform" />
+                    Get Started
+                    <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="px-16 py-8 text-2xl rounded-3xl bg-white/5 backdrop-blur-xl border-white/30 hover:bg-white/10 transition-all duration-500 group"
-                >
-                  <Play className="mr-4 h-6 w-6 group-hover:scale-110 transition-transform" />
-                  <Link to="/login">Watch Demo</Link>
                 </Button>
               </motion.div>
             </motion.div>
@@ -326,7 +336,7 @@ export default function Index() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent backdrop-blur-xl rounded-[3rem] border border-white/20" />
                 {mount3D && <Scene3D className="w-full h-full rounded-[3rem]" />}
                 
-                {/* Floating UI Elements with advanced animations */}
+                {/* Floating UI Elements */}
                 <motion.div 
                   className="absolute top-8 right-8 px-6 py-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/30"
                   animate={{ 
@@ -342,7 +352,7 @@ export default function Index() {
                       animate={{ scale: [1, 1.3, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
-                    <span className="text-lg font-bold">Neural Active</span>
+                    <span className="text-lg font-bold">Learning Active</span>
                   </div>
                 </motion.div>
 
@@ -357,7 +367,7 @@ export default function Index() {
                 >
                   <div className="flex items-center space-x-3">
                     <Brain className="w-5 h-5 text-accent" />
-                    <span className="text-lg font-bold">AI Learning: 96%</span>
+                    <span className="text-lg font-bold">Progress: 87%</span>
                   </div>
                 </motion.div>
 
@@ -370,8 +380,8 @@ export default function Index() {
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <div className="flex items-center space-x-2">
-                    <Layers className="w-4 h-4 text-neon-cyan" />
-                    <span className="text-sm font-medium">3D Mode</span>
+                    <CheckCircle className="w-4 h-4 text-neon-cyan" />
+                    <span className="text-sm font-medium">Libya Ready</span>
                   </div>
                 </motion.div>
               </div>
@@ -379,8 +389,63 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Features Section - Floating Cards */}
-        <section className="relative py-40">
+        {/* About / Why Learn Section */}
+        <section className="relative py-32">
+          <motion.div 
+            className="absolute inset-0 opacity-20"
+            style={{ background: 'var(--gradient-neon)' }}
+          />
+          
+          <div className="container relative z-10">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 1.2 }}
+              className="text-center mb-20"
+            >
+              <h2 className="text-5xl md:text-6xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                Why Learn English?
+              </h2>
+              <p className="text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
+                Unlock limitless opportunities in Libya and beyond with the global language of success
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-12 mb-20">
+              {whyLearnFeatures.map((feature, index) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 60, rotateX: -10 }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.8, delay: index * 0.2 }}
+                  whileHover={{ 
+                    y: -10, 
+                    rotateX: 5, 
+                    scale: 1.02
+                  }}
+                  className="group p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/20 text-center"
+                  style={{ boxShadow: 'var(--shadow-elegant)' }}
+                >
+                  <motion.div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-700 rounded-3xl"
+                    style={{ background: `var(${feature.gradient})` }}
+                  />
+                  
+                  <div className="inline-flex p-4 rounded-2xl bg-gradient-to-r from-primary to-accent mb-6">
+                    <feature.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
+                  <p className="text-foreground/70 leading-relaxed">{feature.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="relative py-32">
           <motion.div 
             className="absolute inset-0 opacity-30"
             style={{ background: 'var(--gradient-future)' }}
@@ -392,17 +457,17 @@ export default function Index() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 1.2 }}
-              className="text-center mb-32"
+              className="text-center mb-20"
             >
-              <h2 className="text-6xl md:text-7xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                Revolutionary Features
+              <h2 className="text-5xl md:text-6xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                Our Features
               </h2>
-              <p className="text-2xl text-foreground/70 max-w-4xl mx-auto leading-relaxed">
-                Experience learning technology that feels like magic
+              <p className="text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
+                Modern technology meets proven teaching methods for maximum learning efficiency
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {features.map((feature, index) => (
                 <motion.div 
                   key={index}
@@ -413,102 +478,30 @@ export default function Index() {
                   whileHover={{ 
                     y: -10, 
                     rotateX: 5, 
-                    rotateY: 5,
                     scale: 1.02
                   }}
-                  className="group p-10 rounded-[2rem] bg-white/5 backdrop-blur-xl border border-white/20 relative overflow-hidden"
+                  className="group p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/20 relative overflow-hidden"
                   style={{ 
                     boxShadow: 'var(--shadow-neon)',
                     transformStyle: 'preserve-3d'
                   }}
                 >
                   <motion.div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-700"
+                    className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-700 rounded-3xl"
                     style={{ background: `var(${feature.gradient})` }}
                   />
                   
-                  <div className={`inline-flex p-6 rounded-2xl bg-gradient-to-r ${feature.color} mb-8 relative z-10`}>
-                    <feature.icon className="w-10 h-10 text-white" />
+                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.color} mb-6 relative z-10`}>
+                    <feature.icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-6 relative z-10">{feature.title}</h3>
-                  <p className="text-foreground/70 leading-relaxed text-lg relative z-10">{feature.description}</p>
-                  
-                  <motion.div
-                    className="absolute bottom-4 right-4 w-20 h-20 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  />
+                  <h3 className="text-2xl font-bold mb-4 relative z-10">{feature.title}</h3>
+                  <p className="text-foreground/70 leading-relaxed relative z-10">{feature.description}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Portfolio Showcase - 3D Cards */}
-        <section className="relative py-40">
-          <motion.div 
-            className="absolute inset-0 opacity-20"
-            style={{ background: 'var(--gradient-depth)' }}
-          />
-          
-          <div className="container relative z-10">
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 1.2 }}
-              className="text-center mb-32"
-            >
-              <h2 className="text-6xl md:text-7xl font-black mb-8">
-                Interactive Showcase
-              </h2>
-              <p className="text-2xl text-foreground/70 max-w-3xl mx-auto">
-                Explore our award-winning learning modules
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 gap-16">
-              {portfolioItems.map((item, index) => (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, z: -100 }}
-                  whileInView={{ opacity: 1, z: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.8, delay: index * 0.2 }}
-                  whileHover={{ 
-                    rotateY: 15, 
-                    rotateX: 10,
-                    z: 50,
-                    scale: 1.05
-                  }}
-                  className="group relative"
-                  style={{ transformStyle: 'preserve-3d' }}
-                >
-                  <div className="p-12 rounded-[2rem] bg-white/5 backdrop-blur-xl border border-white/20 relative overflow-hidden" style={{ boxShadow: 'var(--shadow-immersive)' }}>
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                    />
-                    
-                    <div className="text-8xl mb-8 relative z-10">{item.image}</div>
-                    <h3 className="text-3xl font-bold mb-6 relative z-10">{item.title}</h3>
-                    <p className="text-foreground/70 leading-relaxed text-lg mb-8 relative z-10">{item.description}</p>
-                    
-                    <div className="flex flex-wrap gap-3 relative z-10">
-                      {item.tech.map((tech, i) => (
-                        <span 
-                          key={i}
-                          className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-medium"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Stats Section - Floating Numbers */}
         <section className="relative py-32">
