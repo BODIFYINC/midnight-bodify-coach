@@ -1,7 +1,7 @@
 import { Suspense, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, Lightformer } from '@react-three/drei';
-import { LibyanBook } from './LibyanBook';
+import { ModernBookCollection } from './ModernBookCollection';
 import * as THREE from 'three';
 
 // Patch: prevent react-three-fiber from crashing when the dev tagger injects
@@ -53,7 +53,7 @@ export function Scene3D({ className }: Scene3DProps) {
   return (
     <div className={className}>
       <Canvas 
-        camera={{ position: [0, 0, 6], fov: 35 }} 
+        camera={{ position: [0, 2, 8], fov: 40 }} 
         style={{ width: '100%', height: '100%' }}
         gl={{ antialias: true, alpha: true }}
         dpr={[1, 2]}
@@ -105,7 +105,7 @@ export function Scene3D({ className }: Scene3DProps) {
             distance={18}
           />
 
-          <LibyanBook />
+          <ModernBookCollection />
 
           <OrbitControls 
             enableZoom={false} 
