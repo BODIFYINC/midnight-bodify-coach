@@ -28,11 +28,11 @@ export function LibyanBook() {
   const orbRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
-  const primary = useMemo(() => colorFromVar('--primary'), []);
-  const primaryDark = useMemo(() => colorFromVar('--primary', -20), []);
-  const accent = useMemo(() => colorFromVar('--accent'), []);
-  const neonCyan = useMemo(() => colorFromVar('--neon-cyan'), []);
-  const neonPurple = useMemo(() => colorFromVar('--neon-purple'), []);
+  const primary = useMemo(() => colorFromVar('--ocean-blue'), []);
+  const primaryDark = useMemo(() => colorFromVar('--ocean-blue', -20), []);
+  const accent = useMemo(() => colorFromVar('--deep-teal'), []);
+  const electricCyan = useMemo(() => colorFromVar('--electric-cyan'), []);
+  const forestGreen = useMemo(() => colorFromVar('--forest-green'), []);
   const foreground = useMemo(() => colorFromVar('--foreground'), []);
 
   useFrame((state) => {
@@ -75,8 +75,8 @@ export function LibyanBook() {
             metalness={0.8}
             clearcoat={1.2}
             clearcoatRoughness={0.05}
-            emissive={hovered ? neonCyan : primary}
-            emissiveIntensity={hovered ? 0.25 : 0.12}
+            emissive={hovered ? electricCyan : primary}
+            emissiveIntensity={hovered ? 0.15 : 0.08}
             envMapIntensity={2.0}
             transmission={0.1}
             thickness={0.2}
@@ -106,11 +106,11 @@ export function LibyanBook() {
           radius={0.08}
         >
           <meshPhysicalMaterial 
-            color={neonPurple}
+            color={forestGreen}
             roughness={0.05}
             metalness={0.9}
-            emissive={neonPurple}
-            emissiveIntensity={hovered ? 0.3 : 0.2}
+            emissive={forestGreen}
+            emissiveIntensity={hovered ? 0.2 : 0.15}
             clearcoat={1}
             transmission={0.15}
           />
@@ -123,11 +123,11 @@ export function LibyanBook() {
           radius={0.1}
         >
           <meshPhysicalMaterial 
-            color={neonCyan}
+            color={electricCyan}
             roughness={0}
             metalness={0}
-            emissive={neonCyan}
-            emissiveIntensity={hovered ? 0.8 : 0.5}
+            emissive={electricCyan}
+            emissiveIntensity={hovered ? 0.4 : 0.25}
             transmission={0.9}
             thickness={0.1}
             transparent
@@ -144,7 +144,7 @@ export function LibyanBook() {
           anchorY="middle"
           fontWeight="900"
           outlineWidth={0.03}
-          outlineColor={toHexString(neonCyan)}
+          outlineColor={toHexString(electricCyan)}
         >
           Libya-Can
         </Text>
@@ -157,7 +157,7 @@ export function LibyanBook() {
           anchorY="middle"
           fontWeight="800"
           outlineWidth={0.01}
-          outlineColor={toHexString(neonPurple)}
+          outlineColor={toHexString(forestGreen)}
         >
           Future Learning
         </Text>
@@ -165,7 +165,7 @@ export function LibyanBook() {
         <Text
           position={[0, -0.5, 0.26]}
           fontSize={0.14}
-          color={toHexString(neonCyan)}
+          color={toHexString(electricCyan)}
           anchorX="center"
           anchorY="middle"
           fontWeight="700"
@@ -180,13 +180,13 @@ export function LibyanBook() {
         args={[0.18, 32, 32]}
       >
         <meshPhysicalMaterial 
-          color={neonCyan}
+          color={electricCyan}
           roughness={0}
           metalness={0}
           transmission={0.95}
           thickness={0.8}
-          emissive={neonCyan}
-          emissiveIntensity={0.6}
+          emissive={electricCyan}
+          emissiveIntensity={0.3}
           opacity={0.9}
           transparent
         />
@@ -202,13 +202,13 @@ export function LibyanBook() {
         ]}
       >
         <meshPhysicalMaterial 
-          color={neonPurple}
+          color={forestGreen}
           roughness={0}
           metalness={0}
           transmission={0.9}
           thickness={0.6}
-          emissive={neonPurple}
-          emissiveIntensity={0.5}
+          emissive={forestGreen}
+          emissiveIntensity={0.25}
           opacity={0.85}
           transparent
         />
@@ -226,9 +226,9 @@ export function LibyanBook() {
           ]}
         >
           <meshPhysicalMaterial 
-            color={i % 3 === 0 ? neonCyan : i % 3 === 1 ? neonPurple : accent}
-            emissive={i % 3 === 0 ? neonCyan : i % 3 === 1 ? neonPurple : accent}
-            emissiveIntensity={0.8}
+            color={i % 3 === 0 ? electricCyan : i % 3 === 1 ? forestGreen : accent}
+            emissive={i % 3 === 0 ? electricCyan : i % 3 === 1 ? forestGreen : accent}
+            emissiveIntensity={0.4}
             transparent
             opacity={0.7}
             transmission={0.3}
