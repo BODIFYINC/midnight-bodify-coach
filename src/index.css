@@ -71,49 +71,51 @@ input, textarea, select {
 
 /* ===== PROFESSIONAL DESIGN SYSTEM ===== */
 :root {
-  /* ===== CORE PROFESSIONAL PALETTE ===== */
-  --background: 5 8 15;
-  --background-secondary: 10 15 25;
-  --foreground: 248 250 252;
-  --foreground-muted: 148 163 184;
+  /* ===== SOPHISTICATED DARK PALETTE ===== */
+  --background: 8 8 11;
+  --background-secondary: 12 12 16;
+  --background-tertiary: 16 16 20;
+  --foreground: 250 250 250;
+  --foreground-muted: 161 161 170;
+  --foreground-subtle: 113 113 122;
   
-  --card: 15 23 35;
-  --card-hover: 20 28 40;
-  --card-foreground: 248 250 252;
+  --card: 15 15 19;
+  --card-hover: 18 18 23;
+  --card-foreground: 250 250 250;
   
-  --popover: 15 23 35;
-  --popover-foreground: 248 250 252;
+  --popover: 15 15 19;
+  --popover-foreground: 250 250 250;
   
-  --primary: 14 165 233;
-  --primary-hover: 2 132 199;
-  --primary-foreground: 248 250 252;
+  --primary: 168 85 247;
+  --primary-hover: 147 51 234;
+  --primary-foreground: 255 255 255;
   
-  --secondary: 30 41 59;
-  --secondary-hover: 40 51 69;
-  --secondary-foreground: 226 232 240;
+  --secondary: 39 39 42;
+  --secondary-hover: 44 44 49;
+  --secondary-foreground: 244 244 245;
   
-  --accent: 34 197 94;
-  --accent-hover: 22 163 74;
-  --accent-foreground: 248 250 252;
+  --accent: 245 158 11;
+  --accent-hover: 217 119 6;
+  --accent-foreground: 255 255 255;
   
-  --muted: 30 41 59;
-  --muted-hover: 40 51 69;
-  --muted-foreground: 148 163 184;
+  --muted: 39 39 42;
+  --muted-hover: 44 44 49;
+  --muted-foreground: 161 161 170;
   
   --destructive: 239 68 68;
-  --destructive-foreground: 248 250 252;
+  --destructive-foreground: 255 255 255;
   
-  --border: 30 41 59;
-  --input: 30 41 59;
-  --ring: 14 165 233;
+  --border: 39 39 42;
+  --input: 39 39 42;
+  --ring: 168 85 247;
   
-  /* ===== PROFESSIONAL ACCENT COLORS ===== */
-  --ocean-blue: 14 165 233;
-  --deep-teal: 20 184 166;
-  --forest-green: 34 197 94;
-  --steel-gray: 100 116 139;
-  --platinum: 203 213 225;
-  --electric-cyan: 6 182 212;
+  /* ===== DESIGNER ACCENT COLORS ===== */
+  --violet: 168 85 247;
+  --indigo: 99 102 241;
+  --amber: 245 158 11;
+  --emerald: 16 185 129;
+  --rose: 244 63 94;
+  --cyan: 6 182 212;
   
   /* ===== SURFACE COLORS ===== */
   --surface: 15 23 35;
@@ -129,31 +131,31 @@ input, textarea, select {
   --sidebar-border: 30 41 59;
   --sidebar-ring: 14 165 233;
   
-  /* ===== PROFESSIONAL GRADIENTS ===== */
-  --gradient-hero: radial-gradient(ellipse 50% 80% at 20% 40%, hsl(var(--ocean-blue) / 0.08), transparent),
-                   radial-gradient(ellipse 50% 80% at 80% 50%, hsl(var(--deep-teal) / 0.12), transparent),
-                   radial-gradient(ellipse 50% 80% at 40% 80%, hsl(var(--electric-cyan) / 0.06), transparent);
-  --gradient-primary: linear-gradient(135deg, hsl(var(--ocean-blue)), hsl(var(--electric-cyan)));
-  --gradient-secondary: linear-gradient(135deg, hsl(var(--deep-teal)), hsl(var(--forest-green)));
-  --gradient-accent: linear-gradient(135deg, hsl(var(--electric-cyan)), hsl(var(--deep-teal)));
-  --gradient-surface: linear-gradient(135deg, hsl(var(--surface)), hsl(var(--surface-elevated)));
+  /* ===== SOPHISTICATED GRADIENTS ===== */
+  --gradient-hero: radial-gradient(ellipse 50% 80% at 20% 40%, hsl(var(--violet) / 0.05), transparent),
+                   radial-gradient(ellipse 50% 80% at 80% 50%, hsl(var(--indigo) / 0.08), transparent),
+                   radial-gradient(ellipse 50% 80% at 40% 80%, hsl(var(--accent) / 0.03), transparent);
+  --gradient-primary: linear-gradient(135deg, hsl(var(--violet)), hsl(var(--indigo)));
+  --gradient-secondary: linear-gradient(135deg, hsl(var(--indigo)), hsl(var(--violet)));
+  --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--amber)));
+  --gradient-surface: linear-gradient(135deg, hsl(var(--background-secondary)), hsl(var(--background-tertiary)));
   --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(var(--card-hover)));
-  --gradient-text: linear-gradient(135deg, hsl(var(--ocean-blue)), hsl(var(--electric-cyan)));
-  --gradient-glow: linear-gradient(135deg, hsl(var(--ocean-blue) / 0.2), hsl(var(--electric-cyan) / 0.2));
+  --gradient-text: linear-gradient(135deg, hsl(var(--violet)), hsl(var(--accent)));
+  --gradient-glow: linear-gradient(135deg, hsl(var(--violet) / 0.15), hsl(var(--accent) / 0.1));
 
-  /* ===== PROFESSIONAL SHADOWS ===== */
-  --shadow-xs: 0 1px 2px hsl(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 3px hsl(0 0 0 / 0.1), 0 1px 2px hsl(0 0 0 / 0.06);
-  --shadow-md: 0 4px 6px hsl(0 0 0 / 0.07), 0 10px 15px hsl(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px hsl(0 0 0 / 0.1), 0 4px 6px hsl(0 0 0 / 0.05);
-  --shadow-xl: 0 20px 25px hsl(0 0 0 / 0.1), 0 10px 10px hsl(0 0 0 / 0.04);
-  --shadow-glow-primary: 0 0 20px hsl(var(--ocean-blue) / 0.3);
-  --shadow-glow-secondary: 0 0 25px hsl(var(--deep-teal) / 0.25);
-  --shadow-glow-accent: 0 0 30px hsl(var(--electric-cyan) / 0.2);
-  --shadow-hover: 0 25px 50px hsl(0 0 0 / 0.15);
-  --shadow-active: 0 5px 10px hsl(0 0 0 / 0.2);
-  --shadow-inset: inset 0 2px 4px hsl(0 0 0 / 0.06);
-  --shadow-inset-dark: inset 0 2px 4px hsl(0 0 0 / 0.12);
+  /* ===== ELEGANT SHADOWS ===== */
+  --shadow-xs: 0 1px 2px hsl(0 0 0 / 0.1);
+  --shadow-sm: 0 1px 3px hsl(0 0 0 / 0.15), 0 1px 2px hsl(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px hsl(0 0 0 / 0.1), 0 10px 15px hsl(0 0 0 / 0.15);
+  --shadow-lg: 0 10px 15px hsl(0 0 0 / 0.15), 0 4px 6px hsl(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px hsl(0 0 0 / 0.2), 0 10px 10px hsl(0 0 0 / 0.1);
+  --shadow-glow-primary: 0 0 30px hsl(var(--violet) / 0.4);
+  --shadow-glow-secondary: 0 0 25px hsl(var(--indigo) / 0.3);
+  --shadow-glow-accent: 0 0 35px hsl(var(--accent) / 0.25);
+  --shadow-hover: 0 25px 50px hsl(0 0 0 / 0.25);
+  --shadow-active: 0 5px 10px hsl(0 0 0 / 0.3);
+  --shadow-inset: inset 0 2px 4px hsl(0 0 0 / 0.1);
+  --shadow-inset-dark: inset 0 2px 4px hsl(0 0 0 / 0.2);
 
   /* ===== MODERN TYPOGRAPHY SCALE ===== */
   --font-size-xs: clamp(0.75rem, 0.8vw, 0.8rem);

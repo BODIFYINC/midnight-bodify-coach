@@ -45,10 +45,10 @@ function colorFromVar(varName: string, lOffset = 0) {
 }
 
 export function Scene3D({ className }: Scene3DProps) {
-  const ambientColor = useMemo(() => colorFromVar('--ocean-blue', -40), []);
-  const keyColor = useMemo(() => colorFromVar('--electric-cyan', 20), []);
-  const fillColor = useMemo(() => colorFromVar('--deep-teal', -10), []);
-  const rimColor = useMemo(() => colorFromVar('--forest-green', 25), []);
+  const ambientColor = useMemo(() => colorFromVar('--violet', -40), []);
+  const keyColor = useMemo(() => colorFromVar('--indigo', 20), []);
+  const fillColor = useMemo(() => colorFromVar('--accent', -10), []);
+  const rimColor = useMemo(() => colorFromVar('--amber', 25), []);
 
   return (
     <div className={className}>
