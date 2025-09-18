@@ -28,11 +28,11 @@ export function LibyanBook() {
   const orbRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
-  const primary = useMemo(() => colorFromVar('--violet'), []);
-  const primaryDark = useMemo(() => colorFromVar('--violet', -20), []);
-  const accent = useMemo(() => colorFromVar('--accent'), []);
-  const indigo = useMemo(() => colorFromVar('--indigo'), []);
-  const amber = useMemo(() => colorFromVar('--amber'), []);
+  const primary = useMemo(() => colorFromVar('--gold'), []);
+  const primaryDark = useMemo(() => colorFromVar('--gold-dark'), []);
+  const accent = useMemo(() => colorFromVar('--champagne'), []);
+  const bronze = useMemo(() => colorFromVar('--bronze'), []);
+  const copper = useMemo(() => colorFromVar('--copper'), []);
   const foreground = useMemo(() => colorFromVar('--foreground'), []);
 
   useFrame((state) => {
@@ -75,7 +75,7 @@ export function LibyanBook() {
             metalness={0.8}
             clearcoat={1.2}
             clearcoatRoughness={0.05}
-            emissive={hovered ? indigo : primary}
+            emissive={hovered ? bronze : primary}
             emissiveIntensity={hovered ? 0.15 : 0.08}
             envMapIntensity={2.0}
             transmission={0.1}
@@ -106,10 +106,10 @@ export function LibyanBook() {
           radius={0.08}
         >
           <meshPhysicalMaterial 
-            color={amber}
+            color={copper}
             roughness={0.05}
             metalness={0.9}
-            emissive={amber}
+            emissive={copper}
             emissiveIntensity={hovered ? 0.2 : 0.15}
             clearcoat={1}
             transmission={0.15}
@@ -123,10 +123,10 @@ export function LibyanBook() {
           radius={0.1}
         >
           <meshPhysicalMaterial 
-            color={indigo}
+            color={bronze}
             roughness={0}
             metalness={0}
-            emissive={indigo}
+            emissive={bronze}
             emissiveIntensity={hovered ? 0.4 : 0.25}
             transmission={0.9}
             thickness={0.1}
@@ -144,7 +144,7 @@ export function LibyanBook() {
           anchorY="middle"
           fontWeight="900"
           outlineWidth={0.03}
-          outlineColor={toHexString(indigo)}
+          outlineColor={toHexString(bronze)}
         >
           Libya-Can
         </Text>
@@ -157,7 +157,7 @@ export function LibyanBook() {
           anchorY="middle"
           fontWeight="800"
           outlineWidth={0.01}
-          outlineColor={toHexString(amber)}
+          outlineColor={toHexString(copper)}
         >
           Future Learning
         </Text>
@@ -165,7 +165,7 @@ export function LibyanBook() {
         <Text
           position={[0, -0.5, 0.26]}
           fontSize={0.14}
-          color={toHexString(indigo)}
+          color={toHexString(bronze)}
           anchorX="center"
           anchorY="middle"
           fontWeight="700"
@@ -180,12 +180,12 @@ export function LibyanBook() {
         args={[0.18, 32, 32]}
       >
         <meshPhysicalMaterial 
-          color={indigo}
+          color={bronze}
           roughness={0}
           metalness={0}
           transmission={0.95}
           thickness={0.8}
-          emissive={indigo}
+          emissive={bronze}
           emissiveIntensity={0.3}
           opacity={0.9}
           transparent
@@ -202,12 +202,12 @@ export function LibyanBook() {
         ]}
       >
         <meshPhysicalMaterial 
-          color={amber}
+          color={copper}
           roughness={0}
           metalness={0}
           transmission={0.9}
           thickness={0.6}
-          emissive={amber}
+          emissive={copper}
           emissiveIntensity={0.25}
           opacity={0.85}
           transparent
@@ -226,8 +226,8 @@ export function LibyanBook() {
           ]}
         >
           <meshPhysicalMaterial 
-            color={i % 3 === 0 ? indigo : i % 3 === 1 ? amber : accent}
-            emissive={i % 3 === 0 ? indigo : i % 3 === 1 ? amber : accent}
+            color={i % 3 === 0 ? bronze : i % 3 === 1 ? copper : accent}
+            emissive={i % 3 === 0 ? bronze : i % 3 === 1 ? copper : accent}
             emissiveIntensity={0.4}
             transparent
             opacity={0.7}
