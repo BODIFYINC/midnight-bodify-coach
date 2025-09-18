@@ -121,4 +121,6 @@ export function Scene3D({ className }: Scene3DProps) {
       </Canvas>
     </div>
   );
+}
+
 export default Scene3D;
