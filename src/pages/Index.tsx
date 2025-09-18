@@ -48,14 +48,14 @@ const Index = () => {
 
         <div className="relative z-10 container mx-auto px-6 text-center">
           <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">
-            <Badge variant="outline" className="border-gold text-gold bg-gold/10 hover:bg-gold/20 transition-all duration-300 px-6 py-2">
+            <Badge variant="outline" className="border-rich-cream text-rich-cream bg-rich-cream/10 hover:bg-rich-cream/20 transition-all duration-300 px-6 py-2">
               <Star className="w-4 h-4 mr-2" />
-              Luxury Arabic Learning Experience
+              Premium Arabic Learning Experience
             </Badge>
             
             <h1 className="text-7xl md:text-9xl font-black text-gradient leading-none tracking-tight">
               Master Arabic
-              <span className="block bg-gradient-to-r from-gold via-champagne to-gold bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-rich-cream via-warm-gold to-rich-cream bg-clip-text text-transparent">
                 with Elegance
               </span>
             </h1>
@@ -78,7 +78,7 @@ const Index = () => {
               <Button 
                 variant="outline" 
                 size="lg"
-                className="border-2 border-gold text-gold hover:bg-gold hover:text-black px-12 py-6 text-xl font-bold rounded-full transition-all duration-500 hover:scale-105"
+                className="border-2 border-rich-cream text-rich-cream hover:bg-rich-cream hover:text-background px-12 py-6 text-xl font-bold rounded-full transition-all duration-500 hover:scale-105"
                 onClick={() => scrollToSection('features')}
               >
                 <Play className="mr-3 w-6 h-6" />
@@ -88,24 +88,24 @@ const Index = () => {
             
             <div className="flex justify-center items-center space-x-12 pt-16 text-foreground-muted">
               <div className="text-center">
-                <div className="text-4xl font-black bg-gradient-to-r from-gold to-champagne bg-clip-text text-transparent">25K+</div>
+                <div className="text-4xl font-black bg-gradient-to-r from-rich-cream to-warm-gold bg-clip-text text-transparent">25K+</div>
                 <div className="text-lg font-medium">Elite Learners</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-black bg-gradient-to-r from-gold to-champagne bg-clip-text text-transparent">4.9★</div>
+                <div className="text-4xl font-black bg-gradient-to-r from-rich-cream to-warm-gold bg-clip-text text-transparent">4.9★</div>
                 <div className="text-lg font-medium">Premium Rating</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-black bg-gradient-to-r from-gold to-champagne bg-clip-text text-transparent">100+</div>
+                <div className="text-4xl font-black bg-gradient-to-r from-rich-cream to-warm-gold bg-clip-text text-transparent">100+</div>
                 <div className="text-lg font-medium">Master Instructors</div>
               </div>
             </div>
           </div>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ChevronDown className="w-8 h-8 text-gold" />
-        </div>
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <ChevronDown className="w-8 h-8 text-rich-cream" />
+          </div>
       </section>
       
       {/* Features Section */}

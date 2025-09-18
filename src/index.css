@@ -69,96 +69,96 @@ input, textarea, select {
   background: transparent;
 }
 
-/* ===== LUXURY GOLDEN DESIGN SYSTEM ===== */
+/* ===== LUXURY RICH DESIGN SYSTEM ===== */
 :root {
-  /* ===== SOPHISTICATED DARK LUXE PALETTE ===== */
-  --background: 8 8 10;
-  --background-secondary: 12 12 15;
-  --background-tertiary: 16 16 20;
-  --background-accent: 20 18 15;
-  --foreground: 255 255 255;
-  --foreground-muted: 200 195 185;
-  --foreground-subtle: 160 155 145;
+  /* ===== SOPHISTICATED RICH LUXURY PALETTE ===== */
+  --background: 25 100 6;
+  --background-secondary: 358 95 12;
+  --background-tertiary: 358 95 18;
+  --background-accent: 0 98 20;
+  --foreground: 50 40 92;
+  --foreground-muted: 50 40 75;
+  --foreground-subtle: 50 40 65;
   
-  --card: 18 17 15;
-  --card-hover: 22 20 18;
-  --card-foreground: 255 255 255;
+  --card: 358 95 15;
+  --card-hover: 0 98 22;
+  --card-foreground: 50 40 92;
   
-  --popover: 18 17 15;
-  --popover-foreground: 255 255 255;
+  --popover: 358 95 15;
+  --popover-foreground: 50 40 92;
   
-  --primary: 45 38 0;
-  --primary-hover: 55 46 0;
-  --primary-foreground: 255 255 255;
+  --primary: 0 98 27;
+  --primary-hover: 0 98 35;
+  --primary-foreground: 50 40 92;
   
-  --secondary: 30 28 25;
-  --secondary-hover: 35 32 28;
-  --secondary-foreground: 255 255 255;
+  --secondary: 358 95 18;
+  --secondary-hover: 0 98 25;
+  --secondary-foreground: 50 40 92;
   
-  --accent: 45 38 0;
-  --accent-hover: 55 46 0;
-  --accent-foreground: 255 255 255;
+  --accent: 50 40 85;
+  --accent-hover: 50 40 80;
+  --accent-foreground: 25 100 6;
   
-  --muted: 25 24 22;
-  --muted-hover: 30 28 25;
-  --muted-foreground: 160 155 145;
+  --muted: 358 95 18;
+  --muted-hover: 0 98 22;
+  --muted-foreground: 50 40 70;
   
-  --destructive: 0 84 60;
-  --destructive-foreground: 255 255 255;
+  --destructive: 0 98 27;
+  --destructive-foreground: 50 40 92;
   
-  --border: 30 28 25;
-  --input: 25 24 22;
-  --ring: 45 38 0;
+  --border: 358 95 18;
+  --input: 358 95 15;
+  --ring: 0 98 27;
   
-  /* ===== LUXURY GOLDEN PALETTE ===== */
-  --gold: 45 38 0;
-  --gold-light: 50 42 5;
-  --gold-dark: 40 34 0;
-  --champagne: 48 43 28;
-  --bronze: 30 20 0;
-  --copper: 25 15 5;
+  /* ===== LUXURY RICH PALETTE ===== */
+  --rich-cream: 50 40 85;
+  --deep-red: 0 98 27;
+  --rich-red: 0 98 35;
+  --deep-brown: 358 95 18;
+  --dark-brown: 25 100 6;
+  --warm-gold: 50 40 75;
   
-  /* ===== LUXURY SURFACE COLORS ===== */
-  --surface: 15 14 12;
-  --surface-elevated: 20 18 15;
-  --surface-luxury: 25 22 18;
+  /* ===== LUXURY RICH SURFACE COLORS ===== */
+  --surface: 25 100 8;
+  --surface-elevated: 358 95 15;
+  --surface-luxury: 0 98 20;
   
   /* ===== SIDEBAR COLORS ===== */
-  --sidebar-background: 15 14 12;
-  --sidebar-foreground: 255 255 255;
-  --sidebar-primary: 45 38 0;
-  --sidebar-primary-foreground: 255 255 255;
-  --sidebar-accent: 25 22 18;
-  --sidebar-accent-foreground: 255 255 255;
-  --sidebar-border: 25 22 18;
-  --sidebar-ring: 45 38 0;
+  --sidebar-background: 25 100 6;
+  --sidebar-foreground: 50 40 92;
+  --sidebar-primary: 0 98 27;
+  --sidebar-primary-foreground: 50 40 92;
+  --sidebar-accent: 358 95 18;
+  --sidebar-accent-foreground: 50 40 92;
+  --sidebar-border: 358 95 18;
+  --sidebar-ring: 0 98 27;
   
-  /* ===== LUXURY GOLDEN GRADIENTS ===== */
-  --gradient-hero: radial-gradient(ellipse 60% 90% at 50% 40%, hsl(var(--gold) / 0.15), transparent),
-                   radial-gradient(ellipse 50% 80% at 80% 60%, hsl(var(--champagne) / 0.12), transparent),
-                   radial-gradient(ellipse 40% 70% at 20% 80%, hsl(var(--bronze) / 0.08), transparent);
-  --gradient-primary: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--gold-light)));
-  --gradient-secondary: linear-gradient(135deg, hsl(var(--champagne)), hsl(var(--gold)));
-  --gradient-accent: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--bronze)));
-  --gradient-luxury: linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--champagne) / 0.15));
+  /* ===== LUXURY RICH GRADIENTS ===== */
+  --gradient-hero: radial-gradient(ellipse 60% 90% at 50% 40%, hsl(var(--rich-cream) / 0.1), transparent),
+                   radial-gradient(ellipse 50% 80% at 80% 60%, hsl(var(--deep-red) / 0.15), transparent),
+                   radial-gradient(ellipse 40% 70% at 20% 80%, hsl(var(--warm-gold) / 0.05), transparent);
+  --gradient-primary: linear-gradient(135deg, hsl(var(--deep-red)), hsl(var(--rich-red)));
+  --gradient-secondary: linear-gradient(135deg, hsl(var(--rich-cream)), hsl(var(--warm-gold)));
+  --gradient-accent: linear-gradient(135deg, hsl(var(--rich-cream)), hsl(var(--deep-red)));
+  --gradient-luxury: linear-gradient(135deg, hsl(var(--rich-cream) / 0.9), hsl(var(--warm-gold) / 0.8));
   --gradient-surface: linear-gradient(135deg, hsl(var(--surface)), hsl(var(--surface-elevated)));
   --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(var(--card-hover)));
-  --gradient-text: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--champagne)));
-  --gradient-glow: linear-gradient(135deg, hsl(var(--gold) / 0.3), hsl(var(--champagne) / 0.2));
+  --gradient-text: linear-gradient(135deg, hsl(var(--rich-cream)), hsl(var(--warm-gold)));
+  --gradient-glow: linear-gradient(135deg, hsl(var(--deep-red) / 0.3), hsl(var(--rich-cream) / 0.2));
 
-  /* ===== LUXURY SHADOWS ===== */
-  --shadow-xs: 0 1px 2px hsl(0 0 0 / 0.2);
-  --shadow-sm: 0 1px 3px hsl(0 0 0 / 0.3), 0 1px 2px hsl(0 0 0 / 0.2);
-  --shadow-md: 0 4px 6px hsl(0 0 0 / 0.2), 0 10px 15px hsl(0 0 0 / 0.25);
-  --shadow-lg: 0 10px 15px hsl(0 0 0 / 0.25), 0 4px 6px hsl(0 0 0 / 0.2);
-  --shadow-xl: 0 20px 25px hsl(0 0 0 / 0.35), 0 10px 10px hsl(0 0 0 / 0.2);
-  --shadow-glow-primary: 0 0 40px hsl(var(--gold) / 0.6);
-  --shadow-glow-secondary: 0 0 30px hsl(var(--champagne) / 0.4);
-  --shadow-glow-accent: 0 0 35px hsl(var(--bronze) / 0.3);
-  --shadow-luxury: 0 25px 50px hsl(0 0 0 / 0.4);
-  --shadow-active: 0 5px 10px hsl(0 0 0 / 0.4);
-  --shadow-inset: inset 0 2px 4px hsl(0 0 0 / 0.3);
-  --shadow-golden: 0 8px 32px hsl(var(--gold) / 0.25);
+  /* ===== LUXURY RICH SHADOWS ===== */
+  --shadow-xs: 0 1px 2px hsl(25 100 6 / 0.4);
+  --shadow-sm: 0 1px 3px hsl(25 100 6 / 0.5), 0 1px 2px hsl(25 100 6 / 0.3);
+  --shadow-md: 0 4px 6px hsl(25 100 6 / 0.4), 0 10px 15px hsl(25 100 6 / 0.3);
+  --shadow-lg: 0 10px 15px hsl(25 100 6 / 0.4), 0 4px 6px hsl(25 100 6 / 0.3);
+  --shadow-xl: 0 20px 25px hsl(25 100 6 / 0.5), 0 10px 10px hsl(25 100 6 / 0.3);
+  --shadow-glow-primary: 0 0 40px hsl(var(--deep-red) / 0.6);
+  --shadow-glow-secondary: 0 0 30px hsl(var(--rich-cream) / 0.4);
+  --shadow-glow-accent: 0 0 35px hsl(var(--warm-gold) / 0.5);
+  --shadow-luxury: 0 25px 50px hsl(25 100 6 / 0.6);
+  --shadow-active: 0 5px 10px hsl(25 100 6 / 0.5);
+  --shadow-inset: inset 0 2px 4px hsl(25 100 6 / 0.4);
+  --shadow-golden: 0 8px 32px hsl(var(--rich-cream) / 0.3);
 
   /* ===== MODERN TYPOGRAPHY SCALE ===== */
   --font-size-xs: clamp(0.75rem, 0.8vw, 0.8rem);
@@ -331,7 +331,7 @@ input, textarea, select {
     border-radius: calc(var(--radius) * 2);
   }
 
-  /* ===== LUXURY GRADIENT UTILITIES ===== */
+  /* ===== LUXURY RICH GRADIENT UTILITIES ===== */
   .bg-gradient-hero {
     background: var(--gradient-hero);
   }
@@ -344,7 +344,7 @@ input, textarea, select {
     background: var(--gradient-luxury);
   }
 
-  .bg-gradient-golden {
+  .bg-gradient-rich {
     background: var(--gradient-accent);
   }
 
@@ -360,12 +360,12 @@ input, textarea, select {
     animation: gradient-shift 3s ease infinite;
   }
 
-  /* ===== LUXURY GLOW EFFECTS ===== */
+  /* ===== LUXURY RICH GLOW EFFECTS ===== */
   .glow-primary {
     box-shadow: var(--shadow-glow-primary);
   }
 
-  .glow-golden {
+  .glow-rich {
     box-shadow: var(--shadow-golden);
   }
 

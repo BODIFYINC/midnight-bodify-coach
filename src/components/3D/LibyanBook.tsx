@@ -28,11 +28,11 @@ export function LibyanBook() {
   const orbRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
-  const primary = useMemo(() => colorFromVar('--gold'), []);
-  const primaryDark = useMemo(() => colorFromVar('--gold-dark'), []);
-  const accent = useMemo(() => colorFromVar('--champagne'), []);
-  const bronze = useMemo(() => colorFromVar('--bronze'), []);
-  const copper = useMemo(() => colorFromVar('--copper'), []);
+  const primary = useMemo(() => colorFromVar('--deep-red'), []);
+  const primaryDark = useMemo(() => colorFromVar('--deep-brown'), []);
+  const accent = useMemo(() => colorFromVar('--rich-cream'), []);
+  const bronze = useMemo(() => colorFromVar('--warm-gold'), []);
+  const copper = useMemo(() => colorFromVar('--rich-red'), []);
   const foreground = useMemo(() => colorFromVar('--foreground'), []);
 
   useFrame((state) => {
