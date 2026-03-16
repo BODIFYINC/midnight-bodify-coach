@@ -5,20 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 import ScrollToTop from "./components/ScrollToTop";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import MobileApp from "./pages/MobileApp";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
-import MobileApp from "./pages/MobileApp";
 import MealDetail from "./pages/MealDetail";
-import About from "./pages/About";
-import Team from "./pages/Team";
-import Careers from "./pages/Careers";
-import Contact from "./pages/Contact";
-import FAQ from "./pages/FAQ";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import Cookies from "./pages/Cookies";
 
 const queryClient = new QueryClient();
 
@@ -48,23 +38,13 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<MobileApp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/get-started" element={<Login />} />
             <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/app" element={<MobileApp />} />
-            <Route path="/dashboard" element={<Navigate to="/app" replace />} />
-            <Route path="/main-dashboard" element={<Navigate to="/app" replace />} />
+            <Route path="/app" element={<Navigate to="/" replace />} />
+            <Route path="/dashboard" element={<Navigate to="/" replace />} />
             <Route path="/meal/:id" element={<MealDetail />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/careers" element={<Careers />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/cookies" element={<Cookies />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
