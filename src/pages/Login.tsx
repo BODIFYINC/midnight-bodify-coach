@@ -1,155 +1,131 @@
-
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { toast } from '@/components/ui/use-toast';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
-// Mock user database with admin account
-const mockUserDatabase = [
-  { email: "test@example.com", password: "password123", isAdmin: false },
-  { email: "user@bodify.com", password: "fitness2025", isAdmin: false },
-  { email: "bodify.inc@gmail.com", password: "Abdullah2008$hackerAA07", isAdmin: true },
-];
+const bodifyLogo = '/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-  
+
+  // Mock user database
+  const mockUsers = [
+    { email: "test@example.com", password: "password123" },
+    { email: "user@bodify.com", password: "fitness2025" },
+  ];
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Basic validation
-    if (!formData.email || !formData.password) {
-      toast({
-        title: "Missing information",
-        description: "Please enter both email and password",
-        variant: "destructive"
-      });
+    if (!email || !password) {
+      toast({ title: 'Missing info', description: 'Enter both email and password', variant: 'destructive' });
       return;
     }
-    
+
     setIsLoading(true);
-    
-    // Check local users then mock database
-    const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = [...storedUsers, ...mockUserDatabase].find(
-      (u: any) => u.email === formData.email && u.password === formData.password
-    );
-    
     setTimeout(() => {
       setIsLoading(false);
-      
-      if (user) {
-        // Store user info in localStorage
-        localStorage.setItem('currentUser', JSON.stringify({
-          email: user.email,
-          isAdmin: user.isAdmin,
-          hasUnlimitedUsage: user.isAdmin
-        }));
 
-        if (user.isAdmin) {
-          toast({
-            title: "Admin login successful",
-            description: "Welcome back, Administrator! You have unlimited usage."
-          });
-        } else {
-          toast({
-            title: "Login successful",
-            description: "Welcome back to Bodify!"
-          });
-        }
-        navigate('/dashboard');
+      if (isSignUp) {
+        // Create account - zero friction
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        users.push({ email, password });
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('currentUser', JSON.stringify({ email }));
+        toast({ title: 'Account created! 🎉', description: 'Let\'s set up your profile.' });
+        navigate('/onboarding');
       } else {
-        // Failed authentication
-        toast({
-          title: "Login failed",
-          description: "Invalid email or password. Please check your credentials and try again.",
-          variant: "destructive"
-        });
+        // Login
+        const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        const user = [...storedUsers, ...mockUsers].find(
+          (u: any) => u.email === email && u.password === password
+        );
+        if (user) {
+          localStorage.setItem('currentUser', JSON.stringify({ email: user.email }));
+          toast({ title: 'Welcome back! 💪', description: 'Ready to crush your goals.' });
+          navigate('/app');
+        } else {
+          toast({ title: 'Login failed', description: 'Invalid email or password.', variant: 'destructive' });
+        }
       }
-    }, 1000);
+    }, 600);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-bodify-dark to-bodify-darker text-foreground">
-      <Navbar />
-      
-      <div className="pt-32 pb-20">
-        <div className="container mx-auto px-6">
-          <div className="max-w-md mx-auto">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="glassmorphism rounded-2xl p-8 border-0"
-            >
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-2">Welcome Back</h2>
-                <p className="text-foreground/70">Sign in to continue your fitness journey</p>
-              </div>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <Label htmlFor="email" className="text-foreground mb-2 block">Email Address</Label>
-                  <Input 
-                    id="email" 
-                    name="email" 
-                    type="email" 
-                    placeholder="you@example.com" 
-                    value={formData.email} 
-                    onChange={handleChange} 
-                    className="bg-background/20 border-border text-foreground placeholder:text-foreground/60 h-12 rounded-xl focus:border-primary"
-                  />
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <Label htmlFor="password" className="text-foreground">Password</Label>
-                    <Link to="/forgot-password" className="text-bodify-orange text-sm hover:underline">
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <Input 
-                    id="password" 
-                    name="password" 
-                    type="password" 
-                    placeholder="••••••••" 
-                    value={formData.password} 
-                    onChange={handleChange} 
-                    className="bg-background/20 border-border text-foreground placeholder:text-foreground/60 h-12 rounded-xl focus:border-primary"
-                  />
-                </div>
-                
-                <Button type="submit" className="btn-primary w-full h-12 text-lg rounded-xl" disabled={isLoading}>
-                  {isLoading ? 'Signing In...' : 'Sign In'}
-                </Button>
-              </form>
-              
-              <div className="mt-8 text-center">
-                <p className="text-foreground/70">
-                  Don't have an account? <Link to="/get-started" className="text-bodify-orange hover:underline font-medium">Get Started</Link>
-                </p>
-              </div>
-            </motion.div>
+    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col items-center justify-center px-6">
+      {/* Logo */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="mb-10"
+      >
+        <img src={bodifyLogo} alt="Bodify" className="w-20 h-20 mx-auto object-contain" />
+      </motion.div>
+
+      {/* Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.4 }}
+        className="w-full max-w-sm"
+      >
+        <h2 className="text-2xl font-bold text-foreground text-center mb-1">
+          {isSignUp ? 'Create Account' : 'Welcome Back'}
+        </h2>
+        <p className="text-sm text-muted-foreground text-center mb-8">
+          {isSignUp ? 'Start your fitness journey' : 'Sign in to continue'}
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="w-full h-12 px-4 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+            />
           </div>
-        </div>
-      </div>
-      
-      <Footer />
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="w-full h-12 px-4 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+            />
+          </div>
+
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            type="submit"
+            disabled={isLoading}
+            className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-accent text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg disabled:opacity-60 transition-opacity"
+            style={{ boxShadow: '0 4px 20px hsla(217, 91%, 60%, 0.3)' }}
+          >
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                {isSignUp ? 'Create Account' : 'Sign In'}
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </motion.button>
+        </form>
+
+        <button
+          onClick={() => setIsSignUp(!isSignUp)}
+          className="w-full mt-6 text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Create one"}
+        </button>
+      </motion.div>
     </div>
   );
 };
