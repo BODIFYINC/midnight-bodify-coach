@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import SplashScreen from '@/components/mobile/SplashScreen';
 import BottomNav from '@/components/mobile/BottomNav';
 import MobileHeader from '@/components/mobile/MobileHeader';
@@ -7,7 +8,6 @@ import LogSheet from '@/components/mobile/LogSheet';
 import HomeTab from '@/components/mobile/HomeTab';
 import ProfileTab from '@/components/mobile/ProfileTab';
 
-// Existing tab components
 import { AIChatTab } from '@/components/dashboard/AIChatTab';
 import { MealsTab } from '@/components/dashboard/MealsTab';
 import { ProgressTab } from '@/components/dashboard/ProgressTab';
@@ -28,14 +28,28 @@ const tabTitles: Record<string, string> = {
 };
 
 const MobileApp = () => {
+  const navigate = useNavigate();
   const [showSplash, setShowSplash] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [activeTab, setActiveTab] = useState('welcome');
   const [logOpen, setLogOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 1400);
+    // Show splash for 1.4s, then check auth
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+      const currentUser = localStorage.getItem('currentUser');
+      setIsAuthenticated(!!currentUser);
+    }, 1400);
     return () => clearTimeout(timer);
   }, []);
+
+  // If splash is done and user is not authenticated, redirect to login
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      navigate('/login', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleTabChange = (tab: string) => {
     if (tab === 'log') {
@@ -68,10 +82,18 @@ const MobileApp = () => {
     }
   };
 
+  // Show splash or loading state
+  if (showSplash || isAuthenticated === null) {
+    return <SplashScreen show={true} />;
+  }
+
+  // If not authenticated, we're redirecting — show nothing
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background">
-      <SplashScreen show={showSplash} />
-
       <MobileHeader title={tabTitles[activeTab]} />
 
       <main className="relative overflow-y-auto" style={{ minHeight: 'calc(100dvh - 56px - 72px)' }}>
