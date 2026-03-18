@@ -1,4 +1,5 @@
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://pxoiavmnxlqmqekwbkwu.supabase.co";
+const CHAT_URL = `${SUPABASE_URL}/functions/v1/chat`;
 
 type Msg = { role: "user" | "assistant"; content: string };
 
