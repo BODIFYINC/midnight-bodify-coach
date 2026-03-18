@@ -7,23 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
-
-interface Exercise {
-  name: string;
-  sets: number;
-  reps: string;
-  rest: string;
-  muscle: string;
-  equipment: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-}
+import { selectExercisesForWorkout, type ExerciseEntry } from '@/services/exerciseDatabase';
 
 interface WorkoutPlan {
   title: string;
   duration: number;
   difficulty: string;
   targetMuscles: string[];
-  exercises: Exercise[];
+  exercises: ExerciseEntry[];
   estimatedCalories: number;
 }
 
@@ -31,7 +22,7 @@ export const CreativeTab: React.FC = () => {
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
   const [loading, setLoading] = useState(false);
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
-  
+
   const [preferences, setPreferences] = useState({
     equipment: 'gym',
     experience: 'intermediate',
@@ -69,349 +60,120 @@ export const CreativeTab: React.FC = () => {
     { value: '90', label: '90 minutes' }
   ];
 
-  const muscleGroups = [
-    'Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Core', 'Glutes', 'Cardio'
-  ];
-
-  const exerciseDatabase: Record<string, Exercise[]> = {
-    chest: [
-      { name: 'Barbell Bench Press', sets: 4, reps: '8-10', rest: '2-3 min', muscle: 'Chest', equipment: 'gym', difficulty: 'intermediate' },
-      { name: 'Dumbbell Flyes', sets: 3, reps: '12-15', rest: '90 sec', muscle: 'Chest', equipment: 'gym', difficulty: 'beginner' },
-      { name: 'Push-ups', sets: 3, reps: '15-20', rest: '60 sec', muscle: 'Chest', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Incline Dumbbell Press', sets: 4, reps: '10-12', rest: '2 min', muscle: 'Chest', equipment: 'gym', difficulty: 'intermediate' }
-    ],
-    back: [
-      { name: 'Deadlifts', sets: 4, reps: '6-8', rest: '3 min', muscle: 'Back', equipment: 'gym', difficulty: 'advanced' },
-      { name: 'Pull-ups', sets: 3, reps: '8-12', rest: '2 min', muscle: 'Back', equipment: 'bodyweight', difficulty: 'intermediate' },
-      { name: 'Bent-over Rows', sets: 4, reps: '10-12', rest: '90 sec', muscle: 'Back', equipment: 'gym', difficulty: 'intermediate' },
-      { name: 'Lat Pulldowns', sets: 3, reps: '12-15', rest: '90 sec', muscle: 'Back', equipment: 'gym', difficulty: 'beginner' }
-    ],
-    legs: [
-      { name: 'Squats', sets: 4, reps: '10-12', rest: '2-3 min', muscle: 'Legs', equipment: 'gym', difficulty: 'intermediate' },
-      { name: 'Lunges', sets: 3, reps: '12/leg', rest: '90 sec', muscle: 'Legs', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Leg Press', sets: 4, reps: '15-20', rest: '2 min', muscle: 'Legs', equipment: 'gym', difficulty: 'beginner' },
-      { name: 'Romanian Deadlifts', sets: 3, reps: '10-12', rest: '2 min', muscle: 'Legs', equipment: 'gym', difficulty: 'intermediate' }
-    ],
-    shoulders: [
-      { name: 'Overhead Press', sets: 4, reps: '8-10', rest: '2 min', muscle: 'Shoulders', equipment: 'gym', difficulty: 'intermediate' },
-      { name: 'Lateral Raises', sets: 3, reps: '15-20', rest: '60 sec', muscle: 'Shoulders', equipment: 'gym', difficulty: 'beginner' },
-      { name: 'Pike Push-ups', sets: 3, reps: '10-15', rest: '90 sec', muscle: 'Shoulders', equipment: 'bodyweight', difficulty: 'intermediate' }
-    ],
-    arms: [
-      { name: 'Bicep Curls', sets: 3, reps: '12-15', rest: '60 sec', muscle: 'Arms', equipment: 'gym', difficulty: 'beginner' },
-      { name: 'Tricep Dips', sets: 3, reps: '12-15', rest: '90 sec', muscle: 'Arms', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Close-grip Push-ups', sets: 3, reps: '10-15', rest: '60 sec', muscle: 'Arms', equipment: 'bodyweight', difficulty: 'intermediate' }
-    ],
-    core: [
-      { name: 'Plank', sets: 3, reps: '30-60 sec', rest: '60 sec', muscle: 'Core', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Russian Twists', sets: 3, reps: '20/side', rest: '60 sec', muscle: 'Core', equipment: 'bodyweight', difficulty: 'intermediate' },
-      { name: 'Mountain Climbers', sets: 3, reps: '30 sec', rest: '60 sec', muscle: 'Core', equipment: 'bodyweight', difficulty: 'beginner' }
-    ],
-    glutes: [
-      { name: 'Hip Thrusts', sets: 4, reps: '12-15', rest: '90 sec', muscle: 'Glutes', equipment: 'gym', difficulty: 'intermediate' },
-      { name: 'Bulgarian Split Squats', sets: 3, reps: '10/leg', rest: '90 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'intermediate' },
-      { name: 'Glute Bridges', sets: 3, reps: '15-20', rest: '60 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Single-leg Glute Bridge', sets: 3, reps: '10/leg', rest: '60 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'intermediate' },
-      { name: 'Clamshells', sets: 3, reps: '15/side', rest: '45 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Fire Hydrants', sets: 3, reps: '12/side', rest: '45 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Romanian Deadlifts', sets: 4, reps: '10-12', rest: '2 min', muscle: 'Glutes', equipment: 'gym', difficulty: 'intermediate' },
-      { name: 'Sumo Squats', sets: 3, reps: '12-15', rest: '90 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Wall Sit', sets: 3, reps: '30-45 sec', rest: '60 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' },
-      { name: 'Step-ups', sets: 3, reps: '10/leg', rest: '60 sec', muscle: 'Glutes', equipment: 'bodyweight', difficulty: 'beginner' }
-    ]
-  };
+  const muscleGroups = ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Core', 'Glutes', 'Cardio'];
 
   const generateWorkout = async () => {
     setLoading(true);
     try {
-      // Simulate AI workout generation
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 400));
 
-      const targetMuscles = preferences.targetMuscles.length > 0 
-        ? preferences.targetMuscles 
+      const targetMuscles = preferences.targetMuscles.length > 0
+        ? preferences.targetMuscles
         : ['Chest', 'Back', 'Legs']; // Default full body
 
-      const seedExercises: Exercise[] = [];
-      
-      // Select exercises based on preferences
-      targetMuscles.forEach(muscle => {
-        const muscleKey = muscle.toLowerCase();
-        const availableExercises = exerciseDatabase[muscleKey] || [];
-        
-        // Filter by equipment and experience
-        const filteredExercises = availableExercises.filter(ex => {
-          const equipmentMatch = preferences.equipment === 'bodyweight' 
-            ? ex.equipment === 'bodyweight'
-            : ex.equipment === 'gym' || ex.equipment === 'bodyweight';
-          
-          const difficultyMatch = preferences.experience === 'beginner' 
-            ? ex.difficulty === 'beginner'
-            : preferences.experience === 'intermediate' 
-            ? ex.difficulty !== 'advanced'
-            : true;
-          
-          return equipmentMatch && difficultyMatch;
-        });
+      // Calculate target exercise count: 6-8 always
+      const targetCount = targetMuscles.length === 1 ? 7 : Math.min(8, Math.max(6, targetMuscles.length * 2));
 
-        // Add 1-2 seed exercises per muscle group
-        const exerciseCount = preferences.goal === 'strength' ? 1 : 2;
-        filteredExercises.slice(0, exerciseCount).forEach(ex => seedExercises.push(ex));
-      });
+      const exercises = selectExercisesForWorkout(
+        targetMuscles,
+        preferences.equipment,
+        preferences.experience,
+        preferences.goal,
+        targetCount
+      );
 
-      // Adjust sets/reps based on goal
-      const adjustExercise = (ex: Exercise): Exercise => {
-        const newEx = { ...ex } as Exercise;
-        switch (preferences.goal) {
-          case 'strength':
-            newEx.sets = Math.min(ex.sets + 1, 5);
-            newEx.reps = '3-6';
-            newEx.rest = '3-4 min';
-            break;
-          case 'endurance':
-            newEx.sets = Math.max(ex.sets - 1, 2);
-            newEx.reps = '15-20';
-            newEx.rest = '30-60 sec';
-            break;
-          case 'weight_loss':
-            newEx.sets = 3;
-            newEx.reps = '12-15';
-            newEx.rest = '45-60 sec';
-            break;
-          default:
-            newEx.rest = newEx.rest || '60-90 sec';
-        }
-        return newEx;
-      };
-
-      const parseRestSec = (rest: string | undefined): number => {
-        if (!rest) return 60;
-        const m = rest.toLowerCase();
-        if (m.includes('min')) {
-          const n = parseInt(m);
-          return (isNaN(n) ? 1 : n) * 60;
-        }
-        const n = parseInt(m);
-        return isNaN(n) ? 60 : n;
-      };
-
-      const estimateExerciseMinutes = (ex: Exercise): number => {
-        const rest = parseRestSec(ex.rest);
-        const perSetActive = preferences.goal === 'strength' ? 35 : preferences.goal === 'endurance' ? 25 : 30;
-        return Math.ceil((ex.sets * (perSetActive + rest)) / 60);
-      };
-
-      const desiredMinutes = parseInt(preferences.duration);
-      const program: Exercise[] = [];
-
-      // Build a large, deduped pool across selected muscles to avoid repeats
-      const targetGroups = (preferences.targetMuscles.length > 0 ? preferences.targetMuscles : ['Chest','Back','Legs','Shoulders','Arms','Core'])
-        .map(m => m.toLowerCase());
-
-      const filterByPrefs = (ex: Exercise) => {
-        const equipmentMatch = preferences.equipment === 'bodyweight' 
-          ? ex.equipment === 'bodyweight'
-          : ex.equipment === 'gym' || ex.equipment === 'bodyweight';
-        const difficultyMatch = preferences.experience === 'beginner' 
-          ? ex.difficulty === 'beginner'
-          : preferences.experience === 'intermediate' 
-          ? ex.difficulty !== 'advanced'
-          : true;
-        return equipmentMatch && difficultyMatch;
-      };
-
-      // Collect and dedupe by name
-      const allAvailable: Exercise[] = Array.from(new Map(
-        targetGroups.flatMap(key => (exerciseDatabase[key] || [])).filter(filterByPrefs)
-          .map(ex => [ex.name, ex] as [string, Exercise])
-      ).values());
-
-      // Fallback to any pool if filter too strict
-      if (allAvailable.length === 0) {
-        const anyPool = Object.keys(exerciseDatabase).flatMap(k => exerciseDatabase[k as keyof typeof exerciseDatabase]);
-        anyPool.filter(filterByPrefs).forEach(ex => allAvailable.push(ex));
-      }
-
-      // Shuffle for variety
-      for (let i = allAvailable.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allAvailable[i], allAvailable[j]] = [allAvailable[j], allAvailable[i]];
-      }
-
-      const usedNames = new Set<string>();
-      let totalMinutes = 0;
-      let idx = 0;
-      const hardCap = 30;
-      while (totalMinutes < desiredMinutes && program.length < hardCap && allAvailable.length > 0) {
-        const base = allAvailable[idx % allAvailable.length];
-        idx++;
-        if (usedNames.has(base.name)) continue;
-        const ex = adjustExercise(base);
-        program.push(ex);
-        usedNames.add(base.name);
-        totalMinutes = program.reduce((sum, e) => sum + estimateExerciseMinutes(e), 0);
-      }
-
-
-      const estimatedCalories = Math.round(desiredMinutes * 8 * (preferences.experience === 'advanced' ? 1.2 : 1));
+      const estimatedCalories = exercises.reduce(
+        (sum, ex) => sum + (ex.caloriesPerSet * ex.sets), 0
+      );
 
       const newWorkout: WorkoutPlan = {
-        title: `AI-Generated ${preferences.goal.replace('_', ' ').toUpperCase()} Workout`,
-        duration: desiredMinutes,
+        title: `${preferences.goal.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())} Workout`,
+        duration: parseInt(preferences.duration),
         difficulty: preferences.experience,
         targetMuscles,
-        exercises: program,
+        exercises,
         estimatedCalories
       };
 
       setWorkoutPlan(newWorkout);
       setCompletedExercises(new Set());
-      
+
       toast({
         title: "Workout Generated! 🏋️",
-        description: `Custom ${desiredMinutes}-minute workout with ${program.length} exercises.`
+        description: `${exercises.length} exercises targeting ${targetMuscles.join(', ')}.`
       });
-
-    } catch (error) {
-      toast({
-        title: "Error generating workout",
-        description: "Please try again in a moment."
-      });
+    } catch {
+      toast({ title: "Error", description: "Please try again." });
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleExerciseComplete = (exerciseName: string) => {
-    const newCompleted = new Set(completedExercises);
-    if (newCompleted.has(exerciseName)) {
-      newCompleted.delete(exerciseName);
-    } else {
-      newCompleted.add(exerciseName);
-    }
-    setCompletedExercises(newCompleted);
+  const toggleExerciseComplete = (name: string) => {
+    const n = new Set(completedExercises);
+    n.has(name) ? n.delete(name) : n.add(name);
+    setCompletedExercises(n);
   };
 
   const handleMuscleGroupToggle = (muscle: string) => {
-    const newTargets = preferences.targetMuscles.includes(muscle)
-      ? preferences.targetMuscles.filter(m => m !== muscle)
-      : [...preferences.targetMuscles, muscle];
-    
-    setPreferences(prev => ({ ...prev, targetMuscles: newTargets }));
+    setPreferences(prev => ({
+      ...prev,
+      targetMuscles: prev.targetMuscles.includes(muscle)
+        ? prev.targetMuscles.filter(m => m !== muscle)
+        : [...prev.targetMuscles, muscle]
+    }));
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'beginner': return 'text-green-400';
-      case 'intermediate': return 'text-yellow-400';
-      case 'advanced': return 'text-red-400';
-      default: return 'text-white';
-    }
+  const getDifficultyColor = (d: string) => {
+    if (d === 'beginner') return 'text-green-400';
+    if (d === 'intermediate') return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center"
-      >
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent mb-2">
           AI Workout Generator
         </h2>
-        <p className="text-white/70">Create custom workout plans based on your equipment and goals</p>
+        <p className="text-muted-foreground">Create custom workout plans based on your equipment and goals</p>
       </motion.div>
 
-      {/* Workout Preferences */}
+      {/* Preferences */}
       <Card className="glassmorphism-card border border-white/10">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-foreground flex items-center">
             <Target className="w-5 h-5 mr-2 text-emerald-400" />
             Workout Preferences
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <label className="text-white/80 text-sm">Equipment Available</label>
-              <Select
-                value={preferences.equipment}
-                onValueChange={(value) => setPreferences(prev => ({ ...prev, equipment: value }))}
-              >
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {equipmentOptions.map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-white/80 text-sm">Experience Level</label>
-              <Select
-                value={preferences.experience}
-                onValueChange={(value) => setPreferences(prev => ({ ...prev, experience: value }))}
-              >
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {experienceOptions.map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-white/80 text-sm">Primary Goal</label>
-              <Select
-                value={preferences.goal}
-                onValueChange={(value) => setPreferences(prev => ({ ...prev, goal: value }))}
-              >
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {goalOptions.map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-white/80 text-sm">Workout Duration</label>
-              <Select
-                value={preferences.duration}
-                onValueChange={(value) => setPreferences(prev => ({ ...prev, duration: value }))}
-              >
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {durationOptions.map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {[
+              { label: 'Equipment Available', key: 'equipment', options: equipmentOptions },
+              { label: 'Experience Level', key: 'experience', options: experienceOptions },
+              { label: 'Primary Goal', key: 'goal', options: goalOptions },
+              { label: 'Workout Duration', key: 'duration', options: durationOptions },
+            ].map(({ label, key, options }) => (
+              <div key={key} className="space-y-2">
+                <label className="text-muted-foreground text-sm">{label}</label>
+                <Select
+                  value={preferences[key as keyof typeof preferences] as string}
+                  onValueChange={(v) => setPreferences(prev => ({ ...prev, [key]: v }))}
+                >
+                  <SelectTrigger className="bg-white/10 border-white/20 text-foreground">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {options.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            ))}
           </div>
 
-          {/* Target Muscle Groups */}
           <div className="space-y-3">
-            <label className="text-white/80 text-sm">Target Muscle Groups (Optional - Leave empty for full body)</label>
+            <label className="text-muted-foreground text-sm">Target Muscle Groups (Leave empty for full body)</label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {muscleGroups.map(muscle => (
                 <div key={muscle} className="flex items-center space-x-2">
@@ -421,15 +183,12 @@ export const CreativeTab: React.FC = () => {
                     onCheckedChange={() => handleMuscleGroupToggle(muscle)}
                     className="border-white/30 data-[state=checked]:bg-emerald-500"
                   />
-                  <label htmlFor={muscle} className="text-white/80 text-sm cursor-pointer">
-                    {muscle}
-                  </label>
+                  <label htmlFor={muscle} className="text-muted-foreground text-sm cursor-pointer">{muscle}</label>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Generate Button */}
           <div className="flex justify-center">
             <AnimatedButton
               onClick={generateWorkout}
@@ -438,7 +197,7 @@ export const CreativeTab: React.FC = () => {
               glowEffect={true}
             >
               <Zap className="w-5 h-5 mr-2" />
-              Generate AI Workout
+              Generate Workout
             </AnimatedButton>
           </div>
         </CardContent>
@@ -446,61 +205,50 @@ export const CreativeTab: React.FC = () => {
 
       {/* Generated Workout */}
       {workoutPlan && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-        >
-          {/* Workout Overview */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
           <Card className="glassmorphism-card border border-white/10">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold text-white">{workoutPlan.title}</h3>
-                <Badge className={`${getDifficultyColor(workoutPlan.difficulty)}`}>
+                <h3 className="text-2xl font-bold text-foreground">{workoutPlan.title}</h3>
+                <Badge className={getDifficultyColor(workoutPlan.difficulty)}>
                   {workoutPlan.difficulty.toUpperCase()}
                 </Badge>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-3 rounded-lg bg-white/10">
                   <Clock className="w-6 h-6 mx-auto mb-2 text-emerald-400" />
-                  <p className="text-xl font-bold text-white">{workoutPlan.duration}</p>
-                  <p className="text-sm text-white/70">Minutes</p>
+                  <p className="text-xl font-bold text-foreground">{workoutPlan.duration}</p>
+                  <p className="text-sm text-muted-foreground">Minutes</p>
                 </div>
-                
                 <div className="text-center p-3 rounded-lg bg-white/10">
                   <Dumbbell className="w-6 h-6 mx-auto mb-2 text-blue-400" />
-                  <p className="text-xl font-bold text-white">{workoutPlan.exercises.length}</p>
-                  <p className="text-sm text-white/70">Exercises</p>
+                  <p className="text-xl font-bold text-foreground">{workoutPlan.exercises.length}</p>
+                  <p className="text-sm text-muted-foreground">Exercises</p>
                 </div>
-                
                 <div className="text-center p-3 rounded-lg bg-white/10">
                   <Target className="w-6 h-6 mx-auto mb-2 text-purple-400" />
-                  <p className="text-xl font-bold text-white">{workoutPlan.targetMuscles.length}</p>
-                  <p className="text-sm text-white/70">Muscle Groups</p>
+                  <p className="text-xl font-bold text-foreground">{workoutPlan.targetMuscles.length}</p>
+                  <p className="text-sm text-muted-foreground">Muscle Groups</p>
                 </div>
-                
                 <div className="text-center p-3 rounded-lg bg-white/10">
                   <Flame className="w-6 h-6 mx-auto mb-2 text-orange-400" />
-                  <p className="text-xl font-bold text-white">{workoutPlan.estimatedCalories}</p>
-                  <p className="text-sm text-white/70">Est. Calories</p>
+                  <p className="text-xl font-bold text-foreground">{workoutPlan.estimatedCalories}</p>
+                  <p className="text-sm text-muted-foreground">Est. Calories</p>
                 </div>
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                {workoutPlan.targetMuscles.map(muscle => (
-                  <Badge key={muscle} className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                    {muscle}
-                  </Badge>
+                {workoutPlan.targetMuscles.map(m => (
+                  <Badge key={m} className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">{m}</Badge>
                 ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* Exercise List */}
           <Card className="glassmorphism-card border border-white/10">
             <CardHeader>
-              <CardTitle className="text-white flex items-center justify-between">
+              <CardTitle className="text-foreground flex items-center justify-between">
                 <div className="flex items-center">
                   <Dumbbell className="w-5 h-5 mr-2 text-emerald-400" />
                   Exercise Plan
@@ -513,10 +261,10 @@ export const CreativeTab: React.FC = () => {
             <CardContent className="space-y-4">
               {workoutPlan.exercises.map((exercise, index) => (
                 <motion.div
-                  key={exercise.name}
+                  key={exercise.name + index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                   className={`p-4 rounded-xl border transition-all duration-300 ${
                     completedExercises.has(exercise.name)
                       ? 'bg-green-500/10 border-green-500/50'
@@ -529,32 +277,23 @@ export const CreativeTab: React.FC = () => {
                         <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
                           {index + 1}
                         </div>
-                        <h4 className="text-lg font-semibold text-white">{exercise.name}</h4>
-                        <Badge className={getDifficultyColor(exercise.difficulty)}>
-                          {exercise.difficulty}
-                        </Badge>
+                        <h4 className="text-lg font-semibold text-foreground">{exercise.name}</h4>
+                        <Badge className={getDifficultyColor(exercise.difficulty)}>{exercise.difficulty}</Badge>
                       </div>
-                      
+
                       <div className="grid grid-cols-3 gap-4 text-sm">
-                        <div>
-                          <span className="text-white/70">Sets: </span>
-                          <span className="text-white font-medium">{exercise.sets}</span>
-                        </div>
-                        <div>
-                          <span className="text-white/70">Reps: </span>
-                          <span className="text-white font-medium">{exercise.reps}</span>
-                        </div>
-                        <div>
-                          <span className="text-white/70">Rest: </span>
-                          <span className="text-white font-medium">{exercise.rest}</span>
-                        </div>
+                        <div><span className="text-muted-foreground">Sets: </span><span className="text-foreground font-medium">{exercise.sets}</span></div>
+                        <div><span className="text-muted-foreground">Reps: </span><span className="text-foreground font-medium">{exercise.reps}</span></div>
+                        <div><span className="text-muted-foreground">Rest: </span><span className="text-foreground font-medium">{exercise.rest}</span></div>
                       </div>
-                      
-                      <div className="mt-2 text-sm text-white/60">
+
+                      <p className="mt-2 text-sm text-muted-foreground">
                         Target: {exercise.muscle} • Equipment: {exercise.equipment}
-                      </div>
+                        {exercise.secondaryMuscles.length > 0 && ` • Also works: ${exercise.secondaryMuscles.join(', ')}`}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground/70 italic">{exercise.instructions}</p>
                     </div>
-                    
+
                     <AnimatedButton
                       size="sm"
                       variant={completedExercises.has(exercise.name) ? "default" : "outline"}
