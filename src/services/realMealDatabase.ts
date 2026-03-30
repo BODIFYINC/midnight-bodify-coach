@@ -820,6 +820,253 @@ export const realisticMealDatabase = [
     ingredients: ['Almonds', 'Walnuts', 'Dark chocolate chips', 'Dried fruit'],
     instructions: ['Combine all ingredients', 'Store in airtight container'],
     type: 'snacks'
+  },
+
+  // ===== LOW-CALORIE HIGH-PROTEIN MEALS (Weight Loss Friendly) =====
+  {
+    id: 'lemon-herb-cod',
+    title: 'Lemon Herb Baked Cod',
+    image: '/images/meals/lemon-herb-cod.jpg',
+    calories: 220,
+    protein: 38,
+    carbs: 5,
+    fat: 5,
+    ingredients: [
+      '6 oz (170g) cod fillet (140 cal, 30g protein, 0g carbs, 1g fat)',
+      '1 cup (30g) arugula (5 cal, 0.5g protein, 1g carbs, 0g fat)',
+      '1 tbsp lemon juice (4 cal)',
+      '1 tsp olive oil (40 cal, 0g protein, 0g carbs, 4.5g fat)',
+      'Fresh dill, garlic, salt, pepper'
+    ],
+    instructions: [
+      'Preheat oven to 400°F (200°C)',
+      'Place cod on parchment-lined baking sheet',
+      'Drizzle with olive oil and lemon juice',
+      'Season with dill, minced garlic, salt, and pepper',
+      'Bake for 12-15 minutes until fish flakes easily',
+      'Serve on a bed of fresh arugula'
+    ],
+    type: 'dinner'
+  },
+  {
+    id: 'turkey-lettuce-wraps',
+    title: 'Asian Turkey Lettuce Wraps',
+    image: '/images/meals/turkey-lettuce-wraps.jpg',
+    calories: 240,
+    protein: 32,
+    carbs: 10,
+    fat: 8,
+    ingredients: [
+      '6 oz (170g) lean ground turkey (240 cal, 30g protein, 0g carbs, 13g fat)',
+      '4 large butter lettuce leaves (5 cal)',
+      '1/4 cup water chestnuts, diced (15 cal)',
+      '1 tbsp low-sodium soy sauce (10 cal)',
+      '1 tsp sesame oil (40 cal)',
+      'Ginger, garlic, green onions'
+    ],
+    instructions: [
+      'Brown ground turkey in a pan over medium-high heat',
+      'Add minced ginger and garlic, cook 1 minute',
+      'Stir in water chestnuts and soy sauce',
+      'Drizzle with sesame oil',
+      'Spoon mixture into lettuce cups',
+      'Garnish with sliced green onions'
+    ],
+    type: 'lunch'
+  },
+  {
+    id: 'shrimp-zoodles',
+    title: 'Garlic Shrimp Zoodles',
+    image: '/images/meals/shrimp-zoodles.jpg',
+    calories: 210,
+    protein: 30,
+    carbs: 8,
+    fat: 7,
+    ingredients: [
+      '6 oz (170g) shrimp, peeled (150 cal, 29g protein, 1g carbs, 2.5g fat)',
+      '2 medium zucchini, spiralized (60 cal, 4g protein, 7g carbs, 0g fat)',
+      '1 tsp olive oil (40 cal)',
+      '3 cloves garlic, minced',
+      'Red pepper flakes, lemon zest, parsley'
+    ],
+    instructions: [
+      'Spiralize zucchini into noodles',
+      'Heat olive oil in a large pan over medium-high heat',
+      'Sauté garlic for 30 seconds until fragrant',
+      'Add shrimp and cook 2-3 minutes per side until pink',
+      'Add zoodles and toss for 1-2 minutes',
+      'Finish with lemon zest, parsley, and red pepper flakes'
+    ],
+    type: 'dinner'
+  },
+  {
+    id: 'egg-white-veggie-bowl',
+    title: 'Egg White & Veggie Power Bowl',
+    image: '/images/meals/egg-white-veggie-bowl.jpg',
+    calories: 195,
+    protein: 28,
+    carbs: 12,
+    fat: 4,
+    ingredients: [
+      '8 egg whites (136 cal, 28g protein, 0g carbs, 0g fat)',
+      '1 cup spinach (7 cal)',
+      '1/2 cup cherry tomatoes (15 cal)',
+      '1/4 cup bell peppers, diced (10 cal)',
+      '1/4 cup mushrooms (5 cal)',
+      'Cooking spray, salt, pepper, turmeric'
+    ],
+    instructions: [
+      'Spray a non-stick pan with cooking spray',
+      'Sauté mushrooms and bell peppers for 3 minutes',
+      'Add spinach and cook until wilted',
+      'Pour in egg whites and scramble gently',
+      'Season with turmeric, salt, and pepper',
+      'Top with halved cherry tomatoes'
+    ],
+    type: 'breakfast'
+  },
+  {
+    id: 'tuna-cucumber-bites',
+    title: 'Tuna Stuffed Cucumber Bites',
+    image: '/images/meals/tuna-cucumber-bites.jpg',
+    calories: 160,
+    protein: 28,
+    carbs: 5,
+    fat: 3,
+    ingredients: [
+      '1 can (142g) tuna in water, drained (120 cal, 26g protein, 0g carbs, 1g fat)',
+      '2 large cucumbers, sliced thick (30 cal)',
+      '2 tbsp non-fat Greek yogurt (15 cal)',
+      'Dill, lemon juice, salt, pepper'
+    ],
+    instructions: [
+      'Drain tuna and mix with Greek yogurt',
+      'Season with dill, lemon juice, salt, and pepper',
+      'Slice cucumbers into thick rounds',
+      'Scoop center of each cucumber slice',
+      'Fill with tuna mixture',
+      'Garnish with fresh dill'
+    ],
+    type: 'snacks'
+  },
+  {
+    id: 'chicken-cauliflower-rice',
+    title: 'Chicken & Cauliflower Rice Bowl',
+    image: '/images/meals/chicken-cauliflower-rice.jpg',
+    calories: 260,
+    protein: 35,
+    carbs: 10,
+    fat: 9,
+    ingredients: [
+      '5 oz (140g) grilled chicken breast (195 cal, 33g protein, 0g carbs, 5g fat)',
+      '1.5 cups cauliflower rice (38 cal, 3g protein, 6g carbs, 0g fat)',
+      '1 tsp olive oil (40 cal)',
+      'Soy sauce, garlic, ginger, green onion'
+    ],
+    instructions: [
+      'Season and grill chicken breast until internal temp reaches 165°F',
+      'Slice chicken and set aside',
+      'Heat olive oil in a pan, add cauliflower rice',
+      'Stir-fry with garlic and ginger for 4-5 minutes',
+      'Add a splash of soy sauce',
+      'Top with sliced chicken and green onions'
+    ],
+    type: 'lunch'
+  },
+  {
+    id: 'cottage-cheese-veggie-plate',
+    title: 'Cottage Cheese & Veggie Plate',
+    image: '/images/meals/cottage-cheese-veggie-plate.jpg',
+    calories: 180,
+    protein: 24,
+    carbs: 12,
+    fat: 4,
+    ingredients: [
+      '1 cup (226g) low-fat cottage cheese (163 cal, 24g protein, 6g carbs, 2g fat)',
+      '1/2 cup cherry tomatoes (15 cal)',
+      '1/2 cup cucumber slices (8 cal)',
+      'Everything bagel seasoning, black pepper'
+    ],
+    instructions: [
+      'Scoop cottage cheese into a bowl or plate',
+      'Arrange cherry tomatoes and cucumber slices around it',
+      'Sprinkle with everything bagel seasoning',
+      'Add freshly cracked black pepper',
+      'Serve chilled'
+    ],
+    type: 'snacks'
+  },
+  {
+    id: 'turkey-spinach-roll-ups',
+    title: 'Turkey & Spinach Roll-Ups',
+    image: '/images/meals/turkey-spinach-roll-ups.jpg',
+    calories: 175,
+    protein: 26,
+    carbs: 4,
+    fat: 6,
+    ingredients: [
+      '4 oz (112g) sliced deli turkey breast (120 cal, 24g protein, 2g carbs, 1g fat)',
+      '1 cup baby spinach (7 cal)',
+      '1 tbsp mustard (10 cal)',
+      '2 tbsp hummus (50 cal, 2g protein, 2g carbs, 4g fat)'
+    ],
+    instructions: [
+      'Lay turkey slices flat on a cutting board',
+      'Spread a thin layer of mustard on each slice',
+      'Add a small dollop of hummus',
+      'Place a few spinach leaves on each slice',
+      'Roll up tightly and secure with a toothpick',
+      'Slice in half and serve'
+    ],
+    type: 'lunch'
+  },
+  {
+    id: 'white-fish-asparagus',
+    title: 'Baked Tilapia with Asparagus',
+    image: '/images/meals/white-fish-asparagus.jpg',
+    calories: 230,
+    protein: 36,
+    carbs: 8,
+    fat: 6,
+    ingredients: [
+      '6 oz (170g) tilapia fillet (165 cal, 34g protein, 0g carbs, 3g fat)',
+      '8 asparagus spears (27 cal, 3g protein, 5g carbs, 0g fat)',
+      '1 tsp olive oil (40 cal)',
+      'Garlic powder, paprika, lemon, salt, pepper'
+    ],
+    instructions: [
+      'Preheat oven to 400°F (200°C)',
+      'Place tilapia and asparagus on a lined baking sheet',
+      'Drizzle with olive oil',
+      'Season fish with garlic powder, paprika, salt, and pepper',
+      'Bake for 12-15 minutes until fish is opaque',
+      'Squeeze fresh lemon over everything before serving'
+    ],
+    type: 'dinner'
+  },
+  {
+    id: 'protein-veggie-soup',
+    title: 'High-Protein Chicken Veggie Soup',
+    image: '/images/meals/protein-veggie-soup.jpg',
+    calories: 200,
+    protein: 30,
+    carbs: 12,
+    fat: 4,
+    ingredients: [
+      '5 oz (140g) shredded chicken breast (165 cal, 31g protein, 0g carbs, 3.6g fat)',
+      '1 cup mixed vegetables — carrot, celery, zucchini (30 cal)',
+      '2 cups low-sodium chicken broth (15 cal)',
+      'Garlic, thyme, bay leaf, salt, pepper'
+    ],
+    instructions: [
+      'Bring chicken broth to a boil in a pot',
+      'Add diced carrots and celery, cook 5 minutes',
+      'Add zucchini, garlic, thyme, and bay leaf',
+      'Simmer for 10 minutes until veggies are tender',
+      'Add shredded chicken and heat through',
+      'Remove bay leaf, season with salt and pepper, serve hot'
+    ],
+    type: 'lunch'
   }
 ];
 
