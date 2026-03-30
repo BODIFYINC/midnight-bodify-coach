@@ -154,7 +154,7 @@ export const SettingsTab: React.FC = () => {
             weight_loss: 'lose_weight',
             maintenance: 'maintenance'
           };
-          const { error: upsertError } = await supabase
+          const { error: upsertError } = await (supabase as any)
             .from('profiles')
             .upsert({
               user_id: user.id,
