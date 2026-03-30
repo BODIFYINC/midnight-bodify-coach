@@ -19,7 +19,7 @@ export async function streamChat({
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4b2lhdm1ueGxxbXFla3dia3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5ODQ2OTIsImV4cCI6MjA3MjU2MDY5Mn0.S2QFFBvLWeURBc4jArsR2zCskNReOpaA4dVFxwQnc8A"}`,
+      Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
     },
     body: JSON.stringify({ messages }),
   });
