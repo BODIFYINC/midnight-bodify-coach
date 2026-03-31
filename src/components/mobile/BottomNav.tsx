@@ -17,14 +17,21 @@ const tabs = [
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 safe-bottom">
-      <div className="mx-3 mb-3">
-        <div className="glass rounded-2xl px-2 py-1.5 flex items-center justify-around"
-          style={{ 
-            boxShadow: '0 -4px 24px hsla(222, 47%, 3%, 0.6), 0 0 0 1px hsla(0,0%,100%,0.06)',
+      <div className="mx-4 mb-4">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 30 }}
+          className="rounded-2xl px-1 py-2 flex items-center justify-around"
+          style={{
+            background: 'hsla(222, 40%, 6%, 0.92)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            boxShadow: '0 -2px 32px hsla(222, 47%, 3%, 0.7), 0 0 0 1px hsla(0,0%,100%,0.06)',
           }}
         >
           {tabs.map((tab) => {
-            const isActive = activeTab === tab.id || 
+            const isActive = activeTab === tab.id ||
               (tab.id === 'profile' && ['settings', 'progress'].includes(activeTab));
             const Icon = tab.icon;
 
@@ -33,11 +40,11 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
                 <motion.button
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
-                  whileTap={{ scale: 0.9 }}
-                  className="relative -mt-5 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent shadow-lg"
-                  style={{ boxShadow: '0 4px 20px hsla(217, 91%, 60%, 0.4)' }}
+                  whileTap={{ scale: 0.88 }}
+                  className="relative -mt-6 flex items-center justify-center w-[52px] h-[52px] rounded-2xl bg-gradient-to-br from-primary to-accent"
+                  style={{ boxShadow: '0 4px 24px hsla(217, 91%, 60%, 0.35)' }}
                 >
-                  <Icon className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <Icon className="w-[22px] h-[22px] text-white" strokeWidth={2.5} />
                 </motion.button>
               );
             }
@@ -46,31 +53,33 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
               <motion.button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
-                whileTap={{ scale: 0.9 }}
-                className="relative flex flex-col items-center gap-0.5 py-2 px-3 min-w-[56px]"
+                whileTap={{ scale: 0.88 }}
+                className="relative flex flex-col items-center gap-1 py-1.5 px-4 min-w-[52px]"
               >
-                <Icon
-                  className={`w-5 h-5 transition-colors duration-200 ${
-                    isActive ? 'text-primary' : 'text-muted-foreground'
-                  }`}
-                  strokeWidth={isActive ? 2.5 : 1.8}
-                />
+                <div className="relative">
+                  <Icon
+                    className={`w-[20px] h-[20px] transition-colors duration-200 ${
+                      isActive ? 'text-primary' : 'text-muted-foreground/70'
+                    }`}
+                    strokeWidth={isActive ? 2.5 : 1.8}
+                  />
+                </div>
                 <span className={`text-[10px] font-medium transition-colors duration-200 ${
-                  isActive ? 'text-primary' : 'text-muted-foreground'
+                  isActive ? 'text-primary' : 'text-muted-foreground/70'
                 }`}>
                   {tab.label}
                 </span>
                 {isActive && (
                   <motion.div
-                    layoutId="bottomNavIndicator"
-                    className="absolute -top-0.5 w-5 h-0.5 rounded-full bg-primary"
+                    layoutId="bottomNavDot"
+                    className="absolute -top-0.5 w-1 h-1 rounded-full bg-primary"
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
                 )}
               </motion.button>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
