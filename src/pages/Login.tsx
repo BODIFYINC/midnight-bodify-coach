@@ -1,76 +1,67 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Mail, Lock, User, Sparkles, Dumbbell } from 'lucide-react';
+import { ArrowRight, Mail, Lock, User, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const bodifyLogo = '/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const mockUsers = [
-    { email: "test@example.com", password: "password123" },
-    { email: "user@bodify.com", password: "fitness2025" },
-  ];
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       toast({ title: 'Missing info', description: 'Enter both email and password', variant: 'destructive' });
       return;
     }
+    if (isSignUp && !name) {
+      toast({ title: 'Missing name', description: 'Please enter your full name', variant: 'destructive' });
+      return;
+    }
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-
+    try {
       if (isSignUp) {
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        users.push({ email, password, name });
-        localStorage.setItem('users', JSON.stringify(users));
-        localStorage.setItem('currentUser', JSON.stringify({ email, name }));
-        toast({ title: 'Account created! 🎉', description: 'Let\'s set up your profile.' });
-        navigate('/onboarding');
-      } else {
-        const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
-        const user = [...storedUsers, ...mockUsers].find(
-          (u: any) => u.email === email && u.password === password
-        );
-        if (user) {
-          localStorage.setItem('currentUser', JSON.stringify({ email: user.email }));
-          toast({ title: 'Welcome back! 💪', description: 'Ready to crush your goals.' });
-          navigate('/app');
+        const { error } = await signUp(email, password, name);
+        if (error) {
+          toast({ title: 'Sign up failed', description: error.message, variant: 'destructive' });
         } else {
-          toast({ title: 'Login failed', description: 'Invalid email or password.', variant: 'destructive' });
+          toast({ title: 'Account created! 🎉', description: "Let's set up your profile." });
+          navigate('/onboarding');
+        }
+      } else {
+        const { error } = await signIn(email, password);
+        if (error) {
+          toast({ title: 'Login failed', description: error.message, variant: 'destructive' });
+        } else {
+          toast({ title: 'Welcome back! 💪', description: 'Ready to crush your goals.' });
+          navigate('/');
         }
       }
-    }, 600);
+    } catch (err: any) {
+      toast({ title: 'Error', description: err.message || 'Something went wrong', variant: 'destructive' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  const inputClass = "w-full h-13 pl-12 pr-4 rounded-2xl bg-card/60 backdrop-blur-sm border border-border/50 text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200";
+
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      {/* Ambient background effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div 
-          className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full opacity-[0.07]"
-          style={{ background: isSignUp 
-            ? 'radial-gradient(circle, hsl(var(--accent)), transparent 70%)' 
-            : 'radial-gradient(circle, hsl(var(--primary)), transparent 70%)'
-          }}
-        />
-        <div 
-          className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full opacity-[0.05]"
-          style={{ background: isSignUp 
-            ? 'radial-gradient(circle, hsl(var(--primary)), transparent 70%)' 
-            : 'radial-gradient(circle, hsl(var(--accent)), transparent 70%)'
-          }}
-        />
+    <div className="min-h-[100dvh] bg-background flex flex-col relative overflow-hidden">
+      {/* Background gradient orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-primary/8 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-accent/6 blur-3xl" />
       </div>
 
       <AnimatePresence mode="wait">
@@ -78,176 +69,215 @@ const Login = () => {
           /* =================== SIGN IN =================== */
           <motion.div
             key="signin"
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 30 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-            className="w-full max-w-sm relative z-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="flex-1 flex flex-col justify-between px-6 pt-16 pb-8 relative z-10"
           >
-            {/* Logo */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mb-8 flex justify-center"
-            >
-              <img src={bodifyLogo} alt="Bodify" className="w-16 h-16 object-contain" />
-            </motion.div>
-
-            <h2 className="text-2xl font-bold text-foreground text-center mb-1">
-              Welcome Back
-            </h2>
-            <p className="text-sm text-muted-foreground text-center mb-8">
-              Sign in to continue your journey
-            </p>
-
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="w-full h-12 pl-11 pr-4 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-                />
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className="w-full h-12 pl-11 pr-4 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-                />
-              </div>
-
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                type="submit"
-                disabled={isLoading}
-                className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 shadow-lg disabled:opacity-60 transition-all mt-2"
-                style={{ boxShadow: '0 4px 20px hsla(var(--primary) / 0.3)' }}
+            {/* Top section */}
+            <div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+                className="flex justify-center mb-10"
               >
-                {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                ) : (
-                  <>
-                    Sign In
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </motion.button>
-            </form>
+                <div className="w-20 h-20 rounded-3xl bg-card/80 backdrop-blur border border-border/30 flex items-center justify-center shadow-xl shadow-primary/5">
+                  <img src={bodifyLogo} alt="Bodify" className="w-12 h-12 object-contain" />
+                </div>
+              </motion.div>
 
-            <div className="mt-8 text-center">
-              <p className="text-sm text-muted-foreground mb-2">Don't have an account?</p>
-              <button
-                onClick={() => { setIsSignUp(true); setEmail(''); setPassword(''); }}
-                className="text-sm font-semibold text-primary hover:underline transition-colors"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
               >
-                Create Account
-              </button>
+                <h1 className="text-3xl font-bold text-foreground text-center tracking-tight">
+                  Welcome back
+                </h1>
+                <p className="text-muted-foreground text-center mt-2 text-sm">
+                  Sign in to continue your fitness journey
+                </p>
+              </motion.div>
+
+              <motion.form
+                onSubmit={handleSubmit}
+                className="mt-10 space-y-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/50" />
+                  <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} className={inputClass} />
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/50" />
+                  <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className={`${inputClass} pr-12`} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/50">
+                    {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                  </button>
+                </div>
+
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-13 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50 transition-all duration-200 shadow-lg shadow-primary/20 mt-6"
+                >
+                  {isLoading ? (
+                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      Sign In
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </motion.button>
+              </motion.form>
             </div>
+
+            {/* Bottom section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-center pt-6"
+            >
+              <p className="text-sm text-muted-foreground">
+                Don't have an account?{' '}
+                <button
+                  onClick={() => { setIsSignUp(true); setEmail(''); setPassword(''); }}
+                  className="text-primary font-semibold hover:underline"
+                >
+                  Get Started
+                </button>
+              </p>
+            </motion.div>
           </motion.div>
         ) : (
           /* =================== SIGN UP =================== */
           <motion.div
             key="signup"
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-            className="w-full max-w-sm relative z-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="flex-1 flex flex-col justify-between px-6 pt-12 pb-8 relative z-10"
           >
-            {/* Icon badge instead of logo */}
+            {/* Top section */}
+            <div>
+              {/* Gradient hero badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+                className="flex justify-center mb-6"
+              >
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary via-accent to-primary flex items-center justify-center shadow-xl shadow-accent/20">
+                    <Sparkles className="w-9 h-9 text-white" />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg">
+                    <span className="text-white text-xs font-bold">+</span>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+              >
+                <h1 className="text-3xl font-bold text-foreground text-center tracking-tight">
+                  Start your journey
+                </h1>
+                <p className="text-muted-foreground text-center mt-2 text-sm">
+                  AI-powered fitness, just for you
+                </p>
+              </motion.div>
+
+              {/* Feature pills */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex justify-center gap-2 mt-5 mb-8"
+              >
+                {[
+                  { label: 'AI Coach', color: 'bg-primary/10 text-primary border-primary/20' },
+                  { label: 'Meal Plans', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+                  { label: 'Workouts', color: 'bg-accent/10 text-accent border-accent/20' },
+                ].map(pill => (
+                  <span key={pill.label} className={`text-xs font-medium px-3.5 py-1.5 rounded-full border ${pill.color}`}>
+                    {pill.label}
+                  </span>
+                ))}
+              </motion.div>
+
+              <motion.form
+                onSubmit={handleSubmit}
+                className="space-y-3.5"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.25 }}
+              >
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/50" />
+                  <input type="text" placeholder="Full name" value={name} onChange={e => setName(e.target.value)} className={inputClass} />
+                </div>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/50" />
+                  <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} className={inputClass} />
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/50" />
+                  <input type={showPassword ? 'text' : 'password'} placeholder="Create password" value={password} onChange={e => setPassword(e.target.value)} className={`${inputClass} pr-12`} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/50">
+                    {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                  </button>
+                </div>
+
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-13 rounded-2xl bg-gradient-to-r from-primary to-accent text-white font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50 transition-all duration-200 shadow-lg shadow-accent/20 mt-5"
+                >
+                  {isLoading ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      Create Free Account
+                    </>
+                  )}
+                </motion.button>
+
+                <p className="text-xs text-muted-foreground/60 text-center mt-3">
+                  By signing up you agree to our Terms & Privacy Policy
+                </p>
+              </motion.form>
+            </div>
+
+            {/* Bottom section */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mb-6 flex justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-center pt-4"
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-primary flex items-center justify-center shadow-lg">
-                <Dumbbell className="w-8 h-8 text-white" />
-              </div>
+              <p className="text-sm text-muted-foreground">
+                Already have an account?{' '}
+                <button
+                  onClick={() => { setIsSignUp(false); setEmail(''); setPassword(''); setName(''); }}
+                  className="text-accent font-semibold hover:underline"
+                >
+                  Sign In
+                </button>
+              </p>
             </motion.div>
-
-            <h2 className="text-2xl font-bold text-foreground text-center mb-1">
-              Join Bodify
-            </h2>
-            <p className="text-sm text-muted-foreground text-center mb-2">
-              Start your transformation today
-            </p>
-
-            {/* Feature chips */}
-            <div className="flex flex-wrap justify-center gap-2 mb-6">
-              {['AI Coach', 'Custom Plans', 'Track Progress'].map(tag => (
-                <span key={tag} className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/20">
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  className="w-full h-12 pl-11 pr-4 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
-                />
-              </div>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="w-full h-12 pl-11 pr-4 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
-                />
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="password"
-                  placeholder="Create Password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className="w-full h-12 pl-11 pr-4 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
-                />
-              </div>
-
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                type="submit"
-                disabled={isLoading}
-                className="w-full h-12 rounded-xl bg-gradient-to-r from-accent to-primary text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg disabled:opacity-60 transition-all mt-2"
-                style={{ boxShadow: '0 4px 20px hsla(var(--accent) / 0.3)' }}
-              >
-                {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4" />
-                    Get Started Free
-                  </>
-                )}
-              </motion.button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground mb-2">Already have an account?</p>
-              <button
-                onClick={() => { setIsSignUp(false); setEmail(''); setPassword(''); setName(''); }}
-                className="text-sm font-semibold text-accent hover:underline transition-colors"
-              >
-                Sign In
-              </button>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
