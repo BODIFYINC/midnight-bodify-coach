@@ -207,7 +207,7 @@ const Login = () => {
               >
                 {[
                   { label: 'AI Coach', color: 'bg-primary/10 text-primary border-primary/20' },
-                  { label: 'Meal Plans', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+                  { label: 'Meal Plans', color: 'bg-accent/10 text-accent border-accent/20' },
                   { label: 'Workouts', color: 'bg-accent/10 text-accent border-accent/20' },
                 ].map(pill => (
                   <span key={pill.label} className={`text-xs font-medium px-3.5 py-1.5 rounded-full border ${pill.color}`}>
