@@ -36,9 +36,7 @@ const MobileApp = () => {
   const [logOpen, setLogOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 1400);
+    const timer = setTimeout(() => setShowSplash(false), 1400);
     return () => clearTimeout(timer);
   }, []);
 
@@ -61,17 +59,17 @@ const MobileApp = () => {
       case 'welcome':
         return <HomeTab onTabChange={handleTabChange} />;
       case 'meals':
-        return <div className="px-4 pb-28"><MealsTab /></div>;
+        return <div className="px-5 pb-32"><MealsTab /></div>;
       case 'chat':
-        return <div className="px-4 pb-28"><AIChatTab /></div>;
+        return <div className="px-5 pb-32"><AIChatTab /></div>;
       case 'progress':
-        return <div className="px-4 pb-28"><ProgressTab /></div>;
+        return <div className="px-5 pb-32"><ProgressTab /></div>;
       case 'recipes':
-        return <div className="px-4 pb-28"><RecipesTab /></div>;
+        return <div className="px-5 pb-32"><RecipesTab /></div>;
       case 'creative':
-        return <div className="px-4 pb-28"><CreativeTab /></div>;
+        return <div className="px-5 pb-32"><CreativeTab /></div>;
       case 'settings':
-        return <div className="px-4 pb-28"><SettingsTab /></div>;
+        return <div className="px-5 pb-32"><SettingsTab /></div>;
       case 'profile':
         return <ProfileTab onTabChange={handleTabChange} />;
       default:
@@ -79,29 +77,25 @@ const MobileApp = () => {
     }
   };
 
-  // Show splash or loading state
   if (showSplash || loading) {
     return <SplashScreen show={true} />;
   }
 
-  // If not authenticated, we're redirecting — show nothing
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background">
       <MobileHeader title={tabTitles[activeTab]} />
 
-      <main className="relative overflow-y-auto" style={{ minHeight: 'calc(100dvh - 56px - 72px)' }}>
+      <main className="relative overflow-y-auto" style={{ minHeight: 'calc(100dvh - 56px - 80px)' }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="pt-2"
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="pt-3"
           >
             {renderContent()}
           </motion.div>

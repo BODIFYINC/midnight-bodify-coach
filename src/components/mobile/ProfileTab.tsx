@@ -1,24 +1,29 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Settings, Camera, TrendingUp, Heart, LogOut, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
 
 interface ProfileTabProps {
   onTabChange: (tab: string) => void;
 }
 
+const fadeUp = {
+  initial: { opacity: 0, y: 14 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } }
+};
+
 const ProfileTab = ({ onTabChange }: ProfileTabProps) => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState({ name: '', email: '', goal: '' });
+  const { user: authUser, signOut } = useAuth();
+  const [userData, setUserData] = useState({ name: '', email: '', goal: '' });
   const [targets, setTargets] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
 
   useEffect(() => {
     const settings = JSON.parse(localStorage.getItem('userSettings') || '{}');
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    setUser({
-      name: settings.name || currentUser.name || 'User',
-      email: currentUser.email || settings.email || '',
+    setUserData({
+      name: settings.name || currentUser.name || authUser?.user_metadata?.full_name || 'User',
+      email: authUser?.email || currentUser.email || settings.email || '',
       goal: settings.goal || 'weight_loss',
     });
     try {
@@ -31,7 +36,7 @@ const ProfileTab = ({ onTabChange }: ProfileTabProps) => {
       const t = AccurateNutritionTracker.calculateNutritionTargets(profile);
       setTargets(t);
     } catch {}
-  }, []);
+  }, [authUser]);
 
   const goalLabel: Record<string, string> = {
     weight_loss: '🔥 Lose Weight', muscle_gain: '💪 Build Muscle',
@@ -39,47 +44,48 @@ const ProfileTab = ({ onTabChange }: ProfileTabProps) => {
   };
 
   const menuItems = [
-    { icon: Settings, label: 'Settings', action: () => onTabChange('settings') },
-    { icon: TrendingUp, label: 'Progress Photos', action: () => onTabChange('progress') },
-    { icon: Heart, label: 'Wellness', action: () => onTabChange('wellness') },
+    { icon: Settings, label: 'Settings', sub: 'Preferences & account', action: () => onTabChange('settings') },
+    { icon: TrendingUp, label: 'Progress Photos', sub: 'Track your transformation', action: () => onTabChange('progress') },
+    { icon: Heart, label: 'Wellness', sub: 'Sleep, water & recovery', action: () => onTabChange('wellness') },
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem('currentUser');
-    navigate('/login');
-  };
-
   return (
-    <div className="px-4 pb-28 space-y-6">
+    <motion.div
+      initial="initial"
+      animate="animate"
+      className="px-5 pb-32 space-y-5"
+    >
       {/* Profile Card */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="glass-card p-6 flex flex-col items-center text-center"
+        variants={fadeUp}
+        className="rounded-2xl p-6 flex flex-col items-center text-center border border-border/40"
+        style={{ background: 'hsla(222, 40%, 6%, 0.7)', backdropFilter: 'blur(16px)' }}
       >
         <div className="relative mb-4">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-            <User className="w-10 h-10 text-white" />
+          <div className="w-[80px] h-[80px] rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-xl shadow-primary/15">
+            <User className="w-9 h-9 text-white" />
           </div>
-          <button className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-card border border-border flex items-center justify-center">
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            className="absolute -bottom-0.5 -right-0.5 w-7 h-7 rounded-full bg-card border border-border/50 flex items-center justify-center shadow-lg"
+          >
             <Camera className="w-3.5 h-3.5 text-muted-foreground" />
-          </button>
+          </motion.button>
         </div>
-        <h2 className="text-lg font-bold text-foreground">{user.name}</h2>
-        <p className="text-xs text-muted-foreground">{user.email}</p>
-        <span className="mt-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-          {goalLabel[user.goal] || user.goal}
+        <h2 className="text-lg font-bold text-foreground tracking-tight">{userData.name}</h2>
+        <p className="text-[12px] text-muted-foreground mt-0.5">{userData.email}</p>
+        <span className="mt-3 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/15 text-primary text-[11px] font-semibold">
+          {goalLabel[userData.goal] || userData.goal}
         </span>
       </motion.div>
 
       {/* Daily Targets */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="glass-card p-4"
+        variants={fadeUp}
+        className="rounded-2xl p-5 border border-border/40"
+        style={{ background: 'hsla(222, 40%, 6%, 0.7)' }}
       >
-        <h3 className="text-sm font-semibold text-foreground mb-3">Daily Targets</h3>
+        <h3 className="text-[13px] font-semibold text-foreground mb-4">Daily Targets</h3>
         <div className="grid grid-cols-4 gap-2 text-center">
           {[
             { label: 'Calories', value: targets.calories, color: 'text-primary' },
@@ -87,9 +93,9 @@ const ProfileTab = ({ onTabChange }: ProfileTabProps) => {
             { label: 'Carbs', value: `${targets.carbs}g`, color: 'text-sky-400' },
             { label: 'Fat', value: `${targets.fat}g`, color: 'text-amber-400' },
           ].map((item, i) => (
-            <div key={i}>
-              <p className={`text-lg font-bold ${item.color}`}>{item.value}</p>
-              <p className="text-[10px] text-muted-foreground">{item.label}</p>
+            <div key={i} className="py-2">
+              <p className={`text-[18px] font-bold ${item.color} tabular-nums`}>{item.value}</p>
+              <p className="text-[10px] text-muted-foreground font-medium mt-1">{item.label}</p>
             </div>
           ))}
         </div>
@@ -97,36 +103,45 @@ const ProfileTab = ({ onTabChange }: ProfileTabProps) => {
 
       {/* Menu */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="glass-card divide-y divide-border"
+        variants={fadeUp}
+        className="rounded-2xl overflow-hidden border border-border/40"
+        style={{ background: 'hsla(222, 40%, 6%, 0.7)' }}
       >
         {menuItems.map((item, i) => (
-          <button
+          <motion.button
             key={i}
+            whileTap={{ scale: 0.99, backgroundColor: 'hsla(0,0%,100%,0.03)' }}
             onClick={item.action}
-            className="flex items-center w-full px-4 py-3.5 hover:bg-muted/30 transition-colors"
+            className={`flex items-center w-full px-5 py-4 transition-colors ${
+              i < menuItems.length - 1 ? 'border-b border-border/30' : ''
+            }`}
           >
-            <item.icon className="w-5 h-5 text-muted-foreground mr-3" />
-            <span className="text-sm text-foreground flex-1 text-left">{item.label}</span>
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          </button>
+            <div className="w-9 h-9 rounded-xl bg-muted/40 flex items-center justify-center mr-3.5">
+              <item.icon className="w-[18px] h-[18px] text-muted-foreground" />
+            </div>
+            <div className="flex-1 text-left">
+              <span className="text-[14px] text-foreground font-medium block">{item.label}</span>
+              <span className="text-[11px] text-muted-foreground">{item.sub}</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground/40" />
+          </motion.button>
         ))}
       </motion.div>
 
       {/* Logout */}
       <motion.button
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        onClick={handleLogout}
-        className="w-full glass-card px-4 py-3.5 flex items-center text-destructive hover:bg-destructive/10 transition-colors"
+        variants={fadeUp}
+        whileTap={{ scale: 0.98 }}
+        onClick={signOut}
+        className="w-full rounded-2xl px-5 py-4 flex items-center border border-destructive/15 transition-colors active:bg-destructive/5"
+        style={{ background: 'hsla(0, 40%, 8%, 0.4)' }}
       >
-        <LogOut className="w-5 h-5 mr-3" />
-        <span className="text-sm font-medium">Log Out</span>
+        <div className="w-9 h-9 rounded-xl bg-destructive/10 flex items-center justify-center mr-3.5">
+          <LogOut className="w-[18px] h-[18px] text-destructive" />
+        </div>
+        <span className="text-[14px] font-medium text-destructive">Log Out</span>
       </motion.button>
-    </div>
+    </motion.div>
   );
 };
 
