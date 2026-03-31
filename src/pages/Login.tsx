@@ -179,7 +179,7 @@ const Login = () => {
                   <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary via-accent to-primary flex items-center justify-center shadow-xl shadow-accent/20">
                     <Sparkles className="w-9 h-9 text-white" />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg">
+                  <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-xl bg-accent flex items-center justify-center shadow-lg">
                     <span className="text-white text-xs font-bold">+</span>
                   </div>
                 </div>
