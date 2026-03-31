@@ -80,12 +80,12 @@ const MobileApp = () => {
   };
 
   // Show splash or loading state
-  if (showSplash || isAuthenticated === null) {
+  if (showSplash || loading) {
     return <SplashScreen show={true} />;
   }
 
   // If not authenticated, we're redirecting — show nothing
-  if (!isAuthenticated) {
+  if (!user) {
     return null;
   }
 
