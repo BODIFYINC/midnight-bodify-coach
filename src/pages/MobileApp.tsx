@@ -32,6 +32,7 @@ const MobileApp = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem('bodify_splash_seen'));
+  const [bootGuardDone, setBootGuardDone] = useState(false);
   const [activeTab, setActiveTab] = useState('welcome');
   const [logOpen, setLogOpen] = useState(false);
 
@@ -53,13 +54,28 @@ const MobileApp = () => {
   };
 
   useEffect(() => {
-    if (!showSplash) return;
+    if (!showSplash) {
+      setBootGuardDone(true);
+      return;
+    }
+
     const timer = setTimeout(() => {
       sessionStorage.setItem('bodify_splash_seen', '1');
       setShowSplash(false);
-    }, 850);
+      setBootGuardDone(true);
+    }, 900);
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [showSplash]);
+
+  useEffect(() => {
+    if (!loading) return;
+    const timeout = setTimeout(() => {
+      setBootGuardDone(true);
+    }, 2800);
+
+    return () => clearTimeout(timeout);
+  }, [loading]);
 
   useEffect(() => {
     if (!showSplash && !loading && !user) {
@@ -104,11 +120,23 @@ const MobileApp = () => {
     }
   };
 
-  if (showSplash || loading) {
+  if ((showSplash && !bootGuardDone) || (loading && !bootGuardDone)) {
     return <SplashScreen show={true} subtitle={loading ? 'Securing your session' : 'Loading Bodify'} />;
   }
 
-  if (!user) return <SplashScreen show={true} subtitle="Opening sign in" />;
+  if (!user) {
+    return (
+      <div className="min-h-screen min-h-[100dvh] bg-background flex items-center justify-center px-6">
+        <div className="w-full max-w-xs rounded-3xl border border-border/50 bg-card/70 backdrop-blur p-6 text-center space-y-3">
+          <img src="/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png" alt="Bodify logo" className="w-12 h-12 mx-auto object-contain" />
+          <p className="text-sm font-semibold text-foreground">Opening sign in…</p>
+          <div className="h-1.5 w-full rounded-full bg-muted/60 overflow-hidden">
+            <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-primary to-accent animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background">
