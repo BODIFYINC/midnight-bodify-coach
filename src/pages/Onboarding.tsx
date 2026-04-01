@@ -1,37 +1,57 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
-
-const bodifyLogo = '/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png';
+import { Button } from '@/components/ui/button';
+import { StepHeader } from '@/components/onboarding/StepHeader';
+import { ProfileInput } from '@/components/onboarding/ProfileInput';
+import { ChoiceCard } from '@/components/onboarding/ChoiceCard';
 
 interface StepData {
   name: string;
   age: string;
   height: string;
   weight: string;
+  bodyFat: string;
   gender: string;
   activity: string;
   goal: string;
-  preferences: string[];
+  daysPerWeek: string;
+  fitnessLevel: 'beginner' | 'intermediate' | 'advanced';
+  dietaryRestrictions: string[];
+  allergies: string;
+  dislikedFoods: string;
 }
 
 const Onboarding = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [data, setData] = useState<StepData>({
-    name: '', age: '', height: '', weight: '', gender: 'male',
-    activity: 'moderate', goal: 'muscle_gain', preferences: [],
+    name: '',
+    age: '',
+    height: '',
+    weight: '',
+    bodyFat: '',
+    gender: 'male',
+    activity: 'moderate',
+    goal: 'muscle_gain',
+    daysPerWeek: '4',
+    fitnessLevel: 'beginner',
+    dietaryRestrictions: [],
+    allergies: '',
+    dislikedFoods: '',
   });
 
-  const totalSteps = 4;
+  const totalSteps = 5;
 
   const activities = [
     { value: 'sedentary', label: 'Sedentary', emoji: '🪑', desc: 'Desk job, little exercise' },
+    { value: 'light', label: 'Light Active', emoji: '🚶', desc: 'Light exercise 1-3x per week' },
     { value: 'moderate', label: 'Moderate', emoji: '🚶', desc: 'Exercise 3-5x per week' },
     { value: 'active', label: 'Athlete', emoji: '🏋️', desc: 'Heavy exercise daily' },
+    { value: 'very_active', label: 'Very Active', emoji: '⚡', desc: 'Intense training + active lifestyle' },
   ];
 
   const goals = [
@@ -40,53 +60,92 @@ const Onboarding = () => {
     { value: 'maintenance', label: 'Longevity', emoji: '🧬' },
   ];
 
-  const prefs = [
+  const restrictions = [
     { value: 'vegan', label: '🌱 Vegan' },
     { value: 'keto', label: '🥑 Keto' },
-    { value: 'no_equipment', label: '🏠 No Equipment' },
     { value: 'vegetarian', label: '🥗 Vegetarian' },
     { value: 'gluten_free', label: '🌾 Gluten-Free' },
     { value: 'dairy_free', label: '🥛 Dairy-Free' },
+    { value: 'halal', label: '🕌 Halal' },
+    { value: 'pescatarian', label: '🐟 Pescatarian' },
   ];
 
-  const togglePref = (v: string) => {
+  const toggleRestriction = (v: string) => {
     setData(d => ({
       ...d,
-      preferences: d.preferences.includes(v)
-        ? d.preferences.filter(p => p !== v)
-        : [...d.preferences, v]
+      dietaryRestrictions: d.dietaryRestrictions.includes(v)
+        ? d.dietaryRestrictions.filter(p => p !== v)
+        : [...d.dietaryRestrictions, v]
     }));
   };
 
+  const stepMeta = [
+    { title: 'Basics', subtitle: 'Tell us who you are' },
+    { title: 'Body Metrics', subtitle: 'Real data = better plans' },
+    { title: 'Training Setup', subtitle: 'Customize your weekly routine' },
+    { title: 'Main Goal', subtitle: 'What are we optimizing for?' },
+    { title: 'Nutrition Filters', subtitle: 'Any restrictions or foods to avoid?' },
+  ];
+
   const handleNext = () => {
-    if (step === 0 && (!data.name || !data.age || !data.height || !data.weight)) {
+    if (step === 0 && (!data.name || !data.age)) {
       toast({ title: 'Fill all fields', variant: 'destructive' }); return;
     }
+    if (step === 1 && (!data.height || !data.weight)) {
+      toast({ title: 'Add your body metrics', variant: 'destructive' }); return;
+    }
+    if (step === 2 && (!data.daysPerWeek || Number(data.daysPerWeek) < 1 || Number(data.daysPerWeek) > 7)) {
+      toast({ title: 'Choose valid workout days (1-7)', variant: 'destructive' }); return;
+    }
+
     if (step < totalSteps - 1) {
       setStep(s => s + 1);
     } else {
       // Save and navigate
       const profile: UserProfile = {
-        weight: parseInt(data.weight), height: parseInt(data.height),
-        age: parseInt(data.age), gender: data.gender as 'male' | 'female',
-        activityLevel: data.activity as any, goal: data.goal as any,
+        weight: parseInt(data.weight),
+        height: parseInt(data.height),
+        age: parseInt(data.age),
+        gender: data.gender as 'male' | 'female',
+        activityLevel: data.activity as UserProfile['activityLevel'],
+        goal: data.goal as UserProfile['goal'],
+        bodyFat: data.bodyFat ? parseInt(data.bodyFat) : undefined,
       };
       const targets = AccurateNutritionTracker.calculateNutritionTargets(profile);
 
+      const allergiesArr = data.allergies
+        .split(',')
+        .map((item) => item.trim().toLowerCase())
+        .filter(Boolean);
+
+      const dislikedArr = data.dislikedFoods
+        .split(',')
+        .map((item) => item.trim().toLowerCase())
+        .filter(Boolean);
+
       const settings = {
-        name: data.name, age: parseInt(data.age), height: parseInt(data.height),
-        weight: parseInt(data.weight), gender: data.gender,
-        activityLevel: data.activity, goal: data.goal,
-        fitnessLevel: 'beginner', daysPerWeek: 3,
-        dietaryRestrictions: data.preferences.join(', '),
-        dislikedFoods: '', allergies: '',
+        name: data.name,
+        age: parseInt(data.age),
+        height: parseInt(data.height),
+        weight: parseInt(data.weight),
+        bodyFat: data.bodyFat ? parseInt(data.bodyFat) : undefined,
+        gender: data.gender,
+        activityLevel: data.activity,
+        goal: data.goal,
+        fitnessLevel: data.fitnessLevel,
+        daysPerWeek: Number(data.daysPerWeek),
+        dietaryRestrictions: data.dietaryRestrictions.join(', '),
+        dislikedFoods: data.dislikedFoods,
+        allergies: data.allergies,
         targetCalories: targets.calories, targetProtein: targets.protein,
         targetCarbs: targets.carbs, targetFat: targets.fat,
       };
       localStorage.setItem('userSettings', JSON.stringify(settings));
       localStorage.setItem('userPreferences', JSON.stringify({
-        ...settings, dislikedFoods: [], allergies: [],
-        dietaryRestrictions: data.preferences,
+        ...settings,
+        dislikedFoods: dislikedArr,
+        allergies: allergiesArr,
+        dietaryRestrictions: data.dietaryRestrictions,
       }));
 
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -100,121 +159,103 @@ const Onboarding = () => {
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col px-6 py-8 safe-top safe-bottom">
-      {/* Progress */}
-      <div className="flex items-center gap-3 mb-8">
-        {step > 0 && (
-          <button onClick={() => setStep(s => s - 1)} className="p-2 -ml-2">
-            <ArrowLeft className="w-5 h-5 text-muted-foreground" />
-          </button>
-        )}
-        <div className="flex-1 flex gap-1.5">
-          {Array.from({ length: totalSteps }).map((_, i) => (
-            <div key={i} className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-              i <= step ? 'bg-primary' : 'bg-muted'
-            }`} />
-          ))}
-        </div>
-      </div>
+      <StepHeader
+        step={step}
+        totalSteps={totalSteps}
+        title={stepMeta[step].title}
+        subtitle={stepMeta[step].subtitle}
+        onBack={step > 0 ? () => setStep((s) => s - 1) : undefined}
+      />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col mt-7">
         <AnimatePresence mode="wait">
           {step === 0 && (
-            <motion.div key="bio" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-5">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">About You</h2>
-                <p className="text-sm text-muted-foreground">Let's personalize your experience</p>
-              </div>
-              <Input label="Your Name" value={data.name} onChange={v => setData(d => ({ ...d, name: v }))} placeholder="Enter your name" />
+            <motion.div key="bio" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-4">
+              <ProfileInput label="Full name" value={data.name} onChange={(v) => setData((d) => ({ ...d, name: v }))} placeholder="Alex Rivera" />
+              <ProfileInput label="Age" type="number" value={data.age} onChange={(v) => setData((d) => ({ ...d, age: v }))} placeholder="25" />
               <div className="grid grid-cols-2 gap-3">
-                <Input label="Age" type="number" value={data.age} onChange={v => setData(d => ({ ...d, age: v }))} placeholder="25" />
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Gender</label>
-                  <div className="flex gap-2">
-                    {['male', 'female'].map(g => (
-                      <button key={g} onClick={() => setData(d => ({ ...d, gender: g }))}
-                        className={`flex-1 h-11 rounded-xl text-sm font-medium transition-all ${
-                          data.gender === g ? 'bg-primary text-white' : 'bg-muted text-muted-foreground border border-border'
-                        }`}>
-                        {g === 'male' ? '♂ Male' : '♀ Female'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <Input label="Height (cm)" type="number" value={data.height} onChange={v => setData(d => ({ ...d, height: v }))} placeholder="175" />
-                <Input label="Weight (kg)" type="number" value={data.weight} onChange={v => setData(d => ({ ...d, weight: v }))} placeholder="70" />
+                <ChoiceCard title="Male" icon="♂️" selected={data.gender === 'male'} onClick={() => setData((d) => ({ ...d, gender: 'male' }))} compact />
+                <ChoiceCard title="Female" icon="♀️" selected={data.gender === 'female'} onClick={() => setData((d) => ({ ...d, gender: 'female' }))} compact />
               </div>
             </motion.div>
           )}
 
           {step === 1 && (
-            <motion.div key="activity" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-5">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">Activity Level</h2>
-                <p className="text-sm text-muted-foreground">How active are you?</p>
+            <motion.div key="metrics" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <ProfileInput label="Height" type="number" value={data.height} onChange={(v) => setData((d) => ({ ...d, height: v }))} placeholder="175" unit="cm" />
+                <ProfileInput label="Weight" type="number" value={data.weight} onChange={(v) => setData((d) => ({ ...d, weight: v }))} placeholder="70" unit="kg" />
               </div>
-              <div className="space-y-3">
-                {activities.map(a => (
-                  <motion.button key={a.value} whileTap={{ scale: 0.97 }}
-                    onClick={() => setData(d => ({ ...d, activity: a.value }))}
-                    className={`w-full p-4 rounded-2xl text-left flex items-center gap-4 transition-all ${
-                      data.activity === a.value
-                        ? 'bg-primary/10 border-2 border-primary'
-                        : 'bg-muted border-2 border-transparent'
-                    }`}>
-                    <span className="text-3xl">{a.emoji}</span>
-                    <div>
-                      <p className="font-semibold text-foreground">{a.label}</p>
-                      <p className="text-xs text-muted-foreground">{a.desc}</p>
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
+              <ProfileInput label="Body fat (optional)" type="number" value={data.bodyFat} onChange={(v) => setData((d) => ({ ...d, bodyFat: v }))} placeholder="18" unit="%" />
             </motion.div>
           )}
 
           {step === 2 && (
-            <motion.div key="goal" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-5">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">Your Goal</h2>
-                <p className="text-sm text-muted-foreground">What are you training for?</p>
-              </div>
+            <motion.div key="activity" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-4">
               <div className="space-y-3">
-                {goals.map(g => (
-                  <motion.button key={g.value} whileTap={{ scale: 0.97 }}
-                    onClick={() => setData(d => ({ ...d, goal: g.value }))}
-                    className={`w-full p-5 rounded-2xl text-left flex items-center gap-4 transition-all ${
-                      data.goal === g.value
-                        ? 'bg-primary/10 border-2 border-primary'
-                        : 'bg-muted border-2 border-transparent'
-                    }`}>
-                    <span className="text-4xl">{g.emoji}</span>
-                    <p className="text-lg font-semibold text-foreground">{g.label}</p>
-                  </motion.button>
+                {activities.map(a => (
+                  <ChoiceCard
+                    key={a.value}
+                    title={a.label}
+                    description={a.desc}
+                    icon={a.emoji}
+                    selected={data.activity === a.value}
+                    onClick={() => setData(d => ({ ...d, activity: a.value }))}
+                  />
                 ))}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <ProfileInput label="Days per week" type="number" value={data.daysPerWeek} onChange={(v) => setData((d) => ({ ...d, daysPerWeek: v }))} placeholder="4" />
+                <label className="block space-y-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Fitness level</span>
+                  <select
+                    value={data.fitnessLevel}
+                    onChange={(e) => setData((d) => ({ ...d, fitnessLevel: e.target.value as StepData['fitnessLevel'] }))}
+                    className="w-full h-12 rounded-2xl border border-border/60 bg-card/60 px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  >
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                </label>
               </div>
             </motion.div>
           )}
 
           {step === 3 && (
-            <motion.div key="prefs" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-5">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">Preferences</h2>
-                <p className="text-sm text-muted-foreground">Select any that apply (optional)</p>
+            <motion.div key="goal" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-5">
+              <div className="space-y-3">
+                {goals.map(g => (
+                  <ChoiceCard
+                    key={g.value}
+                    title={g.label}
+                    icon={g.emoji}
+                    selected={data.goal === g.value}
+                    onClick={() => setData(d => ({ ...d, goal: g.value }))}
+                  />
+                ))}
               </div>
+            </motion.div>
+          )}
+
+          {step === 4 && (
+            <motion.div key="prefs" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-5">
               <div className="grid grid-cols-2 gap-3">
-                {prefs.map(p => (
+                {restrictions.map(p => (
                   <motion.button key={p.value} whileTap={{ scale: 0.95 }}
-                    onClick={() => togglePref(p.value)}
+                    onClick={() => toggleRestriction(p.value)}
                     className={`p-4 rounded-2xl text-sm font-medium transition-all ${
-                      data.preferences.includes(p.value)
+                      data.dietaryRestrictions.includes(p.value)
                         ? 'bg-primary/10 border-2 border-primary text-primary'
-                        : 'bg-muted border-2 border-transparent text-foreground'
+                        : 'bg-card/60 border border-border/60 text-foreground'
                     }`}>
                     {p.label}
                   </motion.button>
                 ))}
+              </div>
+              <div className="space-y-3">
+                <ProfileInput label="Allergies (optional)" value={data.allergies} onChange={(v) => setData((d) => ({ ...d, allergies: v }))} placeholder="nuts, shellfish" />
+                <ProfileInput label="Disliked foods (optional)" value={data.dislikedFoods} onChange={(v) => setData((d) => ({ ...d, dislikedFoods: v }))} placeholder="mushrooms, olives" />
               </div>
             </motion.div>
           )}
@@ -222,33 +263,15 @@ const Onboarding = () => {
       </div>
 
       {/* CTA */}
-      <motion.button
-        whileTap={{ scale: 0.97 }}
+      <Button
         onClick={handleNext}
-        className="w-full h-14 mt-6 rounded-2xl bg-gradient-to-r from-primary to-accent text-white font-semibold flex items-center justify-center gap-2 shadow-lg"
-        style={{ boxShadow: '0 4px 20px hsla(217, 91%, 60%, 0.3)' }}
+        className="w-full h-14 mt-6 text-sm gap-2"
       >
         {step === totalSteps - 1 ? 'Get Started' : 'Continue'}
         <ArrowRight className="w-5 h-5" />
-      </motion.button>
+      </Button>
     </div>
   );
 };
-
-// Simple input component
-const Input = ({ label, value, onChange, placeholder, type = 'text' }: {
-  label: string; value: string; onChange: (v: string) => void; placeholder: string; type?: string;
-}) => (
-  <div>
-    <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{label}</label>
-    <input
-      type={type}
-      value={value}
-      onChange={e => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="w-full h-11 px-4 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-    />
-  </div>
-);
 
 export default Onboarding;
