@@ -20,7 +20,7 @@ export const ProfileInput = ({
 }: ProfileInputProps) => {
   return (
     <label className="block space-y-2">
-      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{label}</span>
       <div className="relative">
         <input
           type={type}
@@ -28,8 +28,8 @@ export const ProfileInput = ({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={cn(
-            'w-full h-12 rounded-2xl border border-border/60 bg-card/60 px-4 text-sm text-foreground',
-            'placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40',
+            'w-full h-12 rounded-2xl border border-border/60 bg-card/70 px-4 text-sm text-foreground transition-all duration-200',
+            'placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 focus:bg-card/90',
             unit ? 'pr-12' : ''
           )}
           inputMode={type === 'number' ? 'numeric' : undefined}
