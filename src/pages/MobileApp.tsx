@@ -31,18 +31,45 @@ const tabTitles: Record<string, string> = {
 const MobileApp = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem('bodify_splash_seen'));
   const [activeTab, setActiveTab] = useState('welcome');
   const [logOpen, setLogOpen] = useState(false);
 
+  const hasCompletedOnboarding = () => {
+    try {
+      const settings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+      return Boolean(
+        settings?.name &&
+        settings?.age &&
+        settings?.height &&
+        settings?.weight &&
+        settings?.activityLevel &&
+        settings?.goal &&
+        settings?.daysPerWeek
+      );
+    } catch {
+      return false;
+    }
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 1400);
+    if (!showSplash) return;
+    const timer = setTimeout(() => {
+      sessionStorage.setItem('bodify_splash_seen', '1');
+      setShowSplash(false);
+    }, 850);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (!showSplash && !loading && !user) {
       navigate('/login', { replace: true });
+    }
+  }, [showSplash, loading, user, navigate]);
+
+  useEffect(() => {
+    if (!showSplash && !loading && user && !hasCompletedOnboarding()) {
+      navigate('/onboarding', { replace: true });
     }
   }, [showSplash, loading, user, navigate]);
 
@@ -78,10 +105,10 @@ const MobileApp = () => {
   };
 
   if (showSplash || loading) {
-    return <SplashScreen show={true} />;
+    return <SplashScreen show={true} subtitle={loading ? 'Securing your session' : 'Loading Bodify'} />;
   }
 
-  if (!user) return null;
+  if (!user) return <SplashScreen show={true} subtitle="Opening sign in" />;
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background">
