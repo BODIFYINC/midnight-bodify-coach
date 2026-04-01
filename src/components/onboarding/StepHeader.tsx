@@ -16,19 +16,20 @@ export const StepHeader = ({ step, totalSteps, title, subtitle, onBack }: StepHe
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         {onBack ? (
-          <button
+          <motion.button
             type="button"
             onClick={onBack}
-            className="h-9 w-9 rounded-xl border border-border/60 bg-card/60 flex items-center justify-center active:scale-95 transition-transform"
+            whileTap={{ scale: 0.95 }}
+            className="h-9 w-9 rounded-xl border border-border/60 bg-card/70 flex items-center justify-center transition-transform"
             aria-label="Go back"
           >
             <ArrowLeft className="w-4 h-4 text-foreground" />
-          </button>
+          </motion.button>
         ) : (
           <div className="h-9 w-9" />
         )}
 
-        <div className="flex-1 h-2 rounded-full bg-muted/70 overflow-hidden">
+        <div className="flex-1 h-2.5 rounded-full bg-muted/70 overflow-hidden border border-border/40">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
