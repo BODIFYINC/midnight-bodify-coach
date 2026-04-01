@@ -19,19 +19,52 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    let mounted = true;
+    let initialized = false;
+
+    const applySession = (nextSession: Session | null) => {
+      if (!mounted) return;
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
+    };
+
+    const finishInit = () => {
+      if (!mounted) return;
+      initialized = true;
       setLoading(false);
+    };
+
+    const fallbackTimeout = window.setTimeout(() => {
+      if (!initialized) finishInit();
+    }, 2500);
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      applySession(nextSession);
+      if (!initialized) finishInit();
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: restoredSession }, error }) => {
+        if (error) {
+          console.error('Auth restore failed:', error.message);
+          return;
+        }
+        applySession(restoredSession);
+      })
+      .catch((error) => {
+        console.error('Auth initialization error:', error);
+      })
+      .finally(() => {
+        finishInit();
+        window.clearTimeout(fallbackTimeout);
+      });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      window.clearTimeout(fallbackTimeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
