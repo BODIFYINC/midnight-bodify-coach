@@ -4,9 +4,10 @@ const bodifyLogo = '/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png';
 
 interface SplashScreenProps {
   show: boolean;
+  subtitle?: string;
 }
 
-const SplashScreen = ({ show }: SplashScreenProps) => {
+const SplashScreen = ({ show, subtitle = 'Preparing your experience' }: SplashScreenProps) => {
   return (
     <AnimatePresence>
       {show && (
@@ -47,6 +48,7 @@ const SplashScreen = ({ show }: SplashScreenProps) => {
               className="flex flex-col items-center gap-3"
             >
               <h1 className="text-xl font-bold tracking-tight text-foreground">Bodify</h1>
+              <p className="text-xs text-muted-foreground font-medium">{subtitle}</p>
               <div className="w-10 h-1 rounded-full bg-gradient-to-r from-primary to-accent" />
             </motion.div>
 
