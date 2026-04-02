@@ -158,7 +158,12 @@ const Onboarding = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col px-6 py-8 safe-top safe-bottom">
+    <div className="relative flex min-h-screen min-h-[100dvh] flex-col overflow-hidden bg-background px-6 py-8 safe-top safe-bottom">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute right-[-20%] top-0 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[-15%] h-80 w-80 rounded-full bg-secondary/10 blur-3xl" />
+      </div>
+
       <StepHeader
         step={step}
         totalSteps={totalSteps}
@@ -167,7 +172,7 @@ const Onboarding = () => {
         onBack={step > 0 ? () => setStep((s) => s - 1) : undefined}
       />
 
-      <div className="flex-1 flex flex-col mt-7">
+      <div className="relative mt-7 flex flex-1 flex-col">
         <AnimatePresence mode="wait">
           {step === 0 && (
             <motion.div key="bio" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 space-y-4">
@@ -211,7 +216,7 @@ const Onboarding = () => {
                   <select
                     value={data.fitnessLevel}
                     onChange={(e) => setData((d) => ({ ...d, fitnessLevel: e.target.value as StepData['fitnessLevel'] }))}
-                    className="w-full h-12 rounded-2xl border border-border/60 bg-card/60 px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-full h-12 rounded-2xl border border-border/60 bg-card/60 px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent/30"
                   >
                     <option value="beginner">Beginner</option>
                     <option value="intermediate">Intermediate</option>
@@ -246,7 +251,7 @@ const Onboarding = () => {
                     onClick={() => toggleRestriction(p.value)}
                     className={`p-4 rounded-2xl text-sm font-medium transition-all ${
                       data.dietaryRestrictions.includes(p.value)
-                        ? 'bg-primary/10 border-2 border-primary text-primary'
+                        ? 'border border-accent/40 bg-gradient-to-br from-accent/15 to-primary/10 text-foreground shadow-lg'
                         : 'bg-card/60 border border-border/60 text-foreground'
                     }`}>
                     {p.label}

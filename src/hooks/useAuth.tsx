@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const fallbackTimeout = window.setTimeout(() => {
       if (!initialized) finishInit();
-    }, 2500);
+    }, 1500);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       applySession(nextSession);

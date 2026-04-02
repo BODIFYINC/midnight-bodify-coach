@@ -15,11 +15,12 @@ const SplashScreen = ({ show, subtitle = 'Preparing your experience' }: SplashSc
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background"
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-background"
         >
-          {/* Subtle radial glow */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-primary/6 blur-[100px]" />
+            <div className="absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 blur-[110px]" />
+            <div className="absolute right-[-10%] top-[18%] h-[220px] w-[220px] rounded-full bg-secondary/10 blur-[100px]" />
+            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary/10 to-transparent" />
           </div>
 
           <div className="flex flex-col items-center gap-8 relative z-10">
@@ -29,15 +30,14 @@ const SplashScreen = ({ show, subtitle = 'Preparing your experience' }: SplashSc
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               className="relative"
             >
-              <div className="w-24 h-24 rounded-[28px] bg-card/80 backdrop-blur border border-border/30 flex items-center justify-center shadow-2xl shadow-primary/10">
+              <div className="flex h-24 w-24 items-center justify-center rounded-[30px] border border-accent/20 bg-card/80 backdrop-blur shadow-2xl">
                 <img src={bodifyLogo} alt="Bodify" className="w-14 h-14 object-contain" />
               </div>
-              {/* Glow ring */}
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1.15, opacity: 0.3 }}
                 transition={{ delay: 0.3, duration: 0.8, ease: 'easeOut' }}
-                className="absolute inset-0 rounded-[28px] border border-primary/30"
+                className="absolute inset-0 rounded-[30px] border border-accent/35"
               />
             </motion.div>
 
@@ -47,12 +47,14 @@ const SplashScreen = ({ show, subtitle = 'Preparing your experience' }: SplashSc
               transition={{ delay: 0.35, duration: 0.5 }}
               className="flex flex-col items-center gap-3"
             >
+              <span className="rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">
+                Bodify AI
+              </span>
               <h1 className="text-xl font-bold tracking-tight text-foreground">Bodify</h1>
               <p className="text-xs text-muted-foreground font-medium">{subtitle}</p>
-              <div className="w-10 h-1 rounded-full bg-gradient-to-r from-primary to-accent" />
+              <div className="h-1 w-16 rounded-full bg-gradient-to-r from-accent via-primary to-secondary" />
             </motion.div>
 
-            {/* Loading dots */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -62,7 +64,7 @@ const SplashScreen = ({ show, subtitle = 'Preparing your experience' }: SplashSc
               {[0, 1, 2].map(i => (
                 <motion.div
                   key={i}
-                  className="w-1.5 h-1.5 rounded-full bg-primary/60"
+                  className="h-1.5 w-1.5 rounded-full bg-accent/70"
                   animate={{ opacity: [0.3, 1, 0.3] }}
                   transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }}
                 />

@@ -24,10 +24,10 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
           transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 30 }}
           className="rounded-2xl px-1 py-2 flex items-center justify-around"
           style={{
-            background: 'hsla(222, 40%, 6%, 0.92)',
+            background: 'linear-gradient(180deg, hsl(var(--card) / 0.92), hsl(var(--background) / 0.94))',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
-            boxShadow: '0 -2px 32px hsla(222, 47%, 3%, 0.7), 0 0 0 1px hsla(0,0%,100%,0.06)',
+            boxShadow: '0 -2px 32px hsl(var(--background) / 0.72), 0 0 0 1px hsl(var(--border) / 0.9), 0 12px 30px -18px hsl(var(--accent) / 0.45)',
           }}
         >
           {tabs.map((tab) => {
@@ -41,10 +41,10 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
                   whileTap={{ scale: 0.88 }}
-                  className="relative -mt-6 flex items-center justify-center w-[52px] h-[52px] rounded-2xl bg-gradient-to-br from-primary to-accent"
-                  style={{ boxShadow: '0 4px 24px hsla(217, 91%, 60%, 0.35)' }}
+                  className="relative -mt-6 flex items-center justify-center w-[52px] h-[52px] rounded-2xl bg-gradient-to-br from-accent via-primary to-secondary"
+                  style={{ boxShadow: '0 10px 28px -10px hsl(var(--accent) / 0.65)' }}
                 >
-                  <Icon className="w-[22px] h-[22px] text-white" strokeWidth={2.5} />
+                  <Icon className="w-[22px] h-[22px] text-secondary-foreground" strokeWidth={2.5} />
                 </motion.button>
               );
             }
@@ -59,20 +59,20 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
                 <div className="relative">
                   <Icon
                     className={`w-[20px] h-[20px] transition-colors duration-200 ${
-                      isActive ? 'text-primary' : 'text-muted-foreground/70'
+                      isActive ? 'text-accent' : 'text-muted-foreground/70'
                     }`}
                     strokeWidth={isActive ? 2.5 : 1.8}
                   />
                 </div>
                 <span className={`text-[10px] font-medium transition-colors duration-200 ${
-                  isActive ? 'text-primary' : 'text-muted-foreground/70'
+                  isActive ? 'text-accent' : 'text-muted-foreground/70'
                 }`}>
                   {tab.label}
                 </span>
                 {isActive && (
                   <motion.div
                     layoutId="bottomNavDot"
-                    className="absolute -top-0.5 w-1 h-1 rounded-full bg-primary"
+                    className="absolute -top-0.5 w-1 h-1 rounded-full bg-accent"
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
                 )}

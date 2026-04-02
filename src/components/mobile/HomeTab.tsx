@@ -59,10 +59,10 @@ const HomeTab = ({ onTabChange }: HomeTabProps) => {
   };
 
   const quickActions = [
-    { label: 'Meals', icon: Utensils, tab: 'meals', gradient: 'from-primary to-accent' },
-    { label: 'Workout', icon: Dumbbell, tab: 'creative', gradient: 'from-secondary to-purple-400' },
-    { label: 'Coach', icon: MessageSquare, tab: 'chat', gradient: 'from-amber-500 to-orange-500' },
-    { label: 'Progress', icon: TrendingUp, tab: 'progress', gradient: 'from-sky-400 to-blue-500' },
+    { label: 'Meals', icon: Utensils, tab: 'meals', gradient: 'from-accent via-primary to-accent' },
+    { label: 'Workout', icon: Dumbbell, tab: 'creative', gradient: 'from-primary via-accent to-secondary' },
+    { label: 'Coach', icon: MessageSquare, tab: 'chat', gradient: 'from-secondary via-primary to-accent' },
+    { label: 'Progress', icon: TrendingUp, tab: 'progress', gradient: 'from-accent via-secondary to-primary' },
   ];
 
   const circumference = 2 * Math.PI * 52;
@@ -83,7 +83,7 @@ const HomeTab = ({ onTabChange }: HomeTabProps) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="inline-flex items-center gap-1.5 mt-2.5 px-3 py-1.5 rounded-full bg-amber-500/12 border border-amber-500/15 text-amber-400 text-[11px] font-semibold"
+            className="inline-flex items-center gap-1.5 mt-2.5 rounded-full border border-accent/20 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold text-accent"
           >
             <Flame className="w-3.5 h-3.5" /> {stats.streak} day streak
           </motion.div>
@@ -115,8 +115,8 @@ const HomeTab = ({ onTabChange }: HomeTabProps) => {
               />
               <defs>
                 <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="hsl(217, 91%, 60%)" />
-                  <stop offset="100%" stopColor="hsl(160, 84%, 39%)" />
+                  <stop offset="0%" stopColor="hsl(var(--accent))" />
+                  <stop offset="100%" stopColor="hsl(var(--primary))" />
                 </linearGradient>
               </defs>
             </svg>
@@ -128,9 +128,9 @@ const HomeTab = ({ onTabChange }: HomeTabProps) => {
 
           {/* Macros */}
           <div className="flex-1 space-y-3.5">
-            <MacroRow icon={Heart} color="text-red-400" label="Protein" current={stats.protein.current} target={stats.protein.target} barColor="bg-red-400" />
+            <MacroRow icon={Heart} color="text-accent" label="Protein" current={stats.protein.current} target={stats.protein.target} barColor="bg-accent" />
             <MacroRow icon={Zap} color="text-primary" label="Carbs" current={stats.carbs.current} target={stats.carbs.target} barColor="bg-primary" />
-            <MacroRow icon={Star} color="text-amber-400" label="Fats" current={stats.fats.current} target={stats.fats.target} barColor="bg-amber-400" />
+            <MacroRow icon={Star} color="text-secondary" label="Fats" current={stats.fats.current} target={stats.fats.target} barColor="bg-secondary" />
           </div>
         </div>
         <div className="mt-4 pt-3.5 border-t border-border/30 text-center">
@@ -180,12 +180,12 @@ const HomeTab = ({ onTabChange }: HomeTabProps) => {
               onClick={() => onTabChange(action.tab)}
               className="flex flex-col items-center gap-2.5 py-3"
             >
-              <div className={`w-[52px] h-[52px] rounded-2xl bg-gradient-to-br ${action.gradient} flex items-center justify-center shadow-lg`}
-                style={{ boxShadow: `0 8px 24px -4px hsla(217, 91%, 60%, 0.2)` }}
+              <div className={`flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-gradient-to-br ${action.gradient} shadow-lg`}
+                style={{ boxShadow: '0 10px 24px -12px hsl(var(--accent) / 0.5)' }}
               >
-                <action.icon className="w-[22px] h-[22px] text-white" strokeWidth={2} />
+                <action.icon className="w-[22px] h-[22px] text-secondary-foreground" strokeWidth={2} />
               </div>
-              <span className="text-[11px] font-medium text-muted-foreground">{action.label}</span>
+              <span className="text-[11px] font-medium text-foreground/82">{action.label}</span>
             </motion.button>
           ))}
         </div>

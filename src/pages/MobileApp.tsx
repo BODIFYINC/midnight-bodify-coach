@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import SplashScreen from '@/components/mobile/SplashScreen';
 import BottomNav from '@/components/mobile/BottomNav';
@@ -28,11 +28,23 @@ const tabTitles: Record<string, string> = {
   profile: 'Profile',
 };
 
+const isPreviewMode = () => {
+  if (typeof window === 'undefined') return false;
+  return window.location.search.includes('__lovable_token=') || window.location.hostname.includes('id-preview');
+};
+
+const hasSeenSplash = () => {
+  try {
+    return sessionStorage.getItem('bodify_splash_seen') === '1';
+  } catch {
+    return true;
+  }
+};
+
 const MobileApp = () => {
-  const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem('bodify_splash_seen'));
-  const [bootGuardDone, setBootGuardDone] = useState(false);
+  const [showSplash, setShowSplash] = useState(() => !isPreviewMode() && !hasSeenSplash());
+  const [bootGuardDone, setBootGuardDone] = useState(() => isPreviewMode() || hasSeenSplash());
   const [activeTab, setActiveTab] = useState('welcome');
   const [logOpen, setLogOpen] = useState(false);
 
@@ -60,34 +72,27 @@ const MobileApp = () => {
     }
 
     const timer = setTimeout(() => {
-      sessionStorage.setItem('bodify_splash_seen', '1');
+      try {
+        sessionStorage.setItem('bodify_splash_seen', '1');
+      } catch {
+        // ignore storage restrictions in embedded previews
+      }
       setShowSplash(false);
       setBootGuardDone(true);
-    }, 900);
+    }, 450);
 
     return () => clearTimeout(timer);
   }, [showSplash]);
 
   useEffect(() => {
-    if (!loading) return;
+    if (showSplash || !loading) return;
+
     const timeout = setTimeout(() => {
       setBootGuardDone(true);
-    }, 2800);
+    }, 1200);
 
     return () => clearTimeout(timeout);
-  }, [loading]);
-
-  useEffect(() => {
-    if (!showSplash && !user && (!loading || bootGuardDone)) {
-      navigate('/login', { replace: true });
-    }
-  }, [showSplash, loading, user, bootGuardDone, navigate]);
-
-  useEffect(() => {
-    if (!showSplash && !loading && user && !hasCompletedOnboarding()) {
-      navigate('/onboarding', { replace: true });
-    }
-  }, [showSplash, loading, user, navigate]);
+  }, [showSplash, loading]);
 
   const TabLoading = () => (
     <div className="px-5 pb-32 pt-3">
@@ -95,6 +100,35 @@ const MobileApp = () => {
         <div className="h-4 w-24 rounded bg-muted/60" />
         <div className="h-8 w-2/3 rounded bg-muted/60" />
         <div className="h-28 w-full rounded-2xl bg-muted/50" />
+      </div>
+    </div>
+  );
+
+  const StartupLoading = () => (
+    <div className="relative min-h-screen min-h-[100dvh] overflow-hidden bg-background px-6">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-16 right-[-15%] h-64 w-64 rounded-full bg-accent/12 blur-3xl" />
+        <div className="absolute bottom-0 left-[-10%] h-72 w-72 rounded-full bg-secondary/10 blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary/8 to-transparent" />
+      </div>
+
+      <div className="relative flex min-h-screen min-h-[100dvh] items-center justify-center">
+        <div className="w-full max-w-sm rounded-[28px] border border-border/50 bg-card/75 p-6 text-center shadow-2xl backdrop-blur-xl">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[20px] border border-accent/20 bg-gradient-to-br from-accent/15 via-primary/10 to-secondary/15">
+            <img src="/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png" alt="Bodify logo" className="h-10 w-10 object-contain" />
+          </div>
+          <p className="mt-5 text-base font-semibold text-foreground">Loading your app</p>
+          <p className="mt-1 text-sm text-muted-foreground">Getting your dashboard and coach ready.</p>
+
+          <div className="mt-5 h-2 overflow-hidden rounded-full bg-muted/70">
+            <motion.div
+              className="h-full rounded-full bg-gradient-to-r from-accent via-primary to-secondary"
+              animate={{ x: ['-35%', '100%'] }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ width: '45%' }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -130,22 +164,22 @@ const MobileApp = () => {
     }
   };
 
-  if ((showSplash && !bootGuardDone) || (loading && !bootGuardDone)) {
+  const onboardingComplete = user ? hasCompletedOnboarding() : false;
+
+  if (showSplash && !bootGuardDone) {
     return <SplashScreen show={true} subtitle={loading ? 'Securing your session' : 'Loading Bodify'} />;
   }
 
-  if (!user) {
-    return (
-      <div className="min-h-screen min-h-[100dvh] bg-background flex items-center justify-center px-6">
-        <div className="w-full max-w-xs rounded-3xl border border-border/50 bg-card/70 backdrop-blur p-6 text-center space-y-3">
-          <img src="/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png" alt="Bodify logo" className="w-12 h-12 mx-auto object-contain" />
-          <p className="text-sm font-semibold text-foreground">Opening sign in…</p>
-          <div className="h-1.5 w-full rounded-full bg-muted/60 overflow-hidden">
-            <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-primary to-accent animate-pulse" />
-          </div>
-        </div>
-      </div>
-    );
+  if (loading && !user) {
+    return <StartupLoading />;
+  }
+
+  if (!loading && !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!loading && user && !onboardingComplete) {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return (
