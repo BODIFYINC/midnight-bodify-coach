@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Mail, Lock, User, Sparkles, Eye, EyeOff } from 'lucide-react';
@@ -9,13 +9,19 @@ const bodifyLogo = '/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/', { replace: true });
+    }
+  }, [loading, navigate, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,14 +60,14 @@ const Login = () => {
     }
   };
 
-  const inputClass = "w-full h-[52px] pl-12 pr-4 rounded-2xl bg-muted/50 border border-border/40 text-foreground placeholder:text-muted-foreground/50 text-[14px] focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all duration-200";
+  const inputClass = "w-full h-[52px] rounded-2xl border border-border/50 bg-card/70 pl-12 pr-4 text-[14px] text-foreground placeholder:text-muted-foreground/50 transition-all duration-200 focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/25";
 
   return (
     <div className="min-h-[100dvh] bg-background flex flex-col relative overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-[300px] h-[300px] rounded-full bg-primary/5 blur-[120px]" />
-        <div className="absolute -bottom-40 -left-40 w-[350px] h-[350px] rounded-full bg-accent/4 blur-[120px]" />
+        <div className="absolute -top-40 -right-32 h-[320px] w-[320px] rounded-full bg-accent/10 blur-[120px]" />
+        <div className="absolute -bottom-44 -left-24 h-[360px] w-[360px] rounded-full bg-secondary/10 blur-[120px]" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary/8 to-transparent" />
       </div>
 
       <AnimatePresence mode="wait">
@@ -76,33 +82,35 @@ const Login = () => {
             className="flex-1 flex flex-col justify-between px-6 pt-20 pb-10 relative z-10"
           >
             <div>
-              {/* Logo */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1, duration: 0.5 }}
                 className="flex justify-center mb-12"
               >
-                <div className="w-[88px] h-[88px] rounded-[24px] bg-card/70 backdrop-blur border border-border/30 flex items-center justify-center shadow-2xl shadow-primary/8">
+                <div className="flex h-[88px] w-[88px] items-center justify-center rounded-[26px] border border-accent/20 bg-card/75 backdrop-blur shadow-2xl">
                   <img src={bodifyLogo} alt="Bodify" className="w-14 h-14 object-contain" />
                 </div>
               </motion.div>
 
-              {/* Text */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
               >
+                <div className="mb-4 flex justify-center">
+                  <span className="rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">
+                    Welcome back
+                  </span>
+                </div>
                 <h1 className="text-[28px] font-bold text-foreground text-center tracking-tight">
-                  Welcome back
+                  Sign in to Bodify
                 </h1>
                 <p className="text-muted-foreground text-center mt-2 text-[14px]">
-                  Sign in to continue your fitness journey
+                  Your coach, meals, and progress in one place
                 </p>
               </motion.div>
 
-              {/* Form */}
               <motion.form
                 onSubmit={handleSubmit}
                 className="mt-10 space-y-3.5"
@@ -126,11 +134,11 @@ const Login = () => {
                   whileTap={{ scale: 0.97 }}
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-[52px] rounded-2xl bg-primary text-primary-foreground font-semibold text-[14px] flex items-center justify-center gap-2 disabled:opacity-50 transition-all duration-200 mt-6"
-                  style={{ boxShadow: '0 8px 32px -4px hsla(217, 91%, 60%, 0.3)' }}
+                  className="mt-6 flex h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-accent via-primary to-secondary text-secondary-foreground transition-all duration-200 disabled:opacity-50"
+                  style={{ boxShadow: '0 12px 30px -14px hsl(var(--accent) / 0.6)' }}
                 >
                   {isLoading ? (
-                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-secondary-foreground/30 border-t-secondary-foreground" />
                   ) : (
                     <>Sign In <ArrowRight className="w-4 h-4" /></>
                   )}
@@ -148,7 +156,7 @@ const Login = () => {
                 Don't have an account?{' '}
                 <button
                   onClick={() => { setIsSignUp(true); setEmail(''); setPassword(''); }}
-                  className="text-primary font-semibold"
+                  className="font-semibold text-accent"
                 >
                   Get Started
                 </button>
@@ -166,7 +174,6 @@ const Login = () => {
             className="flex-1 flex flex-col justify-between px-6 pt-14 pb-10 relative z-10"
           >
             <div>
-              {/* Hero badge */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -174,12 +181,12 @@ const Login = () => {
                 className="flex justify-center mb-8"
               >
                 <div className="relative">
-                  <div className="w-[80px] h-[80px] rounded-[24px] bg-gradient-to-br from-primary via-accent to-primary flex items-center justify-center shadow-2xl"
-                    style={{ boxShadow: '0 12px 40px -8px hsla(160, 84%, 39%, 0.3)' }}>
-                    <Sparkles className="w-9 h-9 text-white" />
+                  <div className="flex h-[80px] w-[80px] items-center justify-center rounded-[24px] border border-accent/20 bg-card/80 shadow-2xl"
+                    style={{ boxShadow: '0 14px 32px -16px hsl(var(--accent) / 0.65)' }}>
+                    <img src={bodifyLogo} alt="Bodify" className="h-12 w-12 object-contain" />
                   </div>
-                  <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-xl bg-accent flex items-center justify-center shadow-lg border-2 border-background">
-                    <span className="text-white text-xs font-bold">+</span>
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full border border-accent/20 bg-accent/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+                    New plan
                   </div>
                 </div>
               </motion.div>
@@ -205,7 +212,7 @@ const Login = () => {
                 className="flex justify-center gap-2 mt-5 mb-8"
               >
                 {[
-                  { label: 'AI Coach', color: 'bg-primary/10 text-primary border-primary/15' },
+                  { label: 'AI Coach', color: 'bg-accent/10 text-accent border-accent/15' },
                   { label: 'Meal Plans', color: 'bg-accent/10 text-accent border-accent/15' },
                   { label: 'Workouts', color: 'bg-secondary/10 text-secondary border-secondary/15' },
                 ].map(pill => (
@@ -242,11 +249,11 @@ const Login = () => {
                   whileTap={{ scale: 0.97 }}
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-[52px] rounded-2xl bg-gradient-to-r from-primary to-accent text-white font-semibold text-[14px] flex items-center justify-center gap-2 disabled:opacity-50 transition-all duration-200 mt-5"
-                  style={{ boxShadow: '0 8px 32px -4px hsla(160, 84%, 39%, 0.25)' }}
+                  className="mt-5 flex h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-accent via-primary to-secondary text-secondary-foreground transition-all duration-200 disabled:opacity-50"
+                  style={{ boxShadow: '0 12px 30px -14px hsl(var(--accent) / 0.6)' }}
                 >
                   {isLoading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-secondary-foreground/30 border-t-secondary-foreground" />
                   ) : (
                     <><Sparkles className="w-4 h-4" /> Create Free Account</>
                   )}
@@ -268,7 +275,7 @@ const Login = () => {
                 Already have an account?{' '}
                 <button
                   onClick={() => { setIsSignUp(false); setEmail(''); setPassword(''); setName(''); }}
-                  className="text-accent font-semibold"
+                  className="font-semibold text-accent"
                 >
                   Sign In
                 </button>

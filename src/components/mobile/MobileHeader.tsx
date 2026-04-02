@@ -15,27 +15,30 @@ const MobileHeader = ({ title }: MobileHeaderProps) => {
       transition={{ duration: 0.3 }}
       className="sticky top-0 z-40 safe-top"
       style={{
-        background: 'hsla(222, 47%, 3%, 0.85)',
+        background: 'linear-gradient(180deg, hsl(var(--background) / 0.9), hsl(var(--card) / 0.82))',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderBottom: '1px solid hsla(0, 0%, 100%, 0.05)',
+        borderBottom: '1px solid hsl(var(--border) / 0.8)',
       }}
     >
       <div className="flex items-center justify-between px-5 py-3.5">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-card/60 border border-border/30 flex items-center justify-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-[14px] border border-accent/20 bg-gradient-to-br from-accent/10 via-primary/10 to-secondary/10">
             <img src={bodifyLogo} alt="Bodify" className="w-6 h-6 object-contain" />
           </div>
-          {title && (
-            <h1 className="text-[17px] font-semibold text-foreground tracking-tight">{title}</h1>
-          )}
+          <div>
+            {title && (
+              <h1 className="text-[17px] font-semibold text-foreground tracking-tight">{title}</h1>
+            )}
+            <p className="text-[11px] font-medium text-muted-foreground">Coach • Meals • Progress</p>
+          </div>
         </div>
         <motion.button
           whileTap={{ scale: 0.9 }}
-          className="relative w-10 h-10 rounded-xl bg-muted/40 flex items-center justify-center active:bg-muted/60 transition-colors"
+          className="relative flex h-10 w-10 items-center justify-center rounded-[14px] border border-border/60 bg-card/70 transition-colors active:bg-muted/60"
         >
           <Bell className="w-[18px] h-[18px] text-muted-foreground" />
-          <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary ring-2 ring-background" />
+          <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-accent ring-2 ring-background" />
         </motion.button>
       </div>
     </motion.div>
