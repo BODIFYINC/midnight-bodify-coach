@@ -15,6 +15,12 @@ export async function streamChat({
   onDone: () => void;
   onError?: (error: string) => void;
 }) {
+  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+    onError?.("AI backend is not configured yet.");
+    onDone();
+    return;
+  }
+
   const resp = await fetch(CHAT_URL, {
     method: "POST",
     headers: {

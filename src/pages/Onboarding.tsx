@@ -153,7 +153,7 @@ const Onboarding = () => {
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
       toast({ title: 'Welcome to Bodify! 🎉' });
-      navigate('/app');
+      navigate('/', { replace: true });
     }
   };
 
