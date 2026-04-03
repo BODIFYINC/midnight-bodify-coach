@@ -14,6 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      daily_logs: {
+        Row: {
+          created_at: string
+          id: string
+          log_date: string
+          mood: string | null
+          notes: string | null
+          sleep_hours: number | null
+          updated_at: string
+          user_id: string
+          water_ml: number | null
+          weight: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          log_date?: string
+          mood?: string | null
+          notes?: string | null
+          sleep_hours?: number | null
+          updated_at?: string
+          user_id: string
+          water_ml?: number | null
+          weight?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          log_date?: string
+          mood?: string | null
+          notes?: string | null
+          sleep_hours?: number | null
+          updated_at?: string
+          user_id?: string
+          water_ml?: number | null
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      meal_logs: {
+        Row: {
+          calories: number | null
+          carbs: number | null
+          created_at: string
+          fat: number | null
+          id: string
+          ingredients: string[] | null
+          logged_at: string
+          meal_name: string
+          meal_type: string
+          protein: number | null
+          user_id: string
+        }
+        Insert: {
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string
+          fat?: number | null
+          id?: string
+          ingredients?: string[] | null
+          logged_at?: string
+          meal_name: string
+          meal_type: string
+          protein?: number | null
+          user_id: string
+        }
+        Update: {
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string
+          fat?: number | null
+          id?: string
+          ingredients?: string[] | null
+          logged_at?: string
+          meal_name?: string
+          meal_type?: string
+          protein?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -38,6 +143,102 @@ export type Database = {
           goal?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          activity_level: string | null
+          age: number | null
+          allergies: string[] | null
+          cooking_time: string | null
+          created_at: string
+          dietary_restrictions: string[] | null
+          disliked_foods: string[] | null
+          favorite_ingredients: string[] | null
+          gender: string | null
+          goal: string | null
+          height: number | null
+          id: string
+          onboarding_completed: boolean | null
+          skill_level: string | null
+          updated_at: string
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string[] | null
+          cooking_time?: string | null
+          created_at?: string
+          dietary_restrictions?: string[] | null
+          disliked_foods?: string[] | null
+          favorite_ingredients?: string[] | null
+          gender?: string | null
+          goal?: string | null
+          height?: number | null
+          id?: string
+          onboarding_completed?: boolean | null
+          skill_level?: string | null
+          updated_at?: string
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string[] | null
+          cooking_time?: string | null
+          created_at?: string
+          dietary_restrictions?: string[] | null
+          disliked_foods?: string[] | null
+          favorite_ingredients?: string[] | null
+          gender?: string | null
+          goal?: string | null
+          height?: number | null
+          id?: string
+          onboarding_completed?: boolean | null
+          skill_level?: string | null
+          updated_at?: string
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      workout_logs: {
+        Row: {
+          completed_at: string
+          created_at: string
+          duration_minutes: number | null
+          exercises: Json | null
+          id: string
+          muscle_groups: string[] | null
+          notes: string | null
+          user_id: string
+          workout_name: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          duration_minutes?: number | null
+          exercises?: Json | null
+          id?: string
+          muscle_groups?: string[] | null
+          notes?: string | null
+          user_id: string
+          workout_name: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          duration_minutes?: number | null
+          exercises?: Json | null
+          id?: string
+          muscle_groups?: string[] | null
+          notes?: string | null
+          user_id?: string
+          workout_name?: string
         }
         Relationships: []
       }
