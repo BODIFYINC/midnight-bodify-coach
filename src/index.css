@@ -158,4 +158,27 @@
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
+
+  /* No-scrollbar utility */
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* Haptic tap feedback */
+  @keyframes tap-bounce {
+    0% { transform: scale(1); }
+    40% { transform: scale(0.96); }
+    100% { transform: scale(1); }
+  }
+  .animate-tap { animation: tap-bounce 0.2s ease-out; }
+
+  /* Gradient shimmer for loading skeletons */
+  @keyframes skeleton-wave {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .skeleton {
+    background: linear-gradient(90deg, hsl(var(--muted)) 25%, hsl(var(--muted) / 0.5) 37%, hsl(var(--muted)) 63%);
+    background-size: 200% 100%;
+    animation: skeleton-wave 1.6s ease-in-out infinite;
+  }
 }

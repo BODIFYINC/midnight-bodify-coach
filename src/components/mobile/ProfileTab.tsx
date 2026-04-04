@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Settings, Camera, TrendingUp, Heart, LogOut, ChevronRight } from 'lucide-react';
+import { User, Settings, Camera, TrendingUp, Heart, LogOut, ChevronRight, Dumbbell } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
+import { getUserSettings } from '@/services/userSettingsService';
+import { getWorkoutLogs } from '@/services/logService';
 
 interface ProfileTabProps {
   onTabChange: (tab: string) => void;
