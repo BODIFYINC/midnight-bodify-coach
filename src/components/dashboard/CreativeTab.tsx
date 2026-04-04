@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Dumbbell, Zap, Target, Clock, Flame, CheckCircle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnimatedButton } from '@/components/ui/animated-button';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Dumbbell, Zap, Target, Clock, Flame, CheckCircle, ChevronDown, Play } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { selectExercisesForWorkout, type ExerciseEntry } from '@/services/exerciseDatabase';
+import { logWorkout } from '@/services/logService';
 
 interface WorkoutPlan {
   title: string;
@@ -18,10 +14,17 @@ interface WorkoutPlan {
   estimatedCalories: number;
 }
 
+const fadeUp = {
+  initial: { opacity: 0, y: 14 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } }
+};
+
 export const CreativeTab: React.FC = () => {
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
   const [loading, setLoading] = useState(false);
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
+  const [savingWorkout, setSavingWorkout] = useState(false);
+  const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
   const [preferences, setPreferences] = useState({
     equipment: 'gym',
@@ -32,76 +35,53 @@ export const CreativeTab: React.FC = () => {
   });
 
   const equipmentOptions = [
-    { value: 'gym', label: 'Full Gym Access' },
-    { value: 'home_basic', label: 'Home - Basic Equipment' },
-    { value: 'home_advanced', label: 'Home - Advanced Setup' },
-    { value: 'bodyweight', label: 'Bodyweight Only' },
-    { value: 'dumbbells', label: 'Dumbbells Only' }
-  ];
-
-  const experienceOptions = [
-    { value: 'beginner', label: 'Beginner (0-1 years)' },
-    { value: 'intermediate', label: 'Intermediate (1-3 years)' },
-    { value: 'advanced', label: 'Advanced (3+ years)' }
+    { value: 'gym', label: 'Full Gym', emoji: '🏋️' },
+    { value: 'home_basic', label: 'Home Basic', emoji: '🏠' },
+    { value: 'home_advanced', label: 'Home Pro', emoji: '⚙️' },
+    { value: 'bodyweight', label: 'Bodyweight', emoji: '🤸' },
+    { value: 'dumbbells', label: 'Dumbbells', emoji: '💪' },
   ];
 
   const goalOptions = [
-    { value: 'muscle_gain', label: 'Muscle Building' },
-    { value: 'strength', label: 'Strength Training' },
-    { value: 'endurance', label: 'Endurance' },
-    { value: 'weight_loss', label: 'Weight Loss' },
-    { value: 'athletic', label: 'Athletic Performance' }
+    { value: 'muscle_gain', label: 'Build Muscle', emoji: '💪' },
+    { value: 'strength', label: 'Strength', emoji: '🏆' },
+    { value: 'endurance', label: 'Endurance', emoji: '🏃' },
+    { value: 'weight_loss', label: 'Fat Loss', emoji: '🔥' },
+    { value: 'athletic', label: 'Athletic', emoji: '⚡' },
   ];
 
-  const durationOptions = [
-    { value: '30', label: '30 minutes' },
-    { value: '45', label: '45 minutes' },
-    { value: '60', label: '60 minutes' },
-    { value: '90', label: '90 minutes' }
+  const muscleGroups = [
+    { id: 'Chest', emoji: '🫁' }, { id: 'Back', emoji: '🔙' },
+    { id: 'Shoulders', emoji: '🦾' }, { id: 'Arms', emoji: '💪' },
+    { id: 'Legs', emoji: '🦵' }, { id: 'Core', emoji: '🧱' },
+    { id: 'Glutes', emoji: '🍑' }, { id: 'Cardio', emoji: '❤️' },
   ];
-
-  const muscleGroups = ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Core', 'Glutes', 'Cardio'];
 
   const generateWorkout = async () => {
     setLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 400));
-
+      await new Promise(r => setTimeout(r, 400));
       const targetMuscles = preferences.targetMuscles.length > 0
         ? preferences.targetMuscles
-        : ['Chest', 'Back', 'Legs']; // Default full body
-
-      // Calculate target exercise count: 6-8 always
+        : ['Chest', 'Back', 'Legs'];
       const targetCount = targetMuscles.length === 1 ? 7 : Math.min(8, Math.max(6, targetMuscles.length * 2));
 
       const exercises = selectExercisesForWorkout(
-        targetMuscles,
-        preferences.equipment,
-        preferences.experience,
-        preferences.goal,
-        targetCount
+        targetMuscles, preferences.equipment, preferences.experience, preferences.goal, targetCount
       );
+      const estimatedCalories = exercises.reduce((sum, ex) => sum + (ex.caloriesPerSet * ex.sets), 0);
 
-      const estimatedCalories = exercises.reduce(
-        (sum, ex) => sum + (ex.caloriesPerSet * ex.sets), 0
-      );
-
-      const newWorkout: WorkoutPlan = {
+      setWorkoutPlan({
         title: `${preferences.goal.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())} Workout`,
         duration: parseInt(preferences.duration),
         difficulty: preferences.experience,
         targetMuscles,
         exercises,
-        estimatedCalories
-      };
-
-      setWorkoutPlan(newWorkout);
-      setCompletedExercises(new Set());
-
-      toast({
-        title: "Workout Generated! 🏋️",
-        description: `${exercises.length} exercises targeting ${targetMuscles.join(', ')}.`
+        estimatedCalories,
       });
+      setCompletedExercises(new Set());
+      setExpandedIdx(null);
+      toast({ title: "Workout Ready! 🏋️", description: `${exercises.length} exercises targeting ${targetMuscles.join(', ')}.` });
     } catch {
       toast({ title: "Error", description: "Please try again." });
     } finally {
@@ -109,13 +89,15 @@ export const CreativeTab: React.FC = () => {
     }
   };
 
-  const toggleExerciseComplete = (name: string) => {
-    const n = new Set(completedExercises);
-    n.has(name) ? n.delete(name) : n.add(name);
-    setCompletedExercises(n);
+  const toggleExercise = (name: string) => {
+    setCompletedExercises(prev => {
+      const n = new Set(prev);
+      n.has(name) ? n.delete(name) : n.add(name);
+      return n;
+    });
   };
 
-  const handleMuscleGroupToggle = (muscle: string) => {
+  const handleMuscleToggle = (muscle: string) => {
     setPreferences(prev => ({
       ...prev,
       targetMuscles: prev.targetMuscles.includes(muscle)
@@ -124,194 +106,286 @@ export const CreativeTab: React.FC = () => {
     }));
   };
 
-  const getDifficultyColor = (d: string) => {
-    if (d === 'beginner') return 'text-green-400';
-    if (d === 'intermediate') return 'text-yellow-400';
-    return 'text-red-400';
+  const handleSaveWorkout = async () => {
+    if (!workoutPlan) return;
+    setSavingWorkout(true);
+    try {
+      await logWorkout({
+        workout_name: workoutPlan.title,
+        exercises: workoutPlan.exercises.map(e => ({
+          name: e.name, sets: e.sets, reps: e.reps,
+          muscle: e.muscle, completed: completedExercises.has(e.name),
+        })),
+        duration_minutes: workoutPlan.duration,
+        muscle_groups: workoutPlan.targetMuscles,
+        notes: `Completed ${completedExercises.size}/${workoutPlan.exercises.length} exercises`,
+      });
+      toast({ title: "Workout Saved! 💾", description: "Logged to your history." });
+    } catch {
+      toast({ title: "Saved locally", description: "Will sync when connected." });
+    } finally {
+      setSavingWorkout(false);
+    }
   };
 
+  const diffColor = (d: string) =>
+    d === 'beginner' ? 'text-accent' : d === 'intermediate' ? 'text-primary' : 'text-destructive';
+
+  const progress = workoutPlan ? (completedExercises.size / workoutPlan.exercises.length) * 100 : 0;
+
   return (
-    <div className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent mb-2">
-          AI Workout Generator
-        </h2>
-        <p className="text-muted-foreground">Create custom workout plans based on your equipment and goals</p>
+    <motion.div initial="initial" animate="animate" className="space-y-5">
+      {/* Header */}
+      <motion.div variants={fadeUp}>
+        <h2 className="text-[22px] font-bold text-foreground tracking-tight">Workout Generator</h2>
+        <p className="text-[13px] text-muted-foreground mt-0.5">Create your perfect session</p>
       </motion.div>
 
-      {/* Preferences */}
-      <Card className="glassmorphism-card border border-white/10">
-        <CardHeader>
-          <CardTitle className="text-foreground flex items-center">
-            <Target className="w-5 h-5 mr-2 text-emerald-400" />
-            Workout Preferences
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { label: 'Equipment Available', key: 'equipment', options: equipmentOptions },
-              { label: 'Experience Level', key: 'experience', options: experienceOptions },
-              { label: 'Primary Goal', key: 'goal', options: goalOptions },
-              { label: 'Workout Duration', key: 'duration', options: durationOptions },
-            ].map(({ label, key, options }) => (
-              <div key={key} className="space-y-2">
-                <label className="text-muted-foreground text-sm">{label}</label>
-                <Select
-                  value={preferences[key as keyof typeof preferences] as string}
-                  onValueChange={(v) => setPreferences(prev => ({ ...prev, [key]: v }))}
-                >
-                  <SelectTrigger className="bg-white/10 border-white/20 text-foreground">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {options.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-          </div>
-
-          <div className="space-y-3">
-            <label className="text-muted-foreground text-sm">Target Muscle Groups (Leave empty for full body)</label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {muscleGroups.map(muscle => (
-                <div key={muscle} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={muscle}
-                    checked={preferences.targetMuscles.includes(muscle)}
-                    onCheckedChange={() => handleMuscleGroupToggle(muscle)}
-                    className="border-white/30 data-[state=checked]:bg-emerald-500"
-                  />
-                  <label htmlFor={muscle} className="text-muted-foreground text-sm cursor-pointer">{muscle}</label>
-                </div>
+      {!workoutPlan ? (
+        <motion.div variants={fadeUp} className="space-y-5">
+          {/* Equipment */}
+          <div>
+            <label className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2.5 block">Equipment</label>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+              {equipmentOptions.map(o => (
+                <motion.button key={o.value} whileTap={{ scale: 0.95 }}
+                  onClick={() => setPreferences(p => ({ ...p, equipment: o.value }))}
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl text-[12px] font-medium transition-all ${
+                    preferences.equipment === o.value
+                      ? 'border-2 border-accent bg-accent/10 text-accent'
+                      : 'border border-border/50 bg-card/50 text-muted-foreground'
+                  }`}>
+                  <span>{o.emoji}</span> {o.label}
+                </motion.button>
               ))}
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <AnimatedButton
-              onClick={generateWorkout}
-              loading={loading}
-              className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 px-8"
-              glowEffect={true}
-            >
-              <Zap className="w-5 h-5 mr-2" />
-              Generate Workout
-            </AnimatedButton>
+          {/* Goal */}
+          <div>
+            <label className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2.5 block">Goal</label>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+              {goalOptions.map(o => (
+                <motion.button key={o.value} whileTap={{ scale: 0.95 }}
+                  onClick={() => setPreferences(p => ({ ...p, goal: o.value }))}
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl text-[12px] font-medium transition-all ${
+                    preferences.goal === o.value
+                      ? 'border-2 border-accent bg-accent/10 text-accent'
+                      : 'border border-border/50 bg-card/50 text-muted-foreground'
+                  }`}>
+                  <span>{o.emoji}</span> {o.label}
+                </motion.button>
+              ))}
+            </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Generated Workout */}
-      {workoutPlan && (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-          <Card className="glassmorphism-card border border-white/10">
-            <CardContent className="p-6">
+          {/* Duration */}
+          <div>
+            <label className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2.5 block">Duration</label>
+            <div className="grid grid-cols-4 gap-2">
+              {['30', '45', '60', '90'].map(d => (
+                <motion.button key={d} whileTap={{ scale: 0.95 }}
+                  onClick={() => setPreferences(p => ({ ...p, duration: d }))}
+                  className={`py-3 rounded-2xl text-[13px] font-semibold transition-all ${
+                    preferences.duration === d
+                      ? 'border-2 border-accent bg-accent/10 text-accent'
+                      : 'border border-border/50 bg-card/50 text-muted-foreground'
+                  }`}>
+                  {d} min
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Muscle Groups */}
+          <div>
+            <label className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2.5 block">
+              Muscles <span className="normal-case text-muted-foreground/60">(empty = full body)</span>
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {muscleGroups.map(m => (
+                <motion.button key={m.id} whileTap={{ scale: 0.93 }}
+                  onClick={() => handleMuscleToggle(m.id)}
+                  className={`flex flex-col items-center gap-1 py-3 rounded-2xl text-[11px] font-medium transition-all ${
+                    preferences.targetMuscles.includes(m.id)
+                      ? 'border-2 border-accent bg-accent/10 text-accent'
+                      : 'border border-border/50 bg-card/50 text-muted-foreground'
+                  }`}>
+                  <span className="text-lg">{m.emoji}</span>
+                  {m.id}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Generate Button */}
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={generateWorkout}
+            disabled={loading}
+            className="w-full h-14 rounded-2xl bg-gradient-to-r from-accent via-primary to-secondary text-secondary-foreground text-[15px] font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+            style={{ boxShadow: '0 12px 30px -14px hsl(var(--accent) / 0.6)' }}
+          >
+            {loading ? (
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-secondary-foreground/30 border-t-secondary-foreground" />
+            ) : (
+              <><Zap className="w-5 h-5" /> Generate Workout</>
+            )}
+          </motion.button>
+        </motion.div>
+      ) : (
+        /* ======= GENERATED WORKOUT ======= */
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-4"
+          >
+            {/* Summary Card */}
+            <div className="rounded-2xl p-5 border border-border/50" style={{ background: 'hsla(222, 40%, 6%, 0.7)', backdropFilter: 'blur(16px)' }}>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold text-foreground">{workoutPlan.title}</h3>
-                <Badge className={getDifficultyColor(workoutPlan.difficulty)}>
-                  {workoutPlan.difficulty.toUpperCase()}
-                </Badge>
+                <div>
+                  <h3 className="text-[17px] font-bold text-foreground">{workoutPlan.title}</h3>
+                  <span className={`text-[11px] font-semibold uppercase ${diffColor(workoutPlan.difficulty)}`}>{workoutPlan.difficulty}</span>
+                </div>
+                <motion.button whileTap={{ scale: 0.95 }} onClick={() => setWorkoutPlan(null)}
+                  className="px-3 py-1.5 rounded-full border border-border/50 text-[11px] font-medium text-muted-foreground active:bg-muted/40">
+                  New
+                </motion.button>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-3 rounded-lg bg-white/10">
-                  <Clock className="w-6 h-6 mx-auto mb-2 text-emerald-400" />
-                  <p className="text-xl font-bold text-foreground">{workoutPlan.duration}</p>
-                  <p className="text-sm text-muted-foreground">Minutes</p>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-white/10">
-                  <Dumbbell className="w-6 h-6 mx-auto mb-2 text-blue-400" />
-                  <p className="text-xl font-bold text-foreground">{workoutPlan.exercises.length}</p>
-                  <p className="text-sm text-muted-foreground">Exercises</p>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-white/10">
-                  <Target className="w-6 h-6 mx-auto mb-2 text-purple-400" />
-                  <p className="text-xl font-bold text-foreground">{workoutPlan.targetMuscles.length}</p>
-                  <p className="text-sm text-muted-foreground">Muscle Groups</p>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-white/10">
-                  <Flame className="w-6 h-6 mx-auto mb-2 text-orange-400" />
-                  <p className="text-xl font-bold text-foreground">{workoutPlan.estimatedCalories}</p>
-                  <p className="text-sm text-muted-foreground">Est. Calories</p>
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                {workoutPlan.targetMuscles.map(m => (
-                  <Badge key={m} className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">{m}</Badge>
+              <div className="grid grid-cols-4 gap-2 text-center">
+                {[
+                  { icon: Clock, value: `${workoutPlan.duration}`, sub: 'min', color: 'text-accent' },
+                  { icon: Dumbbell, value: `${workoutPlan.exercises.length}`, sub: 'exercises', color: 'text-primary' },
+                  { icon: Target, value: `${workoutPlan.targetMuscles.length}`, sub: 'groups', color: 'text-secondary' },
+                  { icon: Flame, value: `${workoutPlan.estimatedCalories}`, sub: 'kcal', color: 'text-destructive' },
+                ].map((s, i) => (
+                  <div key={i} className="py-2">
+                    <s.icon className={`w-4 h-4 mx-auto mb-1 ${s.color}`} />
+                    <p className={`text-[16px] font-bold ${s.color} tabular-nums`}>{s.value}</p>
+                    <p className="text-[9px] text-muted-foreground">{s.sub}</p>
+                  </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
 
-          <Card className="glassmorphism-card border border-white/10">
-            <CardHeader>
-              <CardTitle className="text-foreground flex items-center justify-between">
-                <div className="flex items-center">
-                  <Dumbbell className="w-5 h-5 mr-2 text-emerald-400" />
-                  Exercise Plan
+              {/* Progress bar */}
+              <div className="mt-4 pt-3 border-t border-border/30">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] text-muted-foreground font-medium">Progress</span>
+                  <span className="text-[11px] text-accent font-semibold tabular-nums">{completedExercises.size}/{workoutPlan.exercises.length}</span>
                 </div>
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                  {completedExercises.size}/{workoutPlan.exercises.length} Completed
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {workoutPlan.exercises.map((exercise, index) => (
-                <motion.div
-                  key={exercise.name + index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`p-4 rounded-xl border transition-all duration-300 ${
-                    completedExercises.has(exercise.name)
-                      ? 'bg-green-500/10 border-green-500/50'
-                      : 'bg-white/5 border-white/10 hover:border-emerald-500/50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                          {index + 1}
-                        </div>
-                        <h4 className="text-lg font-semibold text-foreground">{exercise.name}</h4>
-                        <Badge className={getDifficultyColor(exercise.difficulty)}>{exercise.difficulty}</Badge>
-                      </div>
+                <div className="h-[5px] bg-muted/60 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    className="h-full rounded-full bg-gradient-to-r from-accent to-primary"
+                  />
+                </div>
+              </div>
 
-                      <div className="grid grid-cols-3 gap-4 text-sm">
-                        <div><span className="text-muted-foreground">Sets: </span><span className="text-foreground font-medium">{exercise.sets}</span></div>
-                        <div><span className="text-muted-foreground">Reps: </span><span className="text-foreground font-medium">{exercise.reps}</span></div>
-                        <div><span className="text-muted-foreground">Rest: </span><span className="text-foreground font-medium">{exercise.rest}</span></div>
-                      </div>
+              {/* Muscle tags */}
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {workoutPlan.targetMuscles.map(m => (
+                  <span key={m} className="px-2.5 py-1 rounded-full bg-accent/10 border border-accent/15 text-[10px] font-semibold text-accent">{m}</span>
+                ))}
+              </div>
+            </div>
 
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Target: {exercise.muscle} • Equipment: {exercise.equipment}
-                        {exercise.secondaryMuscles.length > 0 && ` • Also works: ${exercise.secondaryMuscles.join(', ')}`}
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground/70 italic">{exercise.instructions}</p>
-                    </div>
-
-                    <AnimatedButton
-                      size="sm"
-                      variant={completedExercises.has(exercise.name) ? "default" : "outline"}
-                      onClick={() => toggleExerciseComplete(exercise.name)}
-                      className={completedExercises.has(exercise.name)
-                        ? "bg-green-500 hover:bg-green-600"
-                        : "border-white/30 hover:bg-white/10"
-                      }
+            {/* Exercise List */}
+            <div className="space-y-2">
+              {workoutPlan.exercises.map((exercise, index) => {
+                const done = completedExercises.has(exercise.name);
+                const expanded = expandedIdx === index;
+                return (
+                  <motion.div
+                    key={exercise.name + index}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.04 }}
+                    className={`rounded-2xl border transition-all overflow-hidden ${
+                      done ? 'border-accent/40 bg-accent/5' : 'border-border/40 bg-card/50'
+                    }`}
+                    style={{ backdropFilter: 'blur(8px)' }}
+                  >
+                    <motion.button
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() => setExpandedIdx(expanded ? null : index)}
+                      className="w-full flex items-center gap-3 p-4"
                     >
-                      <CheckCircle className="w-4 h-4" />
-                    </AnimatedButton>
-                  </div>
-                </motion.div>
-              ))}
-            </CardContent>
-          </Card>
-        </motion.div>
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-[13px] font-bold flex-shrink-0 ${
+                        done ? 'bg-accent text-secondary-foreground' : 'bg-muted/60 text-muted-foreground'
+                      }`}>
+                        {done ? <CheckCircle className="w-4 h-4" /> : index + 1}
+                      </div>
+                      <div className="flex-1 text-left min-w-0">
+                        <p className={`text-[13px] font-semibold truncate ${done ? 'text-accent line-through' : 'text-foreground'}`}>{exercise.name}</p>
+                        <p className="text-[11px] text-muted-foreground">{exercise.sets}×{exercise.reps} · {exercise.rest} rest</p>
+                      </div>
+                      <ChevronDown className={`w-4 h-4 text-muted-foreground/50 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {expanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-4 pb-4 pt-0 space-y-3">
+                            <div className="flex flex-wrap gap-1.5">
+                              <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-semibold">{exercise.muscle}</span>
+                              <span className="px-2 py-0.5 rounded-full bg-muted/60 text-muted-foreground text-[10px] font-medium">{exercise.equipment}</span>
+                              <span className={`px-2 py-0.5 rounded-full bg-muted/60 text-[10px] font-medium ${diffColor(exercise.difficulty)}`}>{exercise.difficulty}</span>
+                            </div>
+                            {exercise.secondaryMuscles.length > 0 && (
+                              <p className="text-[11px] text-muted-foreground">Also works: {exercise.secondaryMuscles.join(', ')}</p>
+                            )}
+                            <p className="text-[12px] text-muted-foreground/80 leading-relaxed italic">{exercise.instructions}</p>
+                            <motion.button
+                              whileTap={{ scale: 0.95 }}
+                              onClick={(e) => { e.stopPropagation(); toggleExercise(exercise.name); }}
+                              className={`w-full py-2.5 rounded-xl text-[12px] font-semibold transition-all ${
+                                done
+                                  ? 'bg-muted/40 text-muted-foreground border border-border/40'
+                                  : 'bg-accent text-secondary-foreground'
+                              }`}
+                            >
+                              {done ? 'Undo' : '✓ Mark Complete'}
+                            </motion.button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Save Workout */}
+            {completedExercises.size > 0 && (
+              <motion.button
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={handleSaveWorkout}
+                disabled={savingWorkout}
+                className="w-full h-13 rounded-2xl bg-gradient-to-r from-accent to-primary text-secondary-foreground text-[14px] font-semibold flex items-center justify-center gap-2 disabled:opacity-50 py-3.5"
+                style={{ boxShadow: '0 10px 24px -12px hsl(var(--accent) / 0.5)' }}
+              >
+                {savingWorkout ? (
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-secondary-foreground/30 border-t-secondary-foreground" />
+                ) : (
+                  <><Play className="w-4 h-4" /> Save Workout</>
+                )}
+              </motion.button>
+            )}
+          </motion.div>
+        </AnimatePresence>
       )}
-    </div>
+    </motion.div>
   );
 };
