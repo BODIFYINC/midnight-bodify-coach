@@ -19,8 +19,10 @@ const ProfileTab = ({ onTabChange }: ProfileTabProps) => {
   const { user: authUser, signOut } = useAuth();
   const [userData, setUserData] = useState({ name: '', email: '', goal: '' });
   const [targets, setTargets] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+  const [workoutCount, setWorkoutCount] = useState(0);
 
   useEffect(() => {
+    // Load from localStorage first (fast), then overlay with DB data
     const settings = JSON.parse(localStorage.getItem('userSettings') || '{}');
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
     setUserData({
@@ -38,6 +40,23 @@ const ProfileTab = ({ onTabChange }: ProfileTabProps) => {
       const t = AccurateNutritionTracker.calculateNutritionTargets(profile);
       setTargets(t);
     } catch {}
+
+    // Load DB data
+    getUserSettings().then(dbSettings => {
+      if (dbSettings?.goal) setUserData(d => ({ ...d, goal: dbSettings.goal || d.goal }));
+      if (dbSettings?.age) {
+        try {
+          const profile: UserProfile = {
+            weight: dbSettings.weight || 70, height: dbSettings.height || 175,
+            age: dbSettings.age || 25, gender: (dbSettings.gender || 'male') as 'male' | 'female',
+            activityLevel: (dbSettings.activity_level || 'moderate') as UserProfile['activityLevel'],
+            goal: (dbSettings.goal || 'weight_loss') as UserProfile['goal'],
+          };
+          setTargets(AccurateNutritionTracker.calculateNutritionTargets(profile));
+        } catch {}
+      }
+    }).catch(() => {});
+    getWorkoutLogs(100).then(logs => setWorkoutCount(logs.length)).catch(() => {});
   }, [authUser]);
 
   const goalLabel: Record<string, string> = {
