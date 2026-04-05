@@ -43,6 +43,7 @@ const Login = () => {
         if (error) {
           toast({ title: 'Sign up failed', description: error.message, variant: 'destructive' });
         } else {
+          haptics.success();
           toast({ title: 'Account created! 🎉', description: "Check your email to verify, then sign in." });
           setIsSignUp(false);
         }
