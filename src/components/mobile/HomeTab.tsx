@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, Heart, Zap, Star, Utensils, Dumbbell, MessageSquare, TrendingUp } from 'lucide-react';
 import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
+import { haptics } from '@/services/haptics';
 import { getUnifiedTargets } from '@/services/unifiedTargets';
 
 interface HomeTabProps {
