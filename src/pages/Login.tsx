@@ -35,6 +35,7 @@ const Login = () => {
       return;
     }
 
+    haptics.heavy();
     setIsLoading(true);
     try {
       if (isSignUp) {
