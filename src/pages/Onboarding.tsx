@@ -5,6 +5,7 @@ import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
 import { saveUserSettings } from '@/services/userSettingsService';
+import OnboardingInput from '@/components/onboarding/OnboardingInput';
 
 interface StepData {
   name: string;
@@ -22,10 +23,46 @@ interface StepData {
   dislikedFoods: string;
 }
 
+const activities = [
+  { value: 'sedentary', emoji: '🪑', label: 'Sedentary', desc: 'Desk job, little exercise' },
+  { value: 'light', emoji: '🚶', label: 'Light Active', desc: 'Light exercise 1-3x/week' },
+  { value: 'moderate', emoji: '🏃', label: 'Moderate', desc: 'Exercise 3-5x/week' },
+  { value: 'active', emoji: '🏋️', label: 'Very Active', desc: 'Heavy exercise daily' },
+  { value: 'very_active', emoji: '⚡', label: 'Athlete', desc: 'Intense training + active job' },
+];
+
+const goals = [
+  { value: 'muscle_gain', emoji: '💪', label: 'Build Muscle', desc: 'Gain lean mass & strength' },
+  { value: 'weight_loss', emoji: '🔥', label: 'Lose Fat', desc: 'Cut body fat, stay strong' },
+  { value: 'maintenance', emoji: '🧬', label: 'Stay Healthy', desc: 'Maintain & feel great' },
+];
+
+const restrictions = [
+  { value: 'vegan', label: '🌱 Vegan' },
+  { value: 'keto', label: '🥑 Keto' },
+  { value: 'vegetarian', label: '🥗 Vegetarian' },
+  { value: 'gluten_free', label: '🌾 Gluten-Free' },
+  { value: 'dairy_free', label: '🥛 Dairy-Free' },
+  { value: 'halal', label: '🕌 Halal' },
+  { value: 'pescatarian', label: '🐟 Pescatarian' },
+  { value: 'none', label: '✅ No Restrictions' },
+];
+
+const stepMeta = [
+  { title: "What's your name?", subtitle: "Let's personalize your experience" },
+  { title: 'Your body metrics', subtitle: 'Real data = better plans' },
+  { title: 'Activity level', subtitle: 'How active are you day-to-day?' },
+  { title: 'Your main goal', subtitle: 'What are we optimizing for?' },
+  { title: 'Dietary preferences', subtitle: 'Any restrictions or foods to avoid?' },
+];
+
+const totalSteps = 5;
+
 const Onboarding = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [data, setData] = useState<StepData>({
     name: '', age: '', height: '', weight: '', bodyFat: '',
     gender: 'male', activity: 'moderate', goal: 'muscle_gain',
@@ -33,32 +70,10 @@ const Onboarding = () => {
     dietaryRestrictions: [], allergies: '', dislikedFoods: '',
   });
 
-  const totalSteps = 5;
-
-  const activities = [
-    { value: 'sedentary', emoji: '🪑', label: 'Sedentary', desc: 'Desk job, little exercise' },
-    { value: 'light', emoji: '🚶', label: 'Light Active', desc: 'Light exercise 1-3x/week' },
-    { value: 'moderate', emoji: '🏃', label: 'Moderate', desc: 'Exercise 3-5x/week' },
-    { value: 'active', emoji: '🏋️', label: 'Very Active', desc: 'Heavy exercise daily' },
-    { value: 'very_active', emoji: '⚡', label: 'Athlete', desc: 'Intense training + active job' },
-  ];
-
-  const goals = [
-    { value: 'muscle_gain', emoji: '💪', label: 'Build Muscle', desc: 'Gain lean mass & strength' },
-    { value: 'weight_loss', emoji: '🔥', label: 'Lose Fat', desc: 'Cut body fat, stay strong' },
-    { value: 'maintenance', emoji: '🧬', label: 'Stay Healthy', desc: 'Maintain & feel great' },
-  ];
-
-  const restrictions = [
-    { value: 'vegan', label: '🌱 Vegan' },
-    { value: 'keto', label: '🥑 Keto' },
-    { value: 'vegetarian', label: '🥗 Vegetarian' },
-    { value: 'gluten_free', label: '🌾 Gluten-Free' },
-    { value: 'dairy_free', label: '🥛 Dairy-Free' },
-    { value: 'halal', label: '🕌 Halal' },
-    { value: 'pescatarian', label: '🐟 Pescatarian' },
-    { value: 'none', label: '✅ No Restrictions' },
-  ];
+  const updateField = (field: keyof StepData, value: string) => {
+    setData(d => ({ ...d, [field]: value }));
+    setErrors(e => ({ ...e, [field]: '' }));
+  };
 
   const toggleRestriction = (v: string) => {
     if (v === 'none') {
@@ -73,28 +88,59 @@ const Onboarding = () => {
     }));
   };
 
-  const stepMeta = [
-    { title: "What's your name?", subtitle: "Let's personalize your experience" },
-    { title: 'Your body metrics', subtitle: 'Real data = better plans' },
-    { title: 'Activity level', subtitle: 'How active are you day-to-day?' },
-    { title: 'Your main goal', subtitle: 'What are we optimizing for?' },
-    { title: 'Dietary preferences', subtitle: 'Any restrictions or foods to avoid?' },
-  ];
+  const validateStep = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (step === 0) {
+      if (!data.name.trim()) newErrors.name = 'Name is required';
+      if (!data.age) newErrors.age = 'Age is required';
+      else {
+        const age = Number(data.age);
+        if (age < 12) newErrors.age = 'Must be 12 or older';
+        if (age > 120) newErrors.age = 'Enter a valid age';
+      }
+      if (!data.gender) newErrors.gender = 'Select your gender';
+    }
+
+    if (step === 1) {
+      if (!data.height) newErrors.height = 'Height is required';
+      else {
+        const h = Number(data.height);
+        if (h < 50) newErrors.height = 'Min 50 cm';
+        if (h > 300) newErrors.height = 'Max 300 cm';
+      }
+      if (!data.weight) newErrors.weight = 'Weight is required';
+      else {
+        const w = Number(data.weight);
+        if (w < 20) newErrors.weight = 'Min 20 kg';
+        if (w > 500) newErrors.weight = 'Max 500 kg';
+      }
+      if (data.bodyFat) {
+        const bf = Number(data.bodyFat);
+        if (bf < 2 || bf > 70) newErrors.bodyFat = '2-70%';
+      }
+      if (data.daysPerWeek) {
+        const d = Number(data.daysPerWeek);
+        if (d < 1 || d > 7) newErrors.daysPerWeek = '1-7 days';
+      }
+    }
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      toast({ title: 'Please fix the errors', variant: 'destructive' });
+      return false;
+    }
+    return true;
+  };
 
   const handleNext = async () => {
-    if (step === 0 && (!data.name || !data.age || !data.gender)) {
-      toast({ title: 'Fill all fields', variant: 'destructive' }); return;
-    }
-    if (step === 1 && (!data.height || !data.weight)) {
-      toast({ title: 'Add your height & weight', variant: 'destructive' }); return;
-    }
+    if (!validateStep()) return;
 
     if (step < totalSteps - 1) {
       setStep(s => s + 1);
       return;
     }
 
-    // Final step — save everything
     setSaving(true);
     try {
       const profile: UserProfile = {
@@ -109,7 +155,6 @@ const Onboarding = () => {
       const allergiesArr = data.allergies.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
       const dislikedArr = data.dislikedFoods.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 
-      // Save to localStorage for offline access
       const settings = {
         name: data.name, age: parseInt(data.age), height: parseInt(data.height),
         weight: parseInt(data.weight), bodyFat: data.bodyFat ? parseInt(data.bodyFat) : undefined,
@@ -119,6 +164,7 @@ const Onboarding = () => {
         dislikedFoods: data.dislikedFoods, allergies: data.allergies,
         targetCalories: targets.calories, targetProtein: targets.protein,
         targetCarbs: targets.carbs, targetFat: targets.fat,
+        onboardingCompleted: true,
       };
       localStorage.setItem('userSettings', JSON.stringify(settings));
       localStorage.setItem('userPreferences', JSON.stringify({
@@ -126,7 +172,6 @@ const Onboarding = () => {
         dietaryRestrictions: data.dietaryRestrictions,
       }));
 
-      // Save to DB
       await saveUserSettings({
         age: parseInt(data.age), weight: parseFloat(data.weight),
         height: parseFloat(data.height), gender: data.gender,
@@ -141,7 +186,6 @@ const Onboarding = () => {
       navigate('/', { replace: true });
     } catch (err) {
       console.error('Onboarding save error:', err);
-      // Still navigate even if DB save fails — localStorage has the data
       toast({ title: 'Welcome to Bodify! 🎉' });
       navigate('/', { replace: true });
     } finally {
@@ -149,35 +193,13 @@ const Onboarding = () => {
     }
   };
 
-  const InputField = ({ label, type = 'text', value, onChange, placeholder, unit }: {
-    label: string; type?: string; value: string; onChange: (v: string) => void; placeholder: string; unit?: string;
-  }) => (
-    <div className="space-y-2">
-      <label className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{label}</label>
-      <div className="relative">
-        <input
-          type={type}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="w-full h-[52px] rounded-2xl border border-border/50 bg-card/60 px-4 text-[15px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/40 transition-all"
-        />
-        {unit && (
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] text-muted-foreground font-medium">{unit}</span>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-background safe-top safe-bottom">
-      {/* Background */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute right-[-20%] top-0 h-72 w-72 rounded-full bg-accent/8 blur-3xl" />
         <div className="absolute bottom-[-10%] left-[-15%] h-80 w-80 rounded-full bg-secondary/8 blur-3xl" />
       </div>
 
-      {/* Header */}
       <div className="relative z-10 px-6 pt-14 pb-2">
         <div className="flex items-center justify-between mb-6">
           {step > 0 ? (
@@ -207,19 +229,18 @@ const Onboarding = () => {
         </AnimatePresence>
       </div>
 
-      {/* Content */}
       <div className="relative z-10 flex-1 overflow-y-auto px-6 py-6">
         <AnimatePresence mode="wait">
           {step === 0 && (
             <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-              <InputField label="Full name" value={data.name} onChange={v => setData(d => ({ ...d, name: v }))} placeholder="Alex Rivera" />
-              <InputField label="Age" type="number" value={data.age} onChange={v => setData(d => ({ ...d, age: v }))} placeholder="25" />
+              <OnboardingInput label="Full name" value={data.name} onChange={v => updateField('name', v)} placeholder="Alex Rivera" error={errors.name} />
+              <OnboardingInput label="Age" type="number" value={data.age} onChange={v => updateField('age', v)} placeholder="25" min={12} max={120} error={errors.age} />
               <div className="space-y-2">
                 <label className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Gender</label>
                 <div className="grid grid-cols-2 gap-3">
                   {[{ value: 'male', emoji: '♂️', label: 'Male' }, { value: 'female', emoji: '♀️', label: 'Female' }].map(g => (
                     <motion.button key={g.value} whileTap={{ scale: 0.96 }}
-                      onClick={() => setData(d => ({ ...d, gender: g.value }))}
+                      onClick={() => updateField('gender', g.value)}
                       className={`h-14 rounded-2xl flex items-center justify-center gap-2.5 text-[14px] font-medium transition-all ${
                         data.gender === g.value
                           ? 'border-2 border-accent bg-accent/10 text-foreground shadow-lg shadow-accent/10'
@@ -236,13 +257,13 @@ const Onboarding = () => {
           {step === 1 && (
             <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
-                <InputField label="Height" type="number" value={data.height} onChange={v => setData(d => ({ ...d, height: v }))} placeholder="175" unit="cm" />
-                <InputField label="Weight" type="number" value={data.weight} onChange={v => setData(d => ({ ...d, weight: v }))} placeholder="70" unit="kg" />
+                <OnboardingInput label="Height" type="number" value={data.height} onChange={v => updateField('height', v)} placeholder="175" unit="cm" min={50} max={300} error={errors.height} />
+                <OnboardingInput label="Weight" type="number" value={data.weight} onChange={v => updateField('weight', v)} placeholder="70" unit="kg" min={20} max={500} error={errors.weight} />
               </div>
-              <InputField label="Body fat (optional)" type="number" value={data.bodyFat} onChange={v => setData(d => ({ ...d, bodyFat: v }))} placeholder="18" unit="%" />
+              <OnboardingInput label="Body fat (optional)" type="number" value={data.bodyFat} onChange={v => updateField('bodyFat', v)} placeholder="18" unit="%" min={2} max={70} error={errors.bodyFat} />
               <div className="grid grid-cols-2 gap-3">
-                <InputField label="Days/week" type="number" value={data.daysPerWeek} onChange={v => setData(d => ({ ...d, daysPerWeek: v }))} placeholder="4" />
-                <div className="space-y-2">
+                <OnboardingInput label="Days/week" type="number" value={data.daysPerWeek} onChange={v => updateField('daysPerWeek', v)} placeholder="4" min={1} max={7} error={errors.daysPerWeek} />
+                <div className="space-y-1.5">
                   <label className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Fitness level</label>
                   <select
                     value={data.fitnessLevel}
@@ -261,16 +282,13 @@ const Onboarding = () => {
           {step === 2 && (
             <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-3">
               {activities.map(a => (
-                <motion.button
-                  key={a.value}
-                  whileTap={{ scale: 0.97 }}
+                <motion.button key={a.value} whileTap={{ scale: 0.97 }}
                   onClick={() => setData(d => ({ ...d, activity: a.value }))}
                   className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${
                     data.activity === a.value
                       ? 'border-2 border-accent bg-accent/10 shadow-lg shadow-accent/10'
                       : 'border border-border/50 bg-card/50'
-                  }`}
-                >
+                  }`}>
                   <span className="text-2xl">{a.emoji}</span>
                   <div className="text-left flex-1">
                     <p className="text-[14px] font-semibold text-foreground">{a.label}</p>
@@ -290,16 +308,13 @@ const Onboarding = () => {
           {step === 3 && (
             <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-3">
               {goals.map(g => (
-                <motion.button
-                  key={g.value}
-                  whileTap={{ scale: 0.97 }}
+                <motion.button key={g.value} whileTap={{ scale: 0.97 }}
                   onClick={() => setData(d => ({ ...d, goal: g.value }))}
                   className={`w-full flex items-center gap-4 p-5 rounded-2xl transition-all ${
                     data.goal === g.value
                       ? 'border-2 border-accent bg-accent/10 shadow-lg shadow-accent/10'
                       : 'border border-border/50 bg-card/50'
-                  }`}
-                >
+                  }`}>
                   <span className="text-3xl">{g.emoji}</span>
                   <div className="text-left flex-1">
                     <p className="text-[16px] font-bold text-foreground">{g.label}</p>
@@ -331,14 +346,13 @@ const Onboarding = () => {
                   </motion.button>
                 ))}
               </div>
-              <InputField label="Allergies (comma separated)" value={data.allergies} onChange={v => setData(d => ({ ...d, allergies: v }))} placeholder="nuts, shellfish" />
-              <InputField label="Disliked foods (optional)" value={data.dislikedFoods} onChange={v => setData(d => ({ ...d, dislikedFoods: v }))} placeholder="mushrooms, olives" />
+              <OnboardingInput label="Allergies (comma separated)" value={data.allergies} onChange={v => updateField('allergies', v)} placeholder="nuts, shellfish" />
+              <OnboardingInput label="Disliked foods (optional)" value={data.dislikedFoods} onChange={v => updateField('dislikedFoods', v)} placeholder="mushrooms, olives" />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* CTA */}
       <div className="relative z-10 px-6 pb-8 pt-4">
         <motion.button
           whileTap={{ scale: 0.97 }}

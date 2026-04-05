@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { getUserSettings } from '@/services/userSettingsService';
 import SplashScreen from '@/components/mobile/SplashScreen';
 import BottomNav from '@/components/mobile/BottomNav';
 import MobileHeader from '@/components/mobile/MobileHeader';
@@ -47,50 +48,68 @@ const MobileApp = () => {
   const [bootGuardDone, setBootGuardDone] = useState(() => isPreviewMode() || hasSeenSplash());
   const [activeTab, setActiveTab] = useState('welcome');
   const [logOpen, setLogOpen] = useState(false);
+  const [onboardingChecked, setOnboardingChecked] = useState(false);
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
 
-  const hasCompletedOnboarding = () => {
-    try {
-      const settings = JSON.parse(localStorage.getItem('userSettings') || '{}');
-      return Boolean(
-        settings?.name &&
-        settings?.age &&
-        settings?.height &&
-        settings?.weight &&
-        settings?.activityLevel &&
-        settings?.goal &&
-        settings?.daysPerWeek
-      );
-    } catch {
-      return false;
+  // Check onboarding from localStorage first, then DB
+  useEffect(() => {
+    if (!user || onboardingChecked) return;
+
+    // Quick local check
+    const localComplete = (() => {
+      try {
+        const s = JSON.parse(localStorage.getItem('userSettings') || '{}');
+        return Boolean(s?.name && s?.age && s?.height && s?.weight && s?.goal && s?.onboardingCompleted);
+      } catch { return false; }
+    })();
+
+    if (localComplete) {
+      setOnboardingComplete(true);
+      setOnboardingChecked(true);
+      return;
     }
-  };
+
+    // Fallback: check DB
+    getUserSettings().then(settings => {
+      if (settings?.onboarding_completed) {
+        // Hydrate localStorage from DB so future checks are instant
+        const localSettings = {
+          name: settings.gender || 'User',
+          age: settings.age,
+          height: settings.height,
+          weight: settings.weight,
+          gender: settings.gender,
+          activityLevel: settings.activity_level,
+          goal: settings.goal,
+          fitnessLevel: settings.skill_level,
+          daysPerWeek: 4,
+          onboardingCompleted: true,
+        };
+        localStorage.setItem('userSettings', JSON.stringify(localSettings));
+        setOnboardingComplete(true);
+      }
+      setOnboardingChecked(true);
+    }).catch(() => {
+      setOnboardingChecked(true);
+    });
+  }, [user, onboardingChecked]);
 
   useEffect(() => {
     if (!showSplash) {
       setBootGuardDone(true);
       return;
     }
-
     const timer = setTimeout(() => {
-      try {
-        sessionStorage.setItem('bodify_splash_seen', '1');
-      } catch {
-        // ignore storage restrictions in embedded previews
-      }
+      try { sessionStorage.setItem('bodify_splash_seen', '1'); } catch {}
       setShowSplash(false);
       setBootGuardDone(true);
     }, 450);
-
     return () => clearTimeout(timer);
   }, [showSplash]);
 
   useEffect(() => {
     if (showSplash || !loading) return;
-
-    const timeout = setTimeout(() => {
-      setBootGuardDone(true);
-    }, 1200);
-
+    const timeout = setTimeout(() => setBootGuardDone(true), 1200);
     return () => clearTimeout(timeout);
   }, [showSplash, loading]);
 
@@ -105,21 +124,18 @@ const MobileApp = () => {
   );
 
   const StartupLoading = () => (
-    <div className="relative min-h-screen min-h-[100dvh] overflow-hidden bg-background px-6">
+    <div className="relative min-h-[100dvh] overflow-hidden bg-background px-6">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-16 right-[-15%] h-64 w-64 rounded-full bg-accent/12 blur-3xl" />
         <div className="absolute bottom-0 left-[-10%] h-72 w-72 rounded-full bg-secondary/10 blur-3xl" />
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-primary/8 to-transparent" />
       </div>
-
-      <div className="relative flex min-h-screen min-h-[100dvh] items-center justify-center">
+      <div className="relative flex min-h-[100dvh] items-center justify-center">
         <div className="w-full max-w-sm rounded-[28px] border border-border/50 bg-card/75 p-6 text-center shadow-2xl backdrop-blur-xl">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[20px] border border-accent/20 bg-gradient-to-br from-accent/15 via-primary/10 to-secondary/15">
             <img src="/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png" alt="Bodify logo" className="h-10 w-10 object-contain" />
           </div>
           <p className="mt-5 text-base font-semibold text-foreground">Loading your app</p>
-          <p className="mt-1 text-sm text-muted-foreground">Getting your dashboard and coach ready.</p>
-
+          <p className="mt-1 text-sm text-muted-foreground">Getting your dashboard ready.</p>
           <div className="mt-5 h-2 overflow-hidden rounded-full bg-muted/70">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-accent via-primary to-secondary"
@@ -134,58 +150,38 @@ const MobileApp = () => {
   );
 
   const handleTabChange = (tab: string) => {
-    if (tab === 'log') {
-      setLogOpen(true);
-      return;
-    }
+    if (tab === 'log') { setLogOpen(true); return; }
     setActiveTab(tab);
   };
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'welcome':
-        return <HomeTab onTabChange={handleTabChange} />;
-      case 'meals':
-        return <div className="px-5 pb-32"><MealsTab /></div>;
-      case 'chat':
-        return <div className="px-5 pb-32"><AIChatTab /></div>;
-      case 'progress':
-        return <div className="px-5 pb-32"><ProgressTab /></div>;
-      case 'recipes':
-        return <div className="px-5 pb-32"><RecipesTab /></div>;
-      case 'creative':
-        return <div className="px-5 pb-32"><CreativeTab /></div>;
-      case 'settings':
-        return <div className="px-5 pb-32"><SettingsTab /></div>;
-      case 'profile':
-        return <ProfileTab onTabChange={handleTabChange} />;
-      default:
-        return <HomeTab onTabChange={handleTabChange} />;
+      case 'welcome': return <HomeTab onTabChange={handleTabChange} />;
+      case 'meals': return <div className="px-5 pb-32"><MealsTab /></div>;
+      case 'chat': return <div className="px-5 pb-32"><AIChatTab /></div>;
+      case 'progress': return <div className="px-5 pb-32"><ProgressTab /></div>;
+      case 'recipes': return <div className="px-5 pb-32"><RecipesTab /></div>;
+      case 'creative': return <div className="px-5 pb-32"><CreativeTab /></div>;
+      case 'settings': return <div className="px-5 pb-32"><SettingsTab /></div>;
+      case 'profile': return <ProfileTab onTabChange={handleTabChange} />;
+      default: return <HomeTab onTabChange={handleTabChange} />;
     }
   };
-
-  const onboardingComplete = user ? hasCompletedOnboarding() : false;
 
   if (showSplash && !bootGuardDone) {
     return <SplashScreen show={true} subtitle={loading ? 'Securing your session' : 'Loading Bodify'} />;
   }
 
-  if (loading && !user) {
-    return <StartupLoading />;
-  }
+  if (loading && !user) return <StartupLoading />;
+  if (!loading && !user) return <Navigate to="/login" replace />;
 
-  if (!loading && !user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (!loading && user && !onboardingComplete) {
-    return <Navigate to="/onboarding" replace />;
-  }
+  // Wait for onboarding check before deciding
+  if (!onboardingChecked) return <StartupLoading />;
+  if (!onboardingComplete) return <Navigate to="/onboarding" replace />;
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background">
+    <div className="min-h-[100dvh] bg-background">
       <MobileHeader title={tabTitles[activeTab]} />
-
       <main className="relative overflow-y-auto" style={{ minHeight: 'calc(100dvh - 56px - 80px)' }}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -202,7 +198,6 @@ const MobileApp = () => {
           </motion.div>
         </AnimatePresence>
       </main>
-
       <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
       <LogSheet open={logOpen} onClose={() => setLogOpen(false)} onNavigate={handleTabChange} />
     </div>
