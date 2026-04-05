@@ -80,7 +80,7 @@ export const AIChatTab: React.FC = () => {
     setMessage('');
     setIsLoading(true);
 
-    // Persist user message
+    haptics.heavy();
     saveChatMessage('user', text).catch(() => {});
 
     let assistantContent = '';
