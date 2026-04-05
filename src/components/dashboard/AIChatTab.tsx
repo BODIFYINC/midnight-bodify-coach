@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, Dumbbell, Apple, Flame, Target, Loader2, ArrowUp } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { streamChat } from '@/services/chatService';
+import { haptics } from '@/services/haptics';
 import { loadChatHistory, saveChatMessage } from '@/services/chatPersistence';
 import ReactMarkdown from 'react-markdown';
 
@@ -79,7 +80,7 @@ export const AIChatTab: React.FC = () => {
     setMessage('');
     setIsLoading(true);
 
-    // Persist user message
+    haptics.heavy();
     saveChatMessage('user', text).catch(() => {});
 
     let assistantContent = '';

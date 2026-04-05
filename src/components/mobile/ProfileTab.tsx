@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Settings, Camera, TrendingUp, Heart, LogOut, ChevronRight, Dumbbell } from 'lucide-react';
+import { haptics } from '@/services/haptics';
 import { useAuth } from '@/hooks/useAuth';
 import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
 import { getUserSettings } from '@/services/userSettingsService';
@@ -65,10 +66,10 @@ const ProfileTab = ({ onTabChange }: ProfileTabProps) => {
   };
 
   const menuItems = [
-    { icon: Settings, label: 'Settings', sub: 'Preferences & account', action: () => onTabChange('settings') },
-    { icon: Dumbbell, label: 'Workouts', sub: `${workoutCount} sessions logged`, action: () => onTabChange('creative') },
-    { icon: TrendingUp, label: 'Progress Photos', sub: 'Track your transformation', action: () => onTabChange('progress') },
-    { icon: Heart, label: 'Wellness', sub: 'Sleep, water & recovery', action: () => onTabChange('wellness') },
+    { icon: Settings, label: 'Settings', sub: 'Preferences & account', action: () => { haptics.tap(); onTabChange('settings'); } },
+    { icon: Dumbbell, label: 'Workouts', sub: `${workoutCount} sessions logged`, action: () => { haptics.tap(); onTabChange('creative'); } },
+    { icon: TrendingUp, label: 'Progress Photos', sub: 'Track your transformation', action: () => { haptics.tap(); onTabChange('progress'); } },
+    { icon: Heart, label: 'Wellness', sub: 'Sleep, water & recovery', action: () => { haptics.tap(); onTabChange('wellness'); } },
   ];
 
   return (

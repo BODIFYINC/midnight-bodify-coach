@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Mail, Lock, User, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { haptics } from '@/services/haptics';
 
 const bodifyLogo = '/lovable-uploads/1ea08858-4d09-483d-bbca-c23dca759081.png';
 
@@ -34,6 +35,7 @@ const Login = () => {
       return;
     }
 
+    haptics.heavy();
     setIsLoading(true);
     try {
       if (isSignUp) {
@@ -41,14 +43,17 @@ const Login = () => {
         if (error) {
           toast({ title: 'Sign up failed', description: error.message, variant: 'destructive' });
         } else {
+          haptics.success();
           toast({ title: 'Account created! 🎉', description: "Check your email to verify, then sign in." });
           setIsSignUp(false);
         }
       } else {
         const { error } = await signIn(email, password);
         if (error) {
+          haptics.error();
           toast({ title: 'Login failed', description: error.message, variant: 'destructive' });
         } else {
+          haptics.success();
           toast({ title: 'Welcome back! 💪', description: 'Ready to crush your goals.' });
           navigate('/');
         }

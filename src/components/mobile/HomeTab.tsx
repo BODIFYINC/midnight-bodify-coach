@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, Heart, Zap, Star, Utensils, Dumbbell, MessageSquare, TrendingUp } from 'lucide-react';
 import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
+import { haptics } from '@/services/haptics';
 import { getUnifiedTargets } from '@/services/unifiedTargets';
 
 interface HomeTabProps {
@@ -177,7 +178,7 @@ const HomeTab = ({ onTabChange }: HomeTabProps) => {
             <motion.button
               key={action.tab}
               whileTap={{ scale: 0.92 }}
-              onClick={() => onTabChange(action.tab)}
+              onClick={() => { haptics.tap(); onTabChange(action.tab); }}
               className="flex flex-col items-center gap-2.5 py-3"
             >
               <div className={`flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-gradient-to-br ${action.gradient} shadow-lg`}
