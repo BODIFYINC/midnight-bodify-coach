@@ -50,7 +50,10 @@ const Login = () => {
       } else {
         const { error } = await signIn(email, password);
         if (error) {
+          haptics.error();
           toast({ title: 'Login failed', description: error.message, variant: 'destructive' });
+        } else {
+          haptics.success();
         } else {
           toast({ title: 'Welcome back! 💪', description: 'Ready to crush your goals.' });
           navigate('/');
