@@ -16,6 +16,7 @@ import Waiting from "./pages/Waiting";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
+import GuestDashboard from "./pages/GuestDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => (
                      </ProtectedRoute>
                    } 
                  />
+                <Route path="/secrethide" element={<GuestDashboard />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

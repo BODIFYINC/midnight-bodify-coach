@@ -29,7 +29,7 @@ export const ScrollAnimation = ({
       transition: {
         duration,
         delay,
-        ease: "easeOut"
+      ease: "easeOut" as const
       }
     }
   };

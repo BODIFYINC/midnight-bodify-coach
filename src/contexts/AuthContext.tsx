@@ -23,7 +23,7 @@ interface AuthContextType {
   deleteUser: (userId: string) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const ADMIN_EMAIL = "abdullah@admin.com";
 const ADMIN_PASSWORD = "Abdullah2008$hackerAA07";
