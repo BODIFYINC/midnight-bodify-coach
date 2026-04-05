@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Settings, Camera, TrendingUp, Heart, LogOut, ChevronRight, Dumbbell } from 'lucide-react';
+import { haptics } from '@/services/haptics';
 import { useAuth } from '@/hooks/useAuth';
 import { AccurateNutritionTracker, type UserProfile } from '@/services/accurateNutritionTracker';
 import { getUserSettings } from '@/services/userSettingsService';
