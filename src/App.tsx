@@ -10,6 +10,7 @@ import MobileApp from "./pages/MobileApp";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import MealDetail from "./pages/MealDetail";
+import SecretLogin from "./pages/SecretLogin";
 
 const queryClient = new QueryClient();
 
