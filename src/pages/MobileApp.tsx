@@ -177,9 +177,9 @@ const MobileApp = () => {
   if (loading && !user && !isGuest) return <StartupLoading />;
   if (!loading && !user && !isGuest) return <Navigate to="/login" replace />;
 
-  // Wait for onboarding check before deciding
-  if (!onboardingChecked) return <StartupLoading />;
-  if (!onboardingComplete) return <Navigate to="/onboarding" replace />;
+  // Wait for onboarding check before deciding (skip for guests)
+  if (!isGuest && !onboardingChecked) return <StartupLoading />;
+  if (!isGuest && !onboardingComplete) return <Navigate to="/onboarding" replace />;
 
   return (
     <div className="min-h-[100dvh] bg-background">
