@@ -43,6 +43,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<MobileApp />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/secretlogin" element={<SecretLogin />} />
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/app" element={<Navigate to="/" replace />} />
               <Route path="/dashboard" element={<Navigate to="/" replace />} />
