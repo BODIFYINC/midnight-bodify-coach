@@ -172,8 +172,10 @@ const MobileApp = () => {
     return <SplashScreen show={true} subtitle={loading ? 'Securing your session' : 'Loading Bodify'} />;
   }
 
-  if (loading && !user) return <StartupLoading />;
-  if (!loading && !user) return <Navigate to="/login" replace />;
+  const isGuest = (() => { try { return localStorage.getItem('bodify_guest_mode') === '1'; } catch { return false; } })();
+
+  if (loading && !user && !isGuest) return <StartupLoading />;
+  if (!loading && !user && !isGuest) return <Navigate to="/login" replace />;
 
   // Wait for onboarding check before deciding
   if (!onboardingChecked) return <StartupLoading />;
