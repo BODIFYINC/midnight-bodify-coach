@@ -10,6 +10,7 @@ import MobileApp from "./pages/MobileApp";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import MealDetail from "./pages/MealDetail";
+import SecretLogin from "./pages/SecretLogin";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<MobileApp />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/secretlogin" element={<SecretLogin />} />
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/app" element={<Navigate to="/" replace />} />
               <Route path="/dashboard" element={<Navigate to="/" replace />} />

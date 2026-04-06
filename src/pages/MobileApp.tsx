@@ -172,12 +172,14 @@ const MobileApp = () => {
     return <SplashScreen show={true} subtitle={loading ? 'Securing your session' : 'Loading Bodify'} />;
   }
 
-  if (loading && !user) return <StartupLoading />;
-  if (!loading && !user) return <Navigate to="/login" replace />;
+  const isGuest = (() => { try { return localStorage.getItem('bodify_guest_mode') === '1'; } catch { return false; } })();
 
-  // Wait for onboarding check before deciding
-  if (!onboardingChecked) return <StartupLoading />;
-  if (!onboardingComplete) return <Navigate to="/onboarding" replace />;
+  if (loading && !user && !isGuest) return <StartupLoading />;
+  if (!loading && !user && !isGuest) return <Navigate to="/login" replace />;
+
+  // Wait for onboarding check before deciding (skip for guests)
+  if (!isGuest && !onboardingChecked) return <StartupLoading />;
+  if (!isGuest && !onboardingComplete) return <Navigate to="/onboarding" replace />;
 
   return (
     <div className="min-h-[100dvh] bg-background">
